@@ -38,6 +38,13 @@ class Contest(models.Model):
     writers= models.ManyToManyField(User,related_name='written_contests')
     description = models.TextField()
     contest_chips = models.ManyToManyField(Contestchip,related_name='contests')
+class Score(models.Model):
+    uuid = models.UUIDField(
+        default=uuid.uuid4, editable=False, unique=True, primary_key=True)
+    score_all = models.IntegerField(null=True)
+    score_m = models.IntegerField(null=True)
+    score_p = models.IntegerField(null=True)
+    score_c = models.IntegerField(null=True)
 
 class  Contestprocess(models.Model):
     PENDING = 'P'
@@ -55,6 +62,7 @@ class  Contestprocess(models.Model):
     status = models.CharField(max_length=20,default=PENDING,choices=CONTEST_STATUS_CHOICES)
     rating = models.ForeignKey('appauth.Rating',on_delete=models.CASCADE,null=True,related_name='processes')
     rating_change = models.ForeignKey('appauth.Rating',on_delete=models.CASCADE,null=True,related_name='ch_processes')
+    score = models.ForeignKey(Score,on_delete=models.PROTECT,null=True)
     rated_date = models.DateTimeField(null=True)
 class Problem(models.Model):
     SINGLE = 'P'

@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework import views, status, response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.contrib.auth import get_user_model, authenticate
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.authtoken.models import Token
 from django.db import transaction
 from .serializers import RegisterInfoCheckSerializer,\
@@ -11,7 +12,8 @@ from .serializers import RegisterInfoCheckSerializer,\
 # Create your views here.
 from .models import User, Rating, Watchfriend
 from core.models import Contest, Contestprocess
-
+from django.core.management.utils import get_random_secret_key
+from django.utils.crypto import get_random_string
 class RegisterView(views.APIView):
     def post(self, request):
         register_serializer = RegisterInfoCheckSerializer(data=request.data)
@@ -26,15 +28,15 @@ class RegisterView(views.APIView):
         rating = Rating()
         rating.save()
         new_user = User.objects.create_user(
-            username=username, email=email, password=password, rating=rating)
+            username=username, email=email, password=password, rating=rating,secret_key=get_random_string(length=64))
 
         new_user.save()
 
-        token, _ = Token.objects.get_or_create(user=new_user)
+        # token, _ = Token.objects.get_or_create(user=new_user)
 
         return response.Response(
             {
-                'token': token.key,
+                'message':'Registered. Check your email to verify',
                 'username': new_user.username
             },
             status=status.HTTP_201_CREATED)
@@ -42,6 +44,7 @@ class RegisterView(views.APIView):
 
 class LoginView(views.APIView):
     def post(self, request):
+        
         login_serializer = LoginInfoCheckSerializer(data=request.data)
         login_serializer.is_valid(raise_exception=True)
 
@@ -54,6 +57,8 @@ class LoginView(views.APIView):
         if user is None:
             return response.Response({'error': 'authentication falied'}, status=status.HTTP_400_BAD_REQUEST)
         else:
+            if user.isVerified==False:
+                return response.Response({'message':'verify your email'},status=status.HTTP_403_FORBIDDEN)
             token, _ = Token.objects.get_or_create(user=user)
             return response.Response({
                 'token': token.key,
@@ -158,6 +163,8 @@ class SelfView(views.APIView):
             status=status.HTTP_200_OK)
 
 class RatingsHistoryView(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+
     def get(self,request,username):
         user = get_object_or_404(User,username=username)
         queryset = Contestprocess.objects.filter(user=user,status=Contestprocess.PASSED)
@@ -167,6 +174,52 @@ class RatingsHistoryView(views.APIView):
             {
                 "message": "Succesfully retrieved ratings",
                 "body": serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
+        
+class UsersPagination(PageNumberPagination):
+    page_size_query_param = 'limit'
+    max_page_size = 20
+    page_size = 15
+
+    #limit and page
+
+class UsersView(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request):
+        search = request.GET.get('search','')
+        
+        queryset = User.objects.filter(username__contains=search)
+        paginator = UsersPagination()
+        page = paginator.paginate_queryset(queryset, request)
+        serializer = UserPreviewSerializer(
+            page, many=True, context={'request': request})
+
+        return response.Response(
+            {
+                "message": "All the users",
+                "body": serializer.data,
+                "pages": paginator.page.paginator.num_pages,
+                "page": paginator.page.number
+            },
+            status=status.HTTP_200_OK
+        )
+
+class VerifyEmail(views.APIView):
+    def get(self,request,secret_key):
+        user = User.objects.get(secret_key=secret_key)
+        user.isVerified = True
+        user.save()
+
+        token, _ = Token.objects.get_or_create(user=user)
+
+        return response.Response(
+            {
+                "message": "Verified User",
+                'token':token.key,
+                'username':user.username
             },
             status=status.HTTP_200_OK
         )
