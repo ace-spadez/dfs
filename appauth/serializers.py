@@ -22,6 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields =[
+            'uuid',
             'username',
             'bio',
             'email',
@@ -57,6 +58,7 @@ class UserPreviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields =[
+            'uuid',
             'username',
             'rating',
             'experience',
