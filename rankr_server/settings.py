@@ -25,7 +25,7 @@ SECRET_KEY = '+lnviw8$*9hlx1aw*bg=np^=ve-&)fm741s68h6uv==)g#dw@2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = "appauth.User"
 
@@ -98,10 +98,10 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'rankr_db',
-        'USER': 'rankr_user',
-        'PASSWORD': 'changethis',
-        'HOST': '127.0.0.1',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
