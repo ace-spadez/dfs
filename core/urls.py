@@ -11,6 +11,5 @@ urlpatterns = [
     # path('contests/<uuid:contest_uuid>/standings') #depending on the score in contestproceess
     path('contests/<uuid:contest_uuid>/apply/',ApplyContest.as_view(),name='applycontest'), #create a  conteestprocess with status=Pending
     path('contests/<uuid:contest_uuid>/attempt/',AttemptContest.as_view(),name='attemptcontest'), #create a  conteestprocess with status=Pending
-    # path()
-    #   
+    
 ]
