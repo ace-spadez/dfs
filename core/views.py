@@ -60,3 +60,21 @@ class ApplyContest(views.APIView):
             },
             status=status.HTTP_200_OK
         )
+class AttemptContest(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def post(self,request,contest_uuid):
+        contest = Contest.objects.get(uuid=contest_uuid)
+        user = request.user
+        ##check if attempt is valid bby comparing datetimes
+        contestprocess =get_object_or_404(Contestprocess,user=user,contest=contest)
+        contestprocess.attempt = True
+        contestprocess.save()
+
+        return response.Response(
+            {
+                "message": "Attempt begins",
+               
+            },
+            status=status.HTTP_200_OK
+        )
