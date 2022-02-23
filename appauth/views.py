@@ -45,7 +45,7 @@ class RegisterView(views.APIView):
             },
             status=status.HTTP_201_CREATED)
 
-   def get(self, request):
+    def get(self, request):
         key = data['check']
 
         User = get_user_model()
