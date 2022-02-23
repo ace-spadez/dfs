@@ -91,11 +91,12 @@ class Problem(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True)
     content = models.TextField()
     content_image = models.ImageField(null=True)
-    problm_type = models.CharField(max_length=20)
+    problem_type = models.CharField(max_length=20)
     tags = models.ManyToManyField(Contestchip,related_name='problems')
     subject =  models.CharField(max_length=30,choices= QUESTION_TYPE_CHOICES)
     writer = models.ForeignKey(User, on_delete=models.PROTECT,related_name='written_problems')
     correct_integer = models.IntegerField(null=True,blank=True)
+    contest = models.ForeignKey(Contest, on_delete=models.PROTECT)
 
 class Option(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True)
