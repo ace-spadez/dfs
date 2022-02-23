@@ -14,6 +14,9 @@ from .models import User, Rating, Watchfriend
 from core.models import Contest, Contestprocess
 from django.core.management.utils import get_random_secret_key
 from django.utils.crypto import get_random_string
+from django.core.mail import send_mail
+from rankr_server.settings import EMAIL_HOST_USER
+
 class RegisterView(views.APIView):
     def post(self, request):
         register_serializer = RegisterInfoCheckSerializer(data=request.data)
@@ -31,6 +34,7 @@ class RegisterView(views.APIView):
             username=username, email=email, password=password, rating=rating,secret_key=get_random_string(length=64))
 
         new_user.save()
+        send_mail("Verify your Email", "Please open this link", EMAIL_HOST_USER, [email], fail_silently = False)
 
         # token, _ = Token.objects.get_or_create(user=new_user)
 
@@ -40,6 +44,26 @@ class RegisterView(views.APIView):
                 'username': new_user.username
             },
             status=status.HTTP_201_CREATED)
+
+   def get(self, request):
+        key = data['check']
+
+        User = get_user_model()
+        user = User.objects.filter(secret_key=key).first()
+        if user is None:
+            return response.Response({'message': 'Wrong link'}, status=status.HTTP_400_BAD_REQUEST)
+        user.isVerified = True
+        user.save()
+
+        # token, _ = Token.objects.get_or_create(user=new_user)
+
+        return response.Response(
+            {
+                'message':'Verified. Please login',
+                'username': new_user.username
+            },
+            status=status.HTTP_201_CREATED)
+
 
 
 class LoginView(views.APIView):
