@@ -1,6 +1,7 @@
 from django.db import models
 from appauth.models import User
 import uuid
+from django.utils import timezone 
 # Create your models here.
 class Contestchip(models.Model):
     name = models.CharField(max_length=20,unique=True,primary_key=True)
@@ -39,6 +40,7 @@ class Contest(models.Model):
     writers= models.ManyToManyField(User,related_name='written_contests')
     description = models.TextField()
     contest_chips = models.ManyToManyField(Contestchip,related_name='contests')
+
 class Score(models.Model):
     uuid = models.UUIDField(
         default=uuid.uuid4, editable=False, unique=True, primary_key=True)
@@ -104,6 +106,7 @@ class Option(models.Model):
 
 class Submission(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="submissions")
     contestprocess  = models.ForeignKey(Contestprocess,on_delete=models.CASCADE)
     problem = models.ForeignKey(Problem,on_delete=models.CASCADE)
     options = models.ManyToManyField(Option)
