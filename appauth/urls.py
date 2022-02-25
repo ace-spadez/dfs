@@ -13,6 +13,7 @@ urlpatterns = [
     path('users/<str:username>/ratings/',RatingsHistoryView.as_view(), name='self'),
     path('friends/',FriendsView.as_view(), name='friends'),
     path('friends/<str:username>/',FriendView.as_view(), name='friend'),
-    path('verify/<str:secret_key>',VerifyEmail.as_view(),name='verify')
+    path('verify/<str:secret_key>',VerifyEmail.as_view(),name='verify'),
+    # path('standings/')
     
 ]

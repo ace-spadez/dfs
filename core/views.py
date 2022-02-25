@@ -4,7 +4,8 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework.pagination import PageNumberPagination
 from .models import Contest, Contestprocess,Submission,Option
 from .serializers  import ContestPreviewSerializer,  ProblemSerializer,\
-    AnswerSerializer
+    AnswerSerializer,AnswerModelSerializer, XProblemSerializer,\
+        StandingsModelSerializer
 
 class ContestsPagination(PageNumberPagination):
     page_size_query_param = 'limit'
@@ -136,7 +137,8 @@ class AnswerView(views.APIView):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
-        submission = Submission.objects.get_or_create(user=user,contestprocess=contestprocess)
+        submission,_ = Submission.objects.get_or_create(user=user,contestprocess=contestprocess,problem=problem)
+        
         options = data.get('options',None)
         integer_content = data.get('integer_content',None)
         if options==None and integer_content==None:
@@ -149,13 +151,56 @@ class AnswerView(views.APIView):
                 opt = Option.objects.get(uuid=option['uuid'])
                 submission.options.add(opt)
 
-        # serializer = ProblemSerializer(problem,context={'request':request})
+        serializer = AnswerModelSerializer(submission,context={'request':request})
 
         return response.Response(
             {
+                'body':serializer.data,
                 "message": "ok",
                
             },
             status=status.HTTP_200_OK
         )
 
+class SubmissionsView(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self,request,contest_uuid):
+        contest = Contest.objects.get(uuid=contest_uuid)
+        user = request.user
+        if  contest.status()!='Passed':
+            return response.Response({},status=status.HTTP_404_NOT_FOUND)
+        problems = contest.problems.all()
+        serializer = XProblemSerializer(problems,many=True,context={'request':request})
+
+        return response.Response(
+            {
+                "message": "All the problems",
+                "body": serializer.data,
+            },
+            status=status.HTTP_200_OK
+        )
+
+class StandingsPagination(PageNumberPagination):
+    page_size_query_param = 'limit'
+    max_page_size = 20
+    page_size = 15
+class StandingsView(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self,request,contest_uuid):
+        contest = Contest.objects.get(uuid=contest_uuid)
+        user = request.user
+        contestprocesses = Contestprocess.objects.filter(contest=contest)
+        paginator = ContestsPagination()
+        page = paginator.paginate_queryset(contestprocesses, request)
+        serializer = StandingsModelSerializer(page,many=True,context={'request':request})
+        return response.Response(
+            {
+                "message": "All the standings",
+                "body": serializer.data,
+                "pages": paginator.page.paginator.num_pages,
+                "page": paginator.page.number
+            },
+            status=status.HTTP_200_OK
+        )

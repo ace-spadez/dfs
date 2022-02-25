@@ -247,3 +247,40 @@ class VerifyEmail(views.APIView):
             },
             status=status.HTTP_200_OK
         )
+class GeneralStandingsPagination(PageNumberPagination):
+    page_size_query_param = 'limit'
+    max_page_size = 20
+    page_size = 15
+class GeneralStandingsView(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+    def get(self,request):
+        subject = request.GET.get('subject',None)
+        users = None
+        if subject==None:
+            users = users.objects.all().order_by('-rating__r_all')
+        else:
+            if subject=='p':
+                users = users.objects.all().order_by('-rating__r_p')
+            elif subject=='m':
+                users = users.objects.all().order_by('-rating__r_m')
+            elif subject=='c':
+                users = users.objects.all().order_by('-rating__r_c')
+            else:
+                users = users.objects.all().order_by('-rating__r_all')
+
+        
+        paginator =GeneralStandingsPagination()
+        page = paginator.paginate_queryset(users, request)
+        serializer = StandingsModelSerializer(page,many=True,context={'request':request})
+        return response.Response(
+            {
+                "message": "All the standings",
+                "body": serializer.data,
+                "pages": paginator.page.paginator.num_pages,
+                "page": paginator.page.number
+            },
+            status=status.HTTP_200_OK
+        )
+       
+        
+

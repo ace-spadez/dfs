@@ -119,6 +119,6 @@ class Submission(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="submissions")
     contestprocess  = models.ForeignKey(Contestprocess,on_delete=models.CASCADE)
-    problem = models.ForeignKey(Problem,on_delete=models.CASCADE)
+    problem = models.ForeignKey(Problem,on_delete=models.CASCADE,related_name='submissions')
     options = models.ManyToManyField(Option,null=True)
     integer_content = models.IntegerField(null=True)
