@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from appauth.serializers import UserPreviewSerializer
-from .models import Contest,Contestprocess
+from .models import Contest,Contestprocess,Problem,Option
 import datetime
 from django.utils import timezone
 import pytz
@@ -48,4 +48,32 @@ class ContestPreviewSerializer(serializers.ModelSerializer):
             return 'Active'
         else:
             return 'Passed'
-   
+class OptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =Option
+        fields = [
+            'uuid',
+            'content',
+            'option_image'
+        ]
+class ProblemSerializer(serializers.ModelSerializer):
+    writer = UserPreviewSerializer()
+    options = OptionSerializer(many=True)
+    class Meta:
+        model = Problem
+        fields=[
+            'uuid',
+            'content',
+            'content_image',
+            'problem_type',
+            'tags',
+            'subject',
+            'writer',
+            'contest',
+            'options'
+        ]
+class AnswerOptionSerializer(serializers.Serializer ):
+    uuid = serializers.UUIDField(required=True)
+class AnswerSerializer(serializers.Serializer):
+    options = AnswerOptionSerializer(many=True,required=False)
+    integer_content =serializers.IntegerField(required=False)

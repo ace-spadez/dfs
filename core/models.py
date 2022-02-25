@@ -40,7 +40,16 @@ class Contest(models.Model):
     writers= models.ManyToManyField(User,related_name='written_contests')
     description = models.TextField()
     contest_chips = models.ManyToManyField(Contestchip,related_name='contests')
-
+    def status(self):
+        td =self.target_date
+        ed = self.end_date
+        dt =timezone.now()
+        if dt<td:
+            return 'Pending'
+        elif dt<ed:
+            return 'Active'
+        else:
+            return 'Passed'
 class Score(models.Model):
     uuid = models.UUIDField(
         default=uuid.uuid4, editable=False, unique=True, primary_key=True)
@@ -72,7 +81,7 @@ class Problem(models.Model):
     SINGLE = 'P'
     MULTIPLE = 'C'
     INTEGER = 'X'
-    CONTEST_STATUS_CHOICES = [
+    QUESTION_TYPE_CHOICES = [
         (SINGLE, 'Single option correct'),
         (MULTIPLE, 'Multiple options correct'),
         (INTEGER, 'Integer type question'),
@@ -82,7 +91,7 @@ class Problem(models.Model):
     PHYSICS = 'P'
     CHEMISTRY = 'C'
     MATHS = 'M'
-    QUESTION_TYPE_CHOICES = [
+    QUESTION_SUBJECT_CHOICES = [
         (PHYSICS, 'Physics'),
         (CHEMISTRY, 'Chemistry'),
         (MATHS, 'Maths'),
@@ -90,19 +99,20 @@ class Problem(models.Model):
     ]
     uuid = models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True)
     content = models.TextField()
-    content_image = models.ImageField(null=True)
-    problem_type = models.CharField(max_length=20)
+    content_image = models.ImageField(null=True,blank=True)
+    problem_type = models.CharField(max_length=20,choices=QUESTION_TYPE_CHOICES)
     tags = models.ManyToManyField(Contestchip,related_name='problems')
-    subject =  models.CharField(max_length=30,choices= QUESTION_TYPE_CHOICES)
+    subject =  models.CharField(max_length=30,choices= QUESTION_SUBJECT_CHOICES)
     writer = models.ForeignKey(User, on_delete=models.PROTECT,related_name='written_problems')
     correct_integer = models.IntegerField(null=True,blank=True)
-    contest = models.ForeignKey(Contest, on_delete=models.PROTECT)
+    contest = models.ForeignKey(Contest, on_delete=models.PROTECT,related_name='problems')
 
 class Option(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True)
     problem = models.ForeignKey(Problem,on_delete=models.CASCADE,related_name= 'options')
-    is_correct = models.BooleanField()
-    option_image = models.ImageField(null=True)
+    is_correct = models.BooleanField(default=False)
+    option_image = models.ImageField(null=True,blank=True)
+    content = models.TextField(null=True,blank=True)
 
 
 class Submission(models.Model):
@@ -110,5 +120,5 @@ class Submission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="submissions")
     contestprocess  = models.ForeignKey(Contestprocess,on_delete=models.CASCADE)
     problem = models.ForeignKey(Problem,on_delete=models.CASCADE)
-    options = models.ManyToManyField(Option)
-    integer_content = models.IntegerField()
+    options = models.ManyToManyField(Option,null=True)
+    integer_content = models.IntegerField(null=True)
