@@ -2,11 +2,11 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework import views, status, response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.pagination import PageNumberPagination
-from .models import Contest, Contestprocess,Submission,Option
+from .models import Contest, Contestprocess,Submission,Option, Score
+from appauth.models import Rating
 from .serializers  import ContestPreviewSerializer,  ProblemSerializer,\
     AnswerSerializer,AnswerModelSerializer, XProblemSerializer,\
         StandingsModelSerializer
-
 class ContestsPagination(PageNumberPagination):
     page_size_query_param = 'limit'
     max_page_size = 20
@@ -52,7 +52,13 @@ class ApplyContest(views.APIView):
     def post(self,request,contest_uuid):
         contest = Contest.objects.get(uuid=contest_uuid)
         user = request.user
-        contestprocess = Contestprocess(user=user,contest=contest)
+        rating = Rating()
+        rating_change = Rating()
+        score = Score()
+        rating.save()
+        rating_change.save()
+        score.save()
+        contestprocess = Contestprocess(user=user,contest=contest, rating=rating, rating_change=rating_change, score = score)
         contestprocess.save()
 
         return response.Response(

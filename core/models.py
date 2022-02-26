@@ -86,6 +86,28 @@ class  Contestprocess(models.Model):
     rating_change = models.ForeignKey('appauth.Rating',on_delete=models.CASCADE,null=True,related_name='ch_processes')
     score = models.ForeignKey(Score,on_delete=models.PROTECT,null=True)
     rated_date = models.DateTimeField(null=True)
+    def get_total_marks(self):
+        sum = 0
+        sum_p = 0
+        sum_c = 0
+        sum_m = 0
+        for submission in self.submissions:
+            sum += submission.get_marks()
+            if submission.problem.subject == Problem.PHYSICS:
+                sum_p+=submission.get_marks()
+            elif submission.problem.subject == Problem.CHEMISTRY:
+                sum_c+=submission.get_marks()
+            elif submission.problem.subject == Problem.MATHS:
+                sum_m+=submission.get_marks()
+
+        self.score.score_all = sum
+        self.score.score_p = sum_p
+        self.score.score_c = sum_c
+        self.score.score_m = sum_m
+        self.score.save()
+        return sum
+
+
 class Problem(models.Model):
     SINGLE = 'P'
     MULTIPLE = 'C'
@@ -127,7 +149,35 @@ class Option(models.Model):
 class Submission(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="submissions")
-    contestprocess  = models.ForeignKey(Contestprocess,on_delete=models.CASCADE)
+    contestprocess  = models.ForeignKey(Contestprocess,on_delete=models.CASCADE, related_name="submissions")
     problem = models.ForeignKey(Problem,on_delete=models.CASCADE,related_name='submissions')
     options = models.ManyToManyField(Option,null=True)
     integer_content = models.IntegerField(null=True)
+
+    def get_marks(self):
+        if self.problem.problem_type == Problem.INTEGER:
+            if self.integer_content == self.problem.correct_integer:
+                return 3
+            else:
+                return -1
+        if self.problem.problem_type == Problem.SINGLE:
+            if len(self.options)==0:
+                return 0
+            if len(self.options)>1:
+                return -1
+            option = self.options.first()
+            if option.is_correct:
+                return 3
+            else:
+                return -1
+        elif self.problem.problem_type == Problem.MULTIPLE:
+            if len(self.options)==0:
+                return 0
+            sum = 0
+            for option in self.options:
+                if not option.is_correct:
+                    return -2
+                else:
+                    sum+=1
+            return sum
+        return 0
