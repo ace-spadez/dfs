@@ -16,6 +16,7 @@ from django.core.management.utils import get_random_secret_key
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from rankr_server.settings import EMAIL_HOST_USER
+from appauth.tasks import send_verification_email
 
 class RegisterView(views.APIView):
     def post(self, request):
@@ -34,7 +35,7 @@ class RegisterView(views.APIView):
             username=username, email=email, password=password, rating=rating,secret_key=get_random_string(length=64))
 
         new_user.save()
-        send_mail("Verify your Email", "Please open this link", EMAIL_HOST_USER, [email], fail_silently = False)
+        send_verification_email.delay(new_user.pk)
 
         # token, _ = Token.objects.get_or_create(user=new_user)
 
