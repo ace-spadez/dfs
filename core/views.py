@@ -15,7 +15,7 @@ class ContestsView(views.APIView):
     permission_classes = [IsAuthenticated, ]
 
     def get(self,request):
-        queryset = Contest.objects.all()
+        queryset = Contest.objects.all().exclude(contest_status=Contest.PROPOSED)
         paginator = ContestsPagination()
         page = paginator.paginate_queryset(queryset, request)
         serializer = ContestPreviewSerializer(

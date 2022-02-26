@@ -30,6 +30,14 @@ class Contest(models.Model):
         (EXTRA_ADAVNCED, 'Extra advanced level'),
         
     ]
+    PROPOSED = 'P'
+    ACCEPTED = 'A'
+    DEAD = 'D'
+    CONTEST_STATUS_CHOICES = [
+        (PROPOSED,'Proposed'),
+        (ACCEPTED, 'Accepted'),
+        (DEAD, 'Over'),        
+    ]
     name = models.CharField(max_length=30)
     date_created = models.DateTimeField(auto_now_add=True)
     target_date = models.DateTimeField()
@@ -40,6 +48,7 @@ class Contest(models.Model):
     writers= models.ManyToManyField(User,related_name='written_contests')
     description = models.TextField()
     contest_chips = models.ManyToManyField(Contestchip,related_name='contests')
+    contest_status = models.CharField(max_length=10,choices=CONTEST_STATUS_CHOICES,default=PROPOSED)
     def status(self):
         td =self.target_date
         ed = self.end_date

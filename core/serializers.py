@@ -17,8 +17,10 @@ class ContestPreviewSerializer(serializers.ModelSerializer):
         fields  =[
             'uuid',
             'name',
+            'contest_status',
             'date_created',
             'target_date',
+            'end_date',
             'duration',
             'contest_type',
             'contest_difficulty',
