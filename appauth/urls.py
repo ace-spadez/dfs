@@ -1,6 +1,6 @@
 from .views import RegisterView, LoginView,LogOutView,\
     UserView,FriendsView,FriendView, SelfView,\
-         RatingsHistoryView, UsersView, VerifyEmail
+         RatingsHistoryView, UsersView, VerifyEmail,GeneralStandingsView
 from django.urls import path
 
 urlpatterns = [
@@ -14,6 +14,6 @@ urlpatterns = [
     path('friends/',FriendsView.as_view(), name='friends'),
     path('friends/<str:username>/',FriendView.as_view(), name='friend'),
     path('verify/<str:secret_key>',VerifyEmail.as_view(),name='verify'),
-    # path('standings/')
+    path('standings/',GeneralStandingsView.as_view(),name='general_standings')
     
 ]

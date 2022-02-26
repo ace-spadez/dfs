@@ -257,21 +257,21 @@ class GeneralStandingsView(views.APIView):
         subject = request.GET.get('subject',None)
         users = None
         if subject==None:
-            users = users.objects.all().order_by('-rating__r_all')
+            users = User.objects.all().order_by('-rating__r_all')
         else:
             if subject=='p':
-                users = users.objects.all().order_by('-rating__r_p')
+                users = User.objects.all().order_by('-rating__r_p')
             elif subject=='m':
-                users = users.objects.all().order_by('-rating__r_m')
+                users = User.objects.all().order_by('-rating__r_m')
             elif subject=='c':
-                users = users.objects.all().order_by('-rating__r_c')
+                users = User.objects.all().order_by('-rating__r_c')
             else:
                 users = users.objects.all().order_by('-rating__r_all')
 
         
         paginator =GeneralStandingsPagination()
         page = paginator.paginate_queryset(users, request)
-        serializer = StandingsModelSerializer(page,many=True,context={'request':request})
+        serializer =UserPreviewSerializer(page,many=True,context={'request':request})
         return response.Response(
             {
                 "message": "All the standings",
