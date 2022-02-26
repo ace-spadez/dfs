@@ -22,8 +22,21 @@ services:
     volumes:
       - postgres_da:/var/lib/rankr/
 
+  redis:
+    image: redis:alpine
+  celery:
+    restart: always
+    build:
+      context: .
+    command: celery -A rankr_server worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+      - web
+    env_file:
+      - ./.env.dev
 
-
-      
 volumes:
   postgres_da:
