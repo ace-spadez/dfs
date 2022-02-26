@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'core',
     'appauth',
     'quadrant',
+    'elo',
 ]
 
 MIDDLEWARE = [
