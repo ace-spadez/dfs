@@ -11,7 +11,8 @@ from appauth.serializers import UserPreviewSerializer
 from core.models import Contest, Contestchip, Problem, Option
 from core.serializers import ContestPreviewSerializer
 from rest_framework.exceptions import ValidationError
-
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from drf_spectacular.types import OpenApiTypes
 
 class QuadregisterView(views.APIView):
     permission_classes = [IsAuthenticated, ]
@@ -173,7 +174,9 @@ class QuadContestApply(views.APIView):
 class QuadContestProblemsView(views.APIView):
     permission_classes = [IsAuthenticated, IsQuadrant, IsWriter]
     # is contest writer
-
+    @extend_schema(
+        responses={200: QuadProblemSerializer},
+    )
     def get(self, request, contest_uuid):
         user = request.user
         contest = Contest.objects.get(uuid=contest_uuid)
