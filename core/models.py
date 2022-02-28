@@ -59,6 +59,12 @@ class Contest(models.Model):
             return 'Active'
         else:
             return 'Passed'
+    def update(self, **kwargs):
+        for field, value in kwargs.items():
+            setattr(self, field, value)
+        self.save(update_fields=kwargs.keys())
+        return self
+
 class Score(models.Model):
     uuid = models.UUIDField(
         default=uuid.uuid4, editable=False, unique=True, primary_key=True)
@@ -109,9 +115,9 @@ class  Contestprocess(models.Model):
 
 
 class Problem(models.Model):
-    SINGLE = 'P'
-    MULTIPLE = 'C'
-    INTEGER = 'X'
+    SINGLE = 'S'
+    MULTIPLE = 'M'
+    INTEGER = 'I'
     QUESTION_TYPE_CHOICES = [
         (SINGLE, 'Single option correct'),
         (MULTIPLE, 'Multiple options correct'),
@@ -137,6 +143,11 @@ class Problem(models.Model):
     writer = models.ForeignKey(User, on_delete=models.PROTECT,related_name='written_problems')
     correct_integer = models.IntegerField(null=True,blank=True)
     contest = models.ForeignKey(Contest, on_delete=models.PROTECT,related_name='problems')
+    def update(self, **kwargs):
+        for field, value in kwargs.items():
+            setattr(self, field, value)
+        self.save(update_fields=kwargs.keys())
+        return self
 
 class Option(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True)
@@ -144,6 +155,11 @@ class Option(models.Model):
     is_correct = models.BooleanField(default=False)
     option_image = models.ImageField(null=True,blank=True)
     content = models.TextField(null=True,blank=True)
+    def update(self, **kwargs):
+        for field, value in kwargs.items():
+            setattr(self, field, value)
+        self.save(update_fields=kwargs.keys())
+        return self
 
 
 class Submission(models.Model):

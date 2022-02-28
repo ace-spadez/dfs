@@ -1,12 +1,15 @@
 from django.urls import path
-from .views import QuadregisterView,QuadContestsView
+from .views import QuadregisterView,QuadContestsView,\
+    QuadContestView,QuadContestProblemsView,QuadContestProblemView,\
+        QuadSelfContests
 urlpatterns=[
     path('quadregister/',QuadregisterView.as_view(),name='quadregister'),
-    path('contests/',QuadContestsView.as_view(),name='quadcontests')
+    path('contests/',QuadContestsView.as_view(),name='quadcontests'),
+    path('self/contests/',QuadSelfContests.as_view(),name='quadcontests'),
+    path('contests/<uuid:contest_uuid>/',QuadContestView.as_view(),name='quadcontest'),
+    path('contests/<uuid:contest_uuid>/problems/',QuadContestProblemsView.as_view(),name='quadcontestproblems'),
+    path('contests/<uuid:contest_uuid>/problems/<uuid:problem_uuid>/',QuadContestProblemView.as_view(),name='quadcontestproblem'),
     # '/contests/<uuid:contest_uuid>/quadpply ## apply as writers
-    # '/contests/' ## get list of all the open contests and post to propose a contest
-    # '/contests/<uuid:contest_uuid>/problems/' ## get all the problems and post to add a problem(only if you are accepted as a writer)
-    # '/contests/<uuid:contest_uuid>/problems/<uuid:problem_uuid>/' ##get, patch, delete the problems
     # '/self/contests/' ## get your own contests
 
 ]
