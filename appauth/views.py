@@ -46,24 +46,24 @@ class RegisterView(views.APIView):
             },
             status=status.HTTP_201_CREATED)
 
-    def get(self, request):
-        key = data['check']
+    # def get(self, request):
+    #     key = data['check']
 
-        User = get_user_model()
-        user = User.objects.filter(secret_key=key).first()
-        if user is None:
-            return response.Response({'message': 'Wrong link'}, status=status.HTTP_400_BAD_REQUEST)
-        user.isVerified = True
-        user.save()
+    #     User = get_user_model()
+    #     user = User.objects.filter(secret_key=key).first()
+    #     if user is None:
+    #         return response.Response({'message': 'Wrong link'}, status=status.HTTP_400_BAD_REQUEST)
+    #     user.isVerified = True
+    #     user.save()
 
-        # token, _ = Token.objects.get_or_create(user=new_user)
+    #     # token, _ = Token.objects.get_or_create(user=new_user)
 
-        return response.Response(
-            {
-                'message':'Verified. Please login',
-                'username': new_user.username
-            },
-            status=status.HTTP_201_CREATED)
+    #     return response.Response(
+    #         {
+    #             'message':'Verified. Please login',
+    #             'username': new_user.username
+    #         },
+    #         status=status.HTTP_201_CREATED)
 
 
 

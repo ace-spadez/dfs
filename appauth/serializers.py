@@ -49,6 +49,7 @@ class SelfSerializer(serializers.ModelSerializer):
             'experience',
             'tier',
             'profile_image',
+            'is_quadrant',
         ]
 class SelfInfoCheckSerializer(serializers.Serializer):
     bio  = serializers.CharField(required=False)

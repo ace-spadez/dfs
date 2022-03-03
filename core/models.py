@@ -45,7 +45,7 @@ class Contest(models.Model):
     duration = models.IntegerField()
     contest_type = models.CharField(max_length=30,choices=CONTEST_TYPE_CHOICES)
     contest_difficulty = models.CharField(max_length=30,choices = CONTEST_DIFFICULTY_CHOICES)
-    writers= models.ManyToManyField(User,related_name='written_contests')
+    # writers= models.ManyToManyField(User,related_name='written_contests')
     description = models.TextField()
     contest_chips = models.ManyToManyField(Contestchip,related_name='contests')
     contest_status = models.CharField(max_length=10,choices=CONTEST_STATUS_CHOICES,default=PROPOSED)

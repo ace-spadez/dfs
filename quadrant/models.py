@@ -8,4 +8,5 @@ class QuadrantUser(models.Model):
 class QuadContestApplication(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='quadapplications')
     contest = models.ForeignKey(Contest,on_delete=models.CASCADE,related_name='quadapplications')
+    is_accepted = models.BooleanField(default=False)
 

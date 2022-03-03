@@ -4,14 +4,16 @@ from .models import Contest,Contestprocess,Problem,Option,\
     Submission
 import datetime
 from django.utils import timezone
+from appauth.models import User
 
 import pytz
 class ContestPreviewSerializer(serializers.ModelSerializer):
-    writers = UserPreviewSerializer(many=True)
+    writers = serializers.SerializerMethodField()
     is_applied = serializers.SerializerMethodField()
     is_attempted = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
-    
+    question_count = serializers.SerializerMethodField()
+    # authors = serializers.SerializerMethodField()
     class Meta:
         model = Contest
         fields  =[
@@ -30,10 +32,16 @@ class ContestPreviewSerializer(serializers.ModelSerializer):
             'is_applied',
             'is_attempted',
             'status',
+            'question_count',
+            # 'authors'
         ]
+    def get_writers(self,contest):
+        users = User.objects.filter(quadapplications__contest=contest,quadapplications__is_accepted=True)
+        return UserPreviewSerializer(users,many=True).data
+    
     def get_is_applied(self,contest):
         user =  self.context['request'].user
-        if Contestprocess.objects.filter(user=user).exists():
+        if Contestprocess.objects.filter(user=user,contest=contest).exists():
             return True
         return False
     def get_is_attempted(self,contest):
@@ -41,6 +49,8 @@ class ContestPreviewSerializer(serializers.ModelSerializer):
         if Contestprocess.objects.filter(user=user,attempt=True).exists():
             return True
         return False
+    def get_question_count(self,contest):
+        return contest.problems.count()
     def get_status(self,contest):
         utc=pytz.UTC
         td =contest.target_date

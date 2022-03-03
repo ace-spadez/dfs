@@ -6,14 +6,13 @@ from .permissions import IsQuadrant, IsWriter
 from .models import QuadrantUser, QuadContestApplication
 from .serializers import QuadRegisterInfoCheckSerializer, QuadContestInfoCheckSerializer,\
     QuadContestPatchInfoCheckSerializer, QuadProblemSerializer,\
-    QuadProblemInfoCheckSerializer,QuadProblemPatchSerializer
+    QuadProblemInfoCheckSerializer,QuadProblemPatchSerializer, QuadContestPreviewSerializer
 from appauth.serializers import UserPreviewSerializer
 from core.models import Contest, Contestchip, Problem, Option
 from core.serializers import ContestPreviewSerializer
 from rest_framework.exceptions import ValidationError
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample, inline_serializer
 from drf_spectacular.types import OpenApiTypes
-
 class QuadregisterView(views.APIView):
     permission_classes = [IsAuthenticated, ]
 
@@ -78,14 +77,15 @@ class QuadContestsView(views.APIView):
             contest_difficulty=contest_difficulty,
             description=description
         )
-        contest.writers.add(user)
+        quadcontestapplication = QuadContestApplication(user=user,contest=contest,is_accepted=True)
+        quadcontestapplication.save()
         for contest_chip in contest_chips:
             contestchip, _ = Contestchip.objects.get_or_create(
                 name=contest_chip['name'])
             contest.contest_chips.add(contestchip)
         contest.save()
 
-        serializer = ContestPreviewSerializer(
+        serializer = QuadContestPreviewSerializer(
             contest, context={'request': request})
         return response.Response(
             {
@@ -100,7 +100,7 @@ class QuadContestsView(views.APIView):
         queryset = Contest.objects.all().exclude(contest_status=Contest.DEAD)
         paginator = ContestsPagination()
         page = paginator.paginate_queryset(queryset, request)
-        serializer = ContestPreviewSerializer(
+        serializer = QuadContestPreviewSerializer(
             page, many=True, context={'request': request})
 
         return response.Response(
@@ -121,7 +121,7 @@ class QuadContestView(views.APIView):
     def get(self, request, contest_uuid):
         user = request.user
         contest = Contest.objects.get(uuid=contest_uuid)
-        serializer = ContestPreviewSerializer(
+        serializer = QuadContestPreviewSerializer(
             contest, context={'request': request})
         return response.Response(
             {
@@ -135,8 +135,9 @@ class QuadContestView(views.APIView):
         user = request.user
         contest = Contest.objects.get(uuid=contest_uuid)
 
-        if not (user in contest.writers.all()):
+        if not QuadContestApplication.objects.filter(user=user,contest=contest,is_accepted=True).exists():
             return response.Response({}, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = QuadContestPatchInfoCheckSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
@@ -168,14 +169,28 @@ class QuadContestApply(views.APIView):
     permission_classes = [IsAuthenticated, IsQuadrant]
 
     def post(self, request, contest_uuid):
-        pass
+        user = request.user
+        contest = Contest.objects.get(uuid=contest_uuid)
+        
+        quadcontestapplication,_ = QuadContestApplication.objects.get_or_create(user=user,contest=contest)
+        if not _:
+            quadcontestapplication.delete()
+        
+        return response.Response(
+            {
+                "message": "the application toggled",
+            
+            },
+            status=status.HTTP_200_OK
+        )      
 
 
 class QuadContestProblemsView(views.APIView):
     permission_classes = [IsAuthenticated, IsQuadrant, IsWriter]
     # is contest writer
     @extend_schema(
-        responses={200: QuadProblemSerializer},
+        responses={200: QuadProblemSerializer(many=True)},
+        
     )
     def get(self, request, contest_uuid):
         user = request.user
