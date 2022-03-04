@@ -1,6 +1,5 @@
 <template>
   <v-main>
-    <!-- <Navbar></Navbar> -->
     <!-- <div> -->
     <v-app-bar color="#fafafa" elevation="4" app>
       <!-- <v-toolbar-side-icon @click.stop="switchShowDrawer"> -->
