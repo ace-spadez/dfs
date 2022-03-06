@@ -87,7 +87,13 @@
                 error-behavior="live"
               />
             </FormulateInput>
-          <FormulateInput type="submit" label="Create Question" />
+
+  <FormulateInput v-if="!problemPostState.loading" type="submit" label="Create Problem" />
+            <FormulateInput v-if="problemPostState.loading" type="button" disabled>
+              Loading
+              <v-progress-circular size="20" color="white" indeterminate style="margin-left:6px;"></v-progress-circular>
+            </FormulateInput>
+
 
           </FormulateForm>
         </div>
@@ -129,7 +135,8 @@ import {
 } from "../../../store/quadcontest/actions";
 import {
   readQuadrantContestState,
-  readQuadrantProblemsState
+  readQuadrantProblemsState,
+  readQuadrantProblemCreateState
 } from "../../../store/quadcontest/getters";
 import { getMonth } from "@/utils";
 import { commitQCSetClear } from "@/store/quadcontest/mutations";
@@ -164,9 +171,19 @@ export default class AddProblem extends Vue {
     console.log(this.problem);
     var problem:IQuadProblemCreate = this.problem;
     await dispatchPostQuadrantContestProblem(this.$store,this.problem)
+     const notif = {
+      content: this.problemPostState.error
+        ? "Error encountered"
+        : "Problem Created",
+      color: this.problemPostState.error ? "danger" : "success"
+    };
+    commitAddNotification(this.$store, notif);
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+    commitRemoveNotification(this.$store, notif);
+  
   }
-  public click() {
-    this.$forceUpdate();
+  public get problemPostState(){
+    return readQuadrantProblemCreateState(this.$store)
   }
 }
 </script>

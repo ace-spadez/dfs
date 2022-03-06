@@ -1,6 +1,6 @@
 import { Contest,IUserPreview } from '@/interfaces';
 import { 
-    HomeState } from './state';
+    HomeState, ContestPageState } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
 
@@ -16,6 +16,9 @@ export const mutations = {
     },
     setStandings(state:HomeState,payload:IUserPreview[]){
         state.standings = payload;
+    },
+    setContestPageState(state:HomeState,payload:ContestPageState){
+        state.contestPage = payload;
     }
 
     
@@ -26,3 +29,4 @@ const {commit} = getStoreAccessors<HomeState | any, State>('');
 export const commitSetContests = commit(mutations.setContests);
 export const commitApplyContests = commit(mutations.applyContest);
 export const commitSetStandings = commit(mutations.setStandings);
+export const commitSetContestPage = commit(mutations.setContestPageState);

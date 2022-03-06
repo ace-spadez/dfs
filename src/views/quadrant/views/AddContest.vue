@@ -93,7 +93,8 @@ export default class AddContest extends Vue {
   contest = {
     target_date: "",
     duration: "0",
-    end_date: ""
+    end_date: "",
+    contest_chips: []
   };
   formula = "";
   public async submit() {
@@ -117,7 +118,6 @@ export default class AddContest extends Vue {
     commitAddNotification(this.$store, notif);
     await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
     commitRemoveNotification(this.$store, notif);
-    this.$router.go(-1);
   }
   public get createContestState() {
     return readQuadrantCreateContestsState(this.$store);

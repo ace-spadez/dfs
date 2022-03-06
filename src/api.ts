@@ -94,7 +94,15 @@ export const api = {
   async getHomeContests(token:string){
     return axios.get(`${apiUrl}/api/core/contests/`,authHeaders(token));
   },
+  async getContestPageContests(token:string,page_num:number){
+    return axios.get(`${apiUrl}/api/core/contests/`,{
+      params:{
+        page:page_num
 
+      },
+      headers:authHeader(token)
+    });
+  },
   async applyForContest(token:string,contest_uuid:string){
     return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/apply/`,{},authHeaders(token))
   },
