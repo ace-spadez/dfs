@@ -180,8 +180,8 @@ export default class AddProblem extends Vue {
   width: 100%;
 }
 .formula {
-  color: rgb(0, 0, 0);
-  background-color: white;
+  color: rgb(255, 255, 255);
+  background-color: rgb(49, 49, 49);
   width:500px;
   font-size: 25px;
   margin:0 50px 0 0;

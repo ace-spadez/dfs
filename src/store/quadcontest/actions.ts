@@ -9,7 +9,8 @@ import {
     commitSetQuadrantContest,
     commitSetQuadrantContestPatch,
     commitSetQuadrantProblemCreate,
-    commitSetQuadrantProblems
+    commitSetQuadrantProblems,
+    commitSetQuadrantProblemPatch
    
 } from './mutations';
 import { 
@@ -17,9 +18,10 @@ import {
     QuadContestState,
     QuadProblemCreateState,
     QuadProblemsState,
-    QuadrantContestState
+    QuadrantContestState,
+    QuadProblemPatchState
 } from './state';
-import {Contest,IUserPreview,IQuadProblem,ICreateContest, IQuadProblemCreate} from '@/interfaces';
+import {Contest,IUserPreview,IQuadProblem,ICreateContest, IQuadProblemCreate, IQuadOptions} from '@/interfaces';
 
 type MainContext = ActionContext<QuadrantContestState, State>;
 
@@ -62,26 +64,29 @@ export const actions = {
             commitSetQuadrantContest(context,quadProblemsState);
         }
     },
-    // async actionPatchQuadrantContest(context:MainContext,contest:ICreateContest){
-    //     var token:string = context.state.token;
-    //     const quadContestPatchState:QuadContestPatchState = context.state.contestPatchState;
-    //     const contestState = context.state.contestState;Q
-    //     quadContestPatchState.loadin
-    //     try{
-    //         var response;
-    //         if(context.state.contestState.contest!=undefined)
-    //         response = await api.patchQuadrantContest(token,context.state.contestState.contest.uuid,contest);
-    //         const contest:Contest = response.data['body'];
-    //         .contest = contest;
-    //         quadContestState.loading = false;
-    //         commitSetQuadrantContest(context,quadContestState)
-    //     }catch(err){
-    //         console.log(err);
-    //         quadContestState.loading = false;
-    //         quadContestState.error= true;
-    //         commitSetQuadrantContest(context,quadContestState);
-    //     }
-    // },
+    async actionPatchQuadrantContest(context:MainContext,payload:any){
+        var token:string = context.state.token;
+        const quadContestPatchState:QuadContestPatchState = context.state.contestPatchState;
+        quadContestPatchState.loading = true
+        commitSetQuadrantContestPatch(context,quadContestPatchState)
+        try{
+    
+       
+            const response = await api.patchQuadrantContest(token,payload.uuid,payload.contest);
+            const contest:Contest = response.data['body'];
+            console.log('patched reesponse',contest)
+            quadContestPatchState.contestPatch = contest;
+            quadContestPatchState.loading = false;
+        commitSetQuadrantContestPatch(context,quadContestPatchState)
+
+        }catch(err){
+            console.log(err);
+            quadContestPatchState.loading = false;
+            quadContestPatchState.error= true;
+        commitSetQuadrantContestPatch(context,quadContestPatchState)
+
+        }
+    },
     async actionQuadPostContestProblem(context:MainContext,_problem:IQuadProblemCreate){
         var token:string = context.state.token;
         const quadProblemCreateState:QuadProblemCreateState = context.state.problemCreateState;
@@ -101,6 +106,30 @@ export const actions = {
             commitSetQuadrantProblemCreate(context,quadProblemCreateState);
         }
 
+    },
+
+    async actionPatchQuadrantProblem(context:MainContext,payload:any){
+        var token:string = context.state.token;
+        const quadProblemPatchState:QuadProblemPatchState = context.state.problemPatchState;
+        quadProblemPatchState.loading = true
+        commitSetQuadrantProblemPatch(context,quadProblemPatchState)
+        try{
+    
+       
+            const response = await api.patchQuadContestProblem(token,payload.contest_uuid,payload.problem_uuid,payload.problem)
+            const problem:IQuadProblem = response.data['body'];
+            console.log('patched reesponse',problem)
+            // quadProblemPatchState.problemPatch = problem;
+            quadProblemPatchState.loading = false;
+        commitSetQuadrantProblemPatch(context,quadProblemPatchState)
+
+        }catch(err){
+            console.log(err);
+            quadProblemPatchState.loading = false;
+            quadProblemPatchState.error= true;
+        commitSetQuadrantProblemPatch(context,quadProblemPatchState)
+
+        }
     }
    
     
@@ -112,3 +141,5 @@ const { dispatch } = getStoreAccessors<QuadrantContestState | any, State>('');
 export const dispatchGetQuadrantContest = dispatch(actions.actionGetQuadrantContest);
 export const dispatchGetQuadrantContestProblems = dispatch(actions.actionGetQuadrantContestProblems);
 export const dispatchPostQuadrantContestProblem = dispatch(actions.actionQuadPostContestProblem);
+export const dispatchPostQuadrantContestPatch = dispatch(actions.actionPatchQuadrantContest)
+export const dispatchPostQuadrantProblemPatch = dispatch(actions.actionPatchQuadrantProblem)

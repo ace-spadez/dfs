@@ -2,6 +2,12 @@
   <v-main>
     
     <v-app-bar color="#fafafa" elevation="4" app>
+          <v-list-item-action @click.prevent="back">
+        <img
+          src="@/assets/img/left-arrow.svg"
+          width="30px"
+       />
+      </v-list-item-action>
   
 
       <img src="@/assets/img/logo.png" width="35px" />
@@ -156,6 +162,10 @@ export default class Main extends Vue {
   public async logout() {
     await dispatchUserLogOut(this.$store);
   }  
+
+  public back(){
+    this.$router.go(-1);
+  }
 }
 </script>
 <style scoped lang="scss">

@@ -6,6 +6,7 @@ export const getters = {
    
   quadrantContestState : (state: QuadrantContestState)=> state.contestState,
   quadrantContestPatchState : (state:QuadrantContestState)=>state.contestPatchState,
+  quadrantProblemPatchState : (state:QuadrantContestState)=>state.problemPatchState,
   quadrantProblemsState:(state:QuadrantContestState)=>state.problemsState,
   quadrantProblemCreateState:(state:QuadrantContestState)=>state.problemCreateState,
 
@@ -15,6 +16,7 @@ const {read} = getStoreAccessors<QuadrantContestState, State>('');
 
 export const readQuadrantContestState= read(getters.quadrantContestState);
 export const readQuadrantContestPatchState= read(getters. quadrantContestPatchState);
+export const readQuadrantProblemPatchState= read(getters. quadrantProblemPatchState);
 export const readQuadrantProblemsState= read(getters.quadrantProblemsState);
 export const readQuadrantProblemCreateState= read(getters.quadrantProblemCreateState);
 

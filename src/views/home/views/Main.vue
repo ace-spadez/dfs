@@ -23,7 +23,7 @@
       <div class="rankings-main">
         <div v-for='(standing,ind) in standings'  :key='ind' class='ranking-main-item'>
 
-          <span class='raking-main-item-logo'>
+          <span class='ranking-main-item-logo'>
             <img  src="@/assets/img/tier/dragon.svg"  width='30px'  height='30px' style='filter: invert(75%) sepia(67%) saturate(340%) hue-rotate(348deg) brightness(104%) contrast(103%);'/>
           </span>
           <span class='ranking-main-item-name' > {{standing['username']}}  ·  <span style='color:grey'>  {{standing['rating']['r_all']}} </span> #{{ind+1}}</span>

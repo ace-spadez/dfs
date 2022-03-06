@@ -1,0 +1,29 @@
+{
+    "new_options": [],
+    "patch_options": [
+        {
+            "uuid": "6bcb34e9-7d2c-42c7-ba4f-e2d8b706a3a1",
+            "is_correct": "false",
+            "content": "a"
+        },
+        {
+            "uuid": "7ee34d6f-9ffc-44c3-9032-27d4da80c428",
+            "is_correct": "false",
+            "content": "a"
+        },
+        {
+            "uuid": "bc9b4564-4c62-493c-83e9-8aa694cc2a0f",
+            "is_correct": "false",
+            "content": "a"
+        },
+        {
+            "uuid": "7ae79b15-1695-4e13-85fe-535a54cf9e8c",
+            "is_correct": "false",
+            "content": "a"
+        }
+    ],
+    "delete_options": [],
+    "content": "a-b",
+    "subject": "P",
+    "tags": []
+}

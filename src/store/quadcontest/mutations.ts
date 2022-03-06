@@ -1,6 +1,6 @@
 import { Contest,IUserPreview } from '@/interfaces';
 import { 
-    QuadrantContestState,QuadContestPatchState,QuadContestState,QuadProblemCreateState,QuadProblemsState } from './state';
+    QuadrantContestState,QuadContestPatchState,QuadContestState,QuadProblemCreateState,QuadProblemsState, QuadProblemPatchState } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
 import {defaultState} from './index'
@@ -12,6 +12,9 @@ export const mutations = {
     },
     setQuadrantContestPatch(state:QuadrantContestState,payload:QuadContestPatchState){
         state.contestPatchState = payload;
+    },
+    setQuadrantProblemPatch(state:QuadrantContestState,payload:QuadProblemPatchState){
+        state.problemPatchState = payload;
     },
     setQuadrantProblems(state:QuadrantContestState,payload:QuadProblemsState){
         state.problemsState = payload;
@@ -34,6 +37,7 @@ const {commit} = getStoreAccessors<QuadrantContestState | any, State>('');
 
 export const commitSetQuadrantContest = commit(mutations.setQuadrantContest);
 export const commitSetQuadrantContestPatch = commit(mutations.setQuadrantContestPatch);
+export const commitSetQuadrantProblemPatch = commit(mutations.setQuadrantProblemPatch);
 export const commitSetQuadrantProblemCreate = commit(mutations.setQuadrantProblemCreate);
 export const commitSetQuadrantProblems = commit(mutations.setQuadrantProblems);
 export const commitQCSetClear = commit(mutations.setClear);

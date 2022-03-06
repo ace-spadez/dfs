@@ -92,7 +92,7 @@
 
           <v-layout column fill-height>
             <v-list>
-              <v-list-item class="v-list-item" to="/main/dashboard">
+              <v-list-item class="v-list-item" to="/profile">
                 <v-list-item-action>
                   <v-img 
                   src="@/assets/img/profile-user.png"
@@ -102,7 +102,7 @@
                   <v-list-item-title>Profile</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item class="v-list-item" to="/main/profile/view">
+              <v-list-item class="v-list-item" to="">
                 <v-list-item-action>
                   <v-img src="@/assets/img/analysis.png"></v-img>
                 </v-list-item-action>
@@ -110,7 +110,7 @@
                   <v-list-item-title>Analysis</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item class="v-list-item" to="/main/profile/edit">
+              <v-list-item class="v-list-item" to="">
                 <v-list-item-action>
                   <v-img src="@/assets/img/settings.png"></v-img>
                 </v-list-item-action>
@@ -376,6 +376,7 @@ export default class Main extends Vue {
     return readIsLoggedIn(this.$store);
   }
   public async logout() {
+  
     await dispatchUserLogOut(this.$store);
   }
 }

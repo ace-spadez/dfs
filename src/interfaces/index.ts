@@ -126,6 +126,7 @@ export interface IQuadProblemPatch{
     content ?: string;
     content_image ?: File;
     subject ?: string;
+    problem_type?:string;
     correct_integer?:number;
     new_options?:Array<IQuadOptionsCreate>;
     patch_options?:Array<IQuadOptionsPatch>;

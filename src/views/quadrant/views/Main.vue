@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
-      <div style="margin: 20px 20px 20px 20px">
-      <router-link to="/quadrant/addcontest/"><v-btn fab>
+      <div style="margin: 20px 20px 20px 20px" class="fab">
+      <router-link to="/quadrant/addcontest/"  ><v-btn fab >
           <v-icon>add</v-icon>
       </v-btn>
       </router-link>
@@ -83,6 +83,7 @@ export default class HomeMain extends Vue {
   box-shadow: 1px 1px 20px 3px rgb(226, 224, 224);
   border-radius: 10px;
 }
-
-
+.fab a{
+  text-decoration: none;
+}
 </style>

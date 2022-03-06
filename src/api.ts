@@ -145,11 +145,11 @@ export const api = {
     return axios.post(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/`,problem,authHeaders(token))
 
   },
-  async patchQuadContestProblem(token:string,contest_uuid:string,problem_uuid:string,contest:IQuadProblemPatch){
-    return axios.patch(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}`,contest,authHeaders(token))
+  async patchQuadContestProblem(token:string,contest_uuid:string,problem_uuid:string,problem:IQuadProblemPatch){
+    return axios.patch(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}/`,problem,authHeaders(token))
   },
   async deleteQuadContestProblem(token:string,contest_uuid:string,problem_uuid:string){
-    return axios.delete(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}`,authHeaders(token))
+    return axios.delete(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}/`,authHeaders(token))
   },
 
 };

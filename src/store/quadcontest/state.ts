@@ -22,17 +22,24 @@ createdProblem?:IQuadProblem
 
 export interface QuadContestPatchState{
 
-    contestPatch? : ICreateContest;
+    contestPatch? :Contest;
     loading:boolean;
     error:boolean;
     patched: boolean;
 
+}
+export interface QuadProblemPatchState{
+    problem?: IQuadProblem;
+    loading: boolean;
+    error: boolean;
 }
 export interface QuadrantContestState {
     contestState:QuadContestState;
     problemsState: QuadProblemsState;
     problemCreateState:QuadProblemCreateState;
     contestPatchState: QuadContestPatchState;
+
+    problemPatchState: QuadProblemPatchState;
 
     contest_uuid?:string;
     token:string;
