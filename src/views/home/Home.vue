@@ -92,7 +92,7 @@
 
           <v-layout column fill-height>
             <v-list>
-              <v-list-item class="v-list-item" to="/profile">
+              <v-list-item class="v-list-item" to="/home/user-profile">
                 <v-list-item-action>
                   <v-img 
                   src="@/assets/img/profile-user.png"

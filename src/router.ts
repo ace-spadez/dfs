@@ -82,6 +82,11 @@ export default new Router({
         },
 
         {
+          path: "user-profile",
+          component: () => import('./views/user/Profile_Dashboard.vue')
+        },
+
+        {
           path: "home",
 
           component: () => import("./views/home/Home.vue"),
@@ -104,6 +109,9 @@ export default new Router({
             { path: "profile", },
             { path: "analysis", },
             { path: "settings", },
+            { path: "user-profile", 
+              component: () => import("./views/user/Profile_Dashboard.vue")
+            },
 
           ],
         },
