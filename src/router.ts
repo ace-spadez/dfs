@@ -82,8 +82,15 @@ export default new Router({
         },
 
         {
-          path: "user-profile",
+          path: "user",
           component: () => import('./views/user/Profile_Dashboard.vue')
+          // children: [
+          //   {
+          //     path: ':user_id',
+
+          //     component: () => import('./views/user/Profile_Dashboard.vue')
+          //   }
+          // ]
         },
 
         {
