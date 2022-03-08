@@ -10,7 +10,8 @@ import {
     commitSetQuadrantContestPatch,
     commitSetQuadrantProblemCreate,
     commitSetQuadrantProblems,
-    commitSetQuadrantProblemPatch
+    commitSetQuadrantProblemPatch,
+    commitSetQuadrantProblemDelete
    
 } from './mutations';
 import { 
@@ -19,7 +20,8 @@ import {
     QuadProblemCreateState,
     QuadProblemsState,
     QuadrantContestState,
-    QuadProblemPatchState
+    QuadProblemPatchState,
+    QuadProblemDeleteState
 } from './state';
 import {Contest,IUserPreview,IQuadProblem,ICreateContest, IQuadProblemCreate, IQuadOptions} from '@/interfaces';
 
@@ -130,6 +132,27 @@ export const actions = {
         commitSetQuadrantProblemPatch(context,quadProblemPatchState)
 
         }
+    },
+
+    async actionDeleteQuadrantProblem(context:MainContext,payload:any){
+        var token:string = context.state.token;
+        const quadProblemDeleteState:QuadProblemDeleteState = context.state.problemPatchState;
+        quadProblemDeleteState.loading = true
+        commitSetQuadrantProblemDelete(context,quadProblemDeleteState)
+        try{
+    
+       
+            const response = await api.deleteQuadContestProblem(token,payload.contest_uuid,payload.problem_uuid)
+            quadProblemDeleteState.loading = false;
+        commitSetQuadrantProblemDelete(context,quadProblemDeleteState)
+
+        }catch(err){
+            console.log(err);
+            quadProblemDeleteState.loading = false;
+            quadProblemDeleteState.error= true;
+        commitSetQuadrantProblemPatch(context,quadProblemDeleteState)
+
+        }
     }
    
     
@@ -143,3 +166,4 @@ export const dispatchGetQuadrantContestProblems = dispatch(actions.actionGetQuad
 export const dispatchPostQuadrantContestProblem = dispatch(actions.actionQuadPostContestProblem);
 export const dispatchPostQuadrantContestPatch = dispatch(actions.actionPatchQuadrantContest)
 export const dispatchPostQuadrantProblemPatch = dispatch(actions.actionPatchQuadrantProblem)
+export const dispatchPostQuadrantProblemDelete = dispatch(actions.actionDeleteQuadrantProblem)

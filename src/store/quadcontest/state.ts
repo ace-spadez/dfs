@@ -33,6 +33,10 @@ export interface QuadProblemPatchState{
     loading: boolean;
     error: boolean;
 }
+export interface QuadProblemDeleteState{
+    loading: boolean;
+    error: boolean;
+}
 export interface QuadrantContestState {
     contestState:QuadContestState;
     problemsState: QuadProblemsState;
@@ -40,6 +44,7 @@ export interface QuadrantContestState {
     contestPatchState: QuadContestPatchState;
 
     problemPatchState: QuadProblemPatchState;
+    problemDeleteState: QuadProblemDeleteState;
 
     contest_uuid?:string;
     token:string;

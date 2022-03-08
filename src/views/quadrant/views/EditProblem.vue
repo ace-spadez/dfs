@@ -93,6 +93,8 @@
             </FormulateInput>
 
             <FormulateInput v-if="!problemPatchState.loading" type="submit" label="Edit problem" />
+            <FormulateInput v-if="!problemPatchState.loading" type="button" class="danger-btn" v-on:click="del" label="Delete problem" />
+
             <FormulateInput v-if="problemPatchState.loading" type="button" disabled>
               Loading
               <v-progress-circular size="20" color="white" indeterminate style="margin-left:6px;"></v-progress-circular>
@@ -136,7 +138,8 @@ import {
   dispatchGetQuadrantContest,
   dispatchGetQuadrantContestProblems,
   dispatchPostQuadrantContestProblem,
-  dispatchPostQuadrantProblemPatch
+  dispatchPostQuadrantProblemPatch,
+  dispatchPostQuadrantProblemDelete
 } from "../../../store/quadcontest/actions";
 import {
   readQuadrantContestState,
@@ -236,7 +239,27 @@ export default class EditProblem extends Vue {
     await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
     commitRemoveNotification(this.$store, notif);
   }
-}
+
+  public async del() {
+    console.log(this.problem);
+
+    await dispatchPostQuadrantProblemDelete(this.$store, {
+      problem_uuid: this.problem.uuid,
+      contest_uuid: this.contestUUID,
+    });
+        console.log(this.problemPatchState);
+    const notif = {
+      content: this.problemPatchState.error
+        ? "Error encountered"
+        : "Problem Edited",
+      color: this.problemPatchState.error ? "danger" : "success"
+    };
+    commitAddNotification(this.$store, notif);
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+    commitRemoveNotification(this.$store, notif);
+  }
+
+  }
 </script>
 
 <style scoped lang="scss">
@@ -308,5 +331,8 @@ export default class EditProblem extends Vue {
   padding-top: 160px;
   padding-right: 50px;
   padding-left: 50px;
+}
+.danger-btn{
+  color: red;
 }
 </style>
