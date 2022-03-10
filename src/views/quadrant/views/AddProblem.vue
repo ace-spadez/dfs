@@ -66,7 +66,7 @@
               <FormulateInput name="is_correct" type="checkbox" label="Is Correct?" />
             </FormulateInput>
             <FormulateInput
-              v-if="problem.problem_type==='I'"
+              v-else
               name="correct_integer"
               type="number"
               label="Correct Integer"
