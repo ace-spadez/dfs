@@ -153,7 +153,8 @@ export default class AddProblem extends Vue {
     tags: [],
     problem_type: "S",
     subject: 'M',
-    contest_uuid:''
+    contest_uuid:'',
+    correct_integer:0,
   };
   formula = "";
   public get getUUID() {

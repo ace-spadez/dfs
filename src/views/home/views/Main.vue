@@ -26,7 +26,9 @@
           <span class='ranking-main-item-logo'>
             <img  src="@/assets/img/tier/dragon.svg"  width='30px'  height='30px' style='filter: invert(75%) sepia(67%) saturate(340%) hue-rotate(348deg) brightness(104%) contrast(103%);'/>
           </span>
-          <span class='ranking-main-item-name' > {{standing['username']}}  ·  <span style='color:grey'>  {{standing['rating']['r_all']}} </span> #{{ind+1}}</span>
+          <span class='ranking-main-item-name' > 
+           <router-link :to="{name:'usersprofile',params:{username:standing['username']}}" >{{standing['username']}}  </router-link> 
+            ·  <span style='color:grey'>  {{standing['rating']['r_all']}} </span> #{{ind+1}}</span>
         </div>
         
 
@@ -83,6 +85,7 @@ export default class HomeMain extends Vue {
   width: 100%;
   height: 100%;
 }
+
 .right-space{
   min-width:600px;
   box-shadow: 0 0 12px 0 grey;
@@ -110,6 +113,9 @@ export default class HomeMain extends Vue {
   font-family: 'montserrat';
   margin-left:20px;
 
+}
+.ranking-main-item-name a{
+  text-decoration: none;
 }
 .rankings-main{
 background-color: $xDark;

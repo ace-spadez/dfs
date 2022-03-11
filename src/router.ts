@@ -45,6 +45,39 @@ export default new Router({
             ),
         },
         {
+          path:'users/:username',
+          component:()=> import("./views/user/Profile.vue"),
+          name:'usersprofile'
+         
+        },
+        {
+          path:'self',
+          component:()=>import('./views/user/Home.vue'),
+          children :[
+            {
+              path:'profile',
+
+              component:()=>import('./views/user/views/Self.vue'),
+              name:'selfprofile',
+
+            },
+            {
+              path:'editprofile',
+
+              component:()=>import('./views/user/views/EditProfile.vue'),
+              name:'editprofile',
+
+            },
+            {
+              path:'analysis',
+            },
+            {
+              path:'settings',
+            },
+          ]
+
+        },
+        {
           path: 'quadrant',
           component: () => import("./views/quadrant/QuadHome.vue"),
           children: [

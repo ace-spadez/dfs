@@ -11,7 +11,9 @@
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "@braid/vue-formulate": "^2.5.0",
+    "@nagoos/vue-image-picker": "^1.0.4",
     "axios": "^0.18.0",
+    "chart.js": "^2.9.4",
     "core-js": "^3.4.3",
     "katex": "^0.12.0",
     "mathlive": "^0.27.4",
@@ -22,6 +24,7 @@
     "typesafe-vuex": "^3.1.1",
     "vee-validate": "^2.1.7",
     "vue": "^2.5.22",
+    "vue-chartjs": "^3.5.1",
     "vue-class-component": "^6.0.0",
     "vue-ctk-date-time-picker": "^2.5.0",
     "vue-katex": "^0.5.0",

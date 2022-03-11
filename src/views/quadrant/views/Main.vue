@@ -39,7 +39,7 @@ export default class HomeMain extends Vue {
   }
 
 
-  public beforeCreate() {
+  public beforeMount() {
     dispatchGetQuadrantContests(this.$store);
   }
 }

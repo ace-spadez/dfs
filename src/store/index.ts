@@ -9,6 +9,7 @@ import { homeModule } from './home';
 import { contestModule } from './contest';
 import {quadrantModule} from './quadrant';
 import {quadContestModule} from './quadcontest'
+import { userModule } from './user';
 Vue.use(Vuex);
 
 const storeOptions: StoreOptions<State> = {
@@ -19,7 +20,8 @@ const storeOptions: StoreOptions<State> = {
     home: homeModule,
     contest : contestModule,
     quadrant:quadrantModule,
-    quadContest: quadContestModule
+    quadContest: quadContestModule,
+    user: userModule
   },
 };
 

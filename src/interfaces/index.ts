@@ -20,6 +20,27 @@ export interface IUserProfile {
     experience?:Number;
 
 }
+export interface IPatchSelf{
+    bio?:string;
+    profile?:File;
+}
+export interface IRatingHistory{
+    rating: Rating;
+    rating_change: Rating;
+    rated_date: Date;
+}
+export interface IProfile{
+    uuid: string;
+    username: string;
+    bio   ?: string;
+    email: string;
+    date_joined:Date;
+    rating?:Rating;
+    experience?:Number;
+    tier: Number;
+    profile_image?:string;
+    is_friend: boolean;
+}
 
 export interface IUserProfileUpdate {
     email?: string;
@@ -52,7 +73,7 @@ export interface Contest{
     name:string;
     contest_status:string;
     date_created: Date;
-    target_data:Date;
+    target_date:Date;
     end_date: Date;
     duration:Number;
     tags: Array<string>;
@@ -117,7 +138,7 @@ export interface IQuadProblemCreate{
     content_image?:File;
     problem_type:string;
     subject:string;
-    correct_integer?:string;
+    correct_integer?:number;
     options : Array<IQuadOptionsCreate>;
     tags : Array<ITag>;
 

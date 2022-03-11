@@ -271,8 +271,8 @@ export default class EditProblem extends Vue {
   width: 100%;
 }
 .formula {
-  color: rgb(0, 0, 0);
-  background-color: white;
+  color: rgb(255, 255, 255);
+  background-color: rgb(47, 47, 47);
   width: 500px;
   font-size: 25px;
   margin: 0 50px 0 0;

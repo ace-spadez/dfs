@@ -64,104 +64,61 @@
         <v-list>
           <v-list-item
             :class="
-              currentRoute == '/home/main'
+              currentRoute == '/self/profile'
                 ? 'v-list-item highlight'
                 : 'v-list-item'
             "
             to="/home/main"
           >
             <v-list-item-action>
-              <v-img src="@/assets/img/home.png"></v-img>
+              <v-img src="@/assets/img/profile-user.png"></v-img>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title
-                :class="currentRoute == '/home/main' ? 'highlight' : ''"
-                >Home</v-list-item-title
+                :class="currentRoute == '/self/profile' ? 'highlight' : ''"
+                >Profile</v-list-item-title
               >
             </v-list-item-content>
           </v-list-item>
           <v-list-item
             :class="
-              currentRoute == '/home/rankings'
+              currentRoute == '/self/analysis'
                 ? 'v-list-item highlight'
                 : 'v-list-item'
             "
             to="/home/rankings"
           >
             <v-list-item-action>
-              <v-img src="@/assets/img/ratings.png"></v-img>
+              <v-img src="@/assets/img/analysis.png"></v-img>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title
-                :class="currentRoute == '/home/rankings' ? 'highlight' : ''"
-                >Rankings</v-list-item-title
+                :class="currentRoute == '/self/analysis' ? 'highlight' : ''"
+                >Analysis</v-list-item-title
               >
             </v-list-item-content>
           </v-list-item>
           <v-list-item
             :class="
-              currentRoute == '/home/problemsets'
+              currentRoute == '/self/settings'
                 ? 'v-list-item highlight'
                 : 'v-list-item'
             "
             to="/home/problemsets"
           >
             <v-list-item-action>
-              <v-img src="@/assets/img/test.png"></v-img>
+              <v-img src="@/assets/img/settings.png"></v-img>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title
-                :class="currentRoute == '/home/problemsets' ? 'highlight' : ''"
-                >Problemsets</v-list-item-title
+                :class="currentRoute == '/self/settings' ? 'highlight' : ''"
+                >Settings</v-list-item-title
               >
             </v-list-item-content>
           </v-list-item>
-          <v-list-item
-            :class="
-              currentRoute == '/home/contests'
-                ? 'v-list-item highlight'
-                : 'v-list-item'
-            "
-            to="/home/contests"
-          >
-            <v-list-item-action>
-              <v-img src="@/assets/img/quiz.png"></v-img>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title
-                :class="currentRoute == '/home/contests' ? 'highlight' : ''"
-                >Contests</v-list-item-title
-              >
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item
-            :class="
-              currentRoute == '/home/quadrant'
-                ? 'v-list-item highlight'
-                : 'v-list-item'
-            "
-            to="/home/quadrant"
-          >
-            <v-list-item-action>
-              <v-img src="@/assets/img/quadrant.png"></v-img>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title
-                :class="currentRoute == '/home/quadrant' ? 'highlight' : ''"
-                >Quadrant</v-list-item-title
-              >
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item class="v-list-item-prime" to="/home/prime">
-            <v-list-item-action>
-              <v-img src="@/assets/img/crown.png"></v-img>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title class="v-list-item-prime"
-                >Prime</v-list-item-title
-              >
-            </v-list-item-content>
-          </v-list-item>
+     
+         
+     
         </v-list>
 
         <v-spacer></v-spacer>
@@ -214,8 +171,8 @@ import Navbar from "@/components/Navbar.vue";
 import Menu from "@/components/Menu.vue";
 
 const routeGuardMain = async (to, from, next) => {
-  if (to.path === "/home") {
-    next("/home/main");
+  if (to.path === "/self") {
+    next("/self/profile");
   } else {
     next();
   }
@@ -224,10 +181,11 @@ const routeGuardMain = async (to, from, next) => {
 @Component({
   components: {
     Navbar,
+
     Menu
   },
 })
-export default class Main extends Vue {
+export default class UserHome extends Vue {
   public appName = appName;
   public search = '';
 
@@ -244,12 +202,6 @@ export default class Main extends Vue {
   }
   public submit(){
 
-  }
-  public get isLoggedIn(){
-    return readIsLoggedIn(this.$store)
-  }
-  public get userProfile(){
-    return readUserProfile(this.$store)
   }
   public onchange(){
 
@@ -291,7 +243,20 @@ export default class Main extends Vue {
       !readDashboardMiniDrawer(this.$store)
     );
   }
+  public get userProfile() {
+    let profile = readUserProfile(this.$store)
+    console.log("userProfile",profile)
+    if(profile!=null)
+    console.log("profile image",profile.profile_image)
+    return readUserProfile(this.$store);
+  }
+  public get isLoggedIn() {
+    return readIsLoggedIn(this.$store);
+  }
+  public async logout() {
   
+    await dispatchUserLogOut(this.$store);
+  }
 }
 </script>
 <style scoped lang="scss">
@@ -351,14 +316,14 @@ export default class Main extends Vue {
   align-content: center;
 }
 .margin300 {
-  margin-left: 300px;
+  margin-left: 260px;
      @include lg{
    margin-left: 0px;
 
   }
 }
 .margin50 {
-  margin-left: 50px;
+  margin-left: 55px;
      @include lg{
   margin-left: 0px;
 

@@ -7,7 +7,8 @@ import {
   Contest,
   ICreateContest,
   IQuadProblemCreate,
-  IQuadProblemPatch
+  IQuadProblemPatch,
+  IPatchSelf
 } from "./interfaces";
 
 function authHeaders(token: string) {
@@ -19,8 +20,8 @@ function authHeaders(token: string) {
 }
 function authHeader(token: string) {
   return {
-      Authorization: `Token ${token}`
-    
+    Authorization: `Token ${token}`
+
   };
 }
 // function headers(){
@@ -38,11 +39,11 @@ export const api = {
     params.append("username", username);
     params.append("password", password);
     var data = {
-      "username":username,
-      "password":password
+      "username": username,
+      "password": password
     }
 
-    return axios.post(`${apiUrl}/api/auth/login/`,data);
+    return axios.post(`${apiUrl}/api/auth/login/`, data);
   },
   async getMe(token: string) {
     console.log(token)
@@ -80,7 +81,7 @@ export const api = {
   async resetPassword(password: string, token: string) {
     return axios.post(`${apiUrl}/api/v1/reset-password/`, {
       new_password: password,
-      token,  
+      token,
     });
   },
   async register(password: string, email: string, username: string) {
@@ -91,73 +92,97 @@ export const api = {
       username,
     });
   },
-  async getHomeContests(token:string){
-    return axios.get(`${apiUrl}/api/core/contests/`,authHeaders(token));
+  async getUser(token: string, username: string) {
+    return axios.get(`${apiUrl}/api/auth/users/${username}/`, authHeaders(token))
   },
-  async getContestPageContests(token:string,page_num:number){
-    return axios.get(`${apiUrl}/api/core/contests/`,{
-      params:{
-        page:page_num
+  async getRankingHistory(token: string, username: string) {
+    return axios.get(`${apiUrl}/api/auth/users/${username}/ratings/`, authHeaders(token))
+
+  },
+  async patchSelf(token: string, user: IPatchSelf) {
+    const formData = new FormData();
+    if (user.profile)
+      formData.append('profile_image', user.profile)
+    if (user.bio)
+      formData.append('bio', user.bio)
+    return axios.post(`${apiUrl}/api/auth/self/`, formData, {
+      headers:{
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Token ${token}`
+
+      }
+    })
+  },
+  async watchToggle(token:string,username:string,value:boolean){
+    return axios.post(`${apiUrl}/api/auth/friends/${username}/`,{value:value},authHeaders(token))
+  },
+  async getHomeContests(token: string) {
+    return axios.get(`${apiUrl}/api/core/contests/`, authHeaders(token));
+  },
+  async getContestPageContests(token: string, page_num: number) {
+    return axios.get(`${apiUrl}/api/core/contests/`, {
+      params: {
+        page: page_num
 
       },
-      headers:authHeader(token)
+      headers: authHeader(token)
     });
   },
-  async applyForContest(token:string,contest_uuid:string){
-    return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/apply/`,{},authHeaders(token))
+  async applyForContest(token: string, contest_uuid: string) {
+    return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/apply/`, {}, authHeaders(token))
   },
-  async getRankList(token:string,subject:string|null){
-    return axios.get(`${apiUrl}/api/auth/standings/`,authHeaders(token))
+  async getRankList(token: string, subject: string | null) {
+    return axios.get(`${apiUrl}/api/auth/standings/`, authHeaders(token))
   },
-  async getQuadrant(token:string){
-    return axios.get(`${apiUrl}/api/quadrant/quadregister/`,authHeaders(token))
+  async getQuadrant(token: string) {
+    return axios.get(`${apiUrl}/api/quadrant/quadregister/`, authHeaders(token))
   },
-  async postSOP(token:string,sop:string){
-    return axios.post(`${apiUrl}/api/quadrant/quadregister/`,{
-      SOP:sop
-    },authHeaders(token))
+  async postSOP(token: string, sop: string) {
+    return axios.post(`${apiUrl}/api/quadrant/quadregister/`, {
+      SOP: sop
+    }, authHeaders(token))
   },
-  async getQuadrantContests(token:string,page:number=1){
-    return axios.get(`${apiUrl}/api/quadrant/contests/`,{
-      params:{
-        page:page
+  async getQuadrantContests(token: string, page: number = 1) {
+    return axios.get(`${apiUrl}/api/quadrant/contests/`, {
+      params: {
+        page: page
       },
       headers: authHeader(token)
     })
   },
-  async getQuadrantSelfContests(token:string){
-    return axios.get(`${apiUrl}/api/quadrant/self/contests/`,authHeaders(token))
+  async getQuadrantSelfContests(token: string) {
+    return axios.get(`${apiUrl}/api/quadrant/self/contests/`, authHeaders(token))
   },
-  async getQuadrantContest(token:string,contest_uuid:string){
-    return axios.get(`${apiUrl}/api/quadrant/contests/${contest_uuid}/`,authHeaders(token))
-    
-  },
-  async quadContestApply(token:string,contest_uuid:string){
-    return axios.post(`${apiUrl}/api/quadrant/contests/${contest_uuid}/apply/`,{},authHeaders(token))
-  },
-  async getQuadContestProblems(token:string,contest_uuid:string){
-    return axios.get(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/`,authHeaders(token))
+  async getQuadrantContest(token: string, contest_uuid: string) {
+    return axios.get(`${apiUrl}/api/quadrant/contests/${contest_uuid}/`, authHeaders(token))
 
   },
-  async createQuadContest(token:string,contest:ICreateContest){
-    return axios.post(`${apiUrl}/api/quadrant/contests/`,contest,authHeaders(token))
+  async quadContestApply(token: string, contest_uuid: string) {
+    return axios.post(`${apiUrl}/api/quadrant/contests/${contest_uuid}/apply/`, {}, authHeaders(token))
   },
-  async patchQuadrantContest(token:string,contest_uuid:string,contest:ICreateContest){
-    return axios.patch(`${apiUrl}/api/quadrant/contests/${contest_uuid}/`,contest,authHeaders(token))
-    
-  },
-  async getQuadContestProblem(token:string,contest_uuid:string,problem_uuid:string){
-    return axios.get(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}`,authHeaders(token))
-  },
-  async createQuadContestProblem(token:string,contest_uuid:string,problem:IQuadProblemCreate){
-    return axios.post(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/`,problem,authHeaders(token))
+  async getQuadContestProblems(token: string, contest_uuid: string) {
+    return axios.get(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/`, authHeaders(token))
 
   },
-  async patchQuadContestProblem(token:string,contest_uuid:string,problem_uuid:string,problem:IQuadProblemPatch){
-    return axios.patch(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}/`,problem,authHeaders(token))
+  async createQuadContest(token: string, contest: ICreateContest) {
+    return axios.post(`${apiUrl}/api/quadrant/contests/`, contest, authHeaders(token))
   },
-  async deleteQuadContestProblem(token:string,contest_uuid:string,problem_uuid:string){
-    return axios.delete(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}/`,authHeaders(token))
+  async patchQuadrantContest(token: string, contest_uuid: string, contest: ICreateContest) {
+    return axios.patch(`${apiUrl}/api/quadrant/contests/${contest_uuid}/`, contest, authHeaders(token))
+
+  },
+  async getQuadContestProblem(token: string, contest_uuid: string, problem_uuid: string) {
+    return axios.get(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}`, authHeaders(token))
+  },
+  async createQuadContestProblem(token: string, contest_uuid: string, problem: IQuadProblemCreate) {
+    return axios.post(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/`, problem, authHeaders(token))
+
+  },
+  async patchQuadContestProblem(token: string, contest_uuid: string, problem_uuid: string, problem: IQuadProblemPatch) {
+    return axios.patch(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}/`, problem, authHeaders(token))
+  },
+  async deleteQuadContestProblem(token: string, contest_uuid: string, problem_uuid: string) {
+    return axios.delete(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}/`, authHeaders(token))
   },
 
 };

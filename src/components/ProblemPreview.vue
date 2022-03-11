@@ -15,6 +15,7 @@
     <v-img v-if="option.content_image" :src="options_image[`${index}`]" width="70%" height="auto" />
 
     </div>
+    <div class="green-option" v-if="problem.problem_type=='I'"><vue-mathjax :formula="`\$${problem.correct_integer}\$`"></vue-mathjax></div>
   </div>
 </template>
 

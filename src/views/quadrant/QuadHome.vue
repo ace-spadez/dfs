@@ -21,89 +21,7 @@
         {{ userProfile.username }}
       </div>
 
-      <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <img v-if="userProfile.profile_image==null"
-            v-on="on"
-            v-bind="attrs"
-            class="profile-image"
-              src='@/assets/img/Intersect.png'
-            width="35px"
-              style="border-radius:50%;"
-
-          />
-             <img v-if="userProfile.profile_image!=null"
-            v-on="on"
-            v-bind="attrs"
-            class="profile-image"
-              :src='userProfile.profile_image'
-            width="35px"
-              style="border-radius:50%;"
-
-          />
-        </template>
-
-        <div class="dropdown" style="background-color:white;">
-          <div class="profile-info">
-            <!-- <v-spacer></v-spacer> -->
-
-            <span v-if="isLoggedIn" class="profile-name">
-              {{ userProfile.username }}
-            </span>
-            <img v-if="userProfile.profile_image==null"
-              class="profile-image"
-              src='@/assets/img/Intersect.png'
-              width="70px"
-              style="border-radius:50%;"
-            />
-            <img v-if="userProfile.profile_image!=null"
-              class="profile-image"
-              :src="userProfile.profile_image"
-              width="70px"
-              style="border-radius:50%;"
-            />
-          </div>
-
-          <v-layout column fill-height>
-            <v-list>
-              <v-list-item class="v-list-item" to="/main/dashboard">
-                <v-list-item-action>
-                  <v-img 
-                  src="@/assets/img/profile-user.png"
-                  ></v-img>
-                </v-list-item-action>
-                <v-list-item-content>
-                  <v-list-item-title>Profile</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="v-list-item" to="/main/profile/view">
-                <v-list-item-action>
-                  <v-img src="@/assets/img/analysis.png"></v-img>
-                </v-list-item-action>
-                <v-list-item-content>
-                  <v-list-item-title>Analysis</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="v-list-item" to="/main/profile/edit">
-                <v-list-item-action>
-                  <v-img src="@/assets/img/settings.png"></v-img>
-                </v-list-item-action>
-                <v-list-item-content>
-                  <v-list-item-title>Settings</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item @click="logout" class="v-list-item">
-                <v-list-item-action>
-                  <v-img src="@/assets/img/logout.png"></v-img>
-                </v-list-item-action>
-                <v-list-item-content>
-                  <v-list-item-title>Log out</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-layout>
-        </div>
-      </v-menu>
+      <Menu></Menu>
     </v-app-bar>
 
    
@@ -122,7 +40,7 @@ import { Vue, Component } from "vue-property-decorator";
 import { appName } from "@/env";
 import { readUserProfile,readIsLoggedIn } from '../../store/main/getters';
 import { dispatchUserLogOut } from '../../store/main/actions';
-
+import Menu from '@/components/Menu.vue'
 
 const routeGuardMain = async (to, from, next) => {
   console.log(to.path)
@@ -133,7 +51,11 @@ const routeGuardMain = async (to, from, next) => {
   }
 };
 
-@Component
+@Component({
+  components:{
+    Menu
+  }
+})
 export default class Main extends Vue {
   public appName = appName;
   public search = '';
