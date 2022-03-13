@@ -1,34 +1,45 @@
 
-import { ContestState,Question} from './state';
+import { ContestState, NotifyMeState, ContestDataState, SubmissionsState, StandingsState, ContestProblemsState, SubmitAnswerState, SubmitPaperState, BeginAttemptState,} from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
 
 export const mutations = {
 
-    setQuestions(state: ContestState, payload:Question[] ) {
-        state.questions = payload;
+    setNotifyMeState(state: ContestState, payload:NotifyMeState ) {
+        state.notifyMeState = payload;
     },
-    setError(state: ContestState,payload: boolean){
-        state.isError = payload;
+    setContestDataState(state: ContestState, payload:ContestDataState ) {
+        state.contestDataState = payload;
     },
-    setInProgress(state: ContestState,payload: boolean){
-        state.inProgress = payload;
+    setSubmissionsState(state: ContestState, payload:SubmissionsState ) {
+        state.submissionsState = payload;
     },
-    setSubmitted(state:ContestState,payload: boolean){
-        state.submitted = payload;
+    setStandingsState(state: ContestState, payload:StandingsState ) {
+        state.standingsState = payload;
     },
-    setAnswers(state:ContestState,payload : (any|null)[]){
-      console.log(payload);
-      state.answers =  payload;
-    }
- 
+    setContestProblemsState(state: ContestState, payload:ContestProblemsState ) {
+        state.contestProblemsState = payload;
+    },
+    setSubmitAnswerState(state: ContestState, payload:SubmitAnswerState ) {
+        state.submitAnswerState = payload;
+    },
+    setSubmitPaperState(state: ContestState, payload:SubmitPaperState ) {
+        state.submitPaperState = payload;
+    },
+    setBeginAttemptState(state: ContestState, payload:BeginAttemptState ) {
+        state.beginAttemptState = payload;
+    },
 };
 
 const {commit} = getStoreAccessors<ContestState | any, State>('');
 
-export const commitSetQuestions = commit(mutations.setQuestions);
-export const commitSetError = commit(mutations.setError);
-export const commitSetInProgress = commit(mutations.setInProgress);
-export const commitSetSubmitted = commit(mutations.setSubmitted);
-export const commitSetAnswers = commit(mutations.setAnswers);
+export const commitSetNotifyMeState = commit(mutations.setNotifyMeState);
+export const commitSetContestDataState = commit(mutations.setContestDataState);
+export const commitSetSubmissionsState = commit(mutations.setSubmissionsState);
+export const commitSetStandingsState = commit(mutations.setStandingsState);
+export const commitSetContestProblemsState = commit(mutations.setContestProblemsState);
+export const commitSetSubmitAnswerState = commit(mutations.setSubmitAnswerState);
+export const commitSetSubmitPaperState = commit(mutations.setSubmitPaperState);
+export const commitSetBeginAttemptState = commit(mutations.setBeginAttemptState);
+
 

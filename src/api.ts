@@ -8,7 +8,8 @@ import {
   ICreateContest,
   IQuadProblemCreate,
   IQuadProblemPatch,
-  IPatchSelf
+  IPatchSelf,
+  ISubmission
 } from "./interfaces";
 
 function authHeaders(token: string) {
@@ -24,14 +25,7 @@ function authHeader(token: string) {
 
   };
 }
-// function headers(){
-//   return {
-//     headers:{
-//       'Access-Control-Allow-Origin' : '*',
-//       'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-//     }
-//   }
-// }
+
 
 export const api = {
   async logInGetToken(username: string, password: string) {
@@ -184,5 +178,22 @@ export const api = {
   async deleteQuadContestProblem(token: string, contest_uuid: string, problem_uuid: string) {
     return axios.delete(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}/`, authHeaders(token))
   },
-
+  async getContest(token: string, contest_uuid: string) {
+    return axios.get(`${apiUrl}/api/core/contests/${contest_uuid}/`, authHeaders(token))
+  },
+  async getContestStandings(token: string, contest_uuid: string) {
+    return axios.get(`${apiUrl}/api/core/contests/${contest_uuid}/standings/`, authHeaders(token))
+  },
+  async getContestProblems(token: string, contest_uuid: string) {
+    return axios.get(`${apiUrl}/api/core/contests/${contest_uuid}/problems/`, authHeaders(token))
+  },
+  async getContestSubmissions(token: string, contest_uuid: string) {
+    return axios.get(`${apiUrl}/api/core/contests/${contest_uuid}/submissions/`, authHeaders(token))
+  },
+  async postContestProblemAnswer(token: string, contest_uuid: string,problem_uuid:string,submission:ISubmission) {
+    return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/problems/${problem_uuid}/answer/`, submission, authHeaders(token))
+  },
+  async postBeginAttempt(token: string, contest_uuid: string) {
+    return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/attempt/`,{}, authHeaders(token))
+  },
 };

@@ -6,6 +6,12 @@ export interface Rating{
     r_p:Number;
     r_c:Number;
 }
+export interface Score{
+    score_all: Number;
+    score_m:Number;
+    score_p:Number;
+    score_c:Number;
+}
 
 export interface IUserProfile {
     email: string;
@@ -130,7 +136,7 @@ export interface IQuadProblem{
     writer: IUserPreview;
     correct_integer?:number;
     contest:string;
-    options : IQuadOptions;
+    options : Array<IQuadOptions>;
 }
 export interface IQuadProblemCreate{
     contest_uuid : string;
@@ -154,4 +160,45 @@ export interface IQuadProblemPatch{
     delete_options?:Array<IQuadOptionsUUID>;
     tags?:Array<ITag>;
 
+
+}
+export interface ISubmission{
+    integer_content?: number;
+    options?: Array<IQuadOptionsUUID>;
+}
+
+export interface IXProblem{
+    uuid:string;
+    content: string;
+    problem_type:string;
+    content_image?:string;
+    tags?:Array<string>;
+    writer: IUserPreview;
+    correct_integer?:number;
+    contest:string;
+    options : Array<IQuadOptions>;
+    submission : ISubmission;
+}
+export interface IOptions{
+    uuid: string;
+    option_image?:string;
+    content:string;
+}
+export interface IProblem{
+    uuid:string;
+    content: string;
+    problem_type:string;
+    content_image?:string;
+    tags?:Array<string>;
+    writer: IUserPreview;
+    contest:string;
+    options : Array<IOptions>;
+    submission : ISubmission;
+}
+export interface IStanding{
+    user: IUserPreview;
+    rating: Rating;
+    rating_change: Rating;
+    score:Score;
+    rated_date: Date;
 }

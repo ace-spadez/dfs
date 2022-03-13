@@ -1,39 +1,57 @@
-import {Contest} from '@/interfaces';
+import { Contest, IXProblem, IUserPreview, Rating, IStanding, IProblem } from '@/interfaces';
 
-export interface Answers{
-   a ?: string; 
-   b ?: string; 
-   c ?: string;
-   d ?: string; 
-   e ?: string; 
-   f ?: string; 
+
+export interface NotifyMeState {
+    loading: boolean;
+    error: boolean;
 }
-export interface CorrectAnswers{
-    a ?: boolean; 
-    b ?: boolean; 
-    c ?: boolean; 
-    d ?: boolean; 
-    e ?: boolean; 
-    f ?: boolean; 
- }
-export interface Question{
-    id: number;
-    question: string;
-    answers : Answers;
-    correct_answers : CorrectAnswers;
-    multiple_correct_answers : boolean;
-    explanation ?: string;
-    tips ?: string;
-    tags : Array<string>;
-    category : string;
-    difficulty: string;
-    
+export interface ContestDataState {
+    contest?: Contest;
+    loading: boolean;
+    error: boolean;
 }
-export interface ContestState{
-    questions : Question[];
-    inProgress : boolean;
-    isError : boolean;
-    submitted : boolean;
-    answers ?: (any|null|[])[];
+export interface SubmissionsState {
+    submissions: IXProblem[];
+    loading: boolean;
+    error: boolean;
+
+}
+export interface StandingsState {
+    standings: IStanding[];
+    loading: boolean;
+    error: boolean;
+    pages?: Number;
+    page: Number;
+}
+export interface ContestProblemsState {
+    problems: IProblem[];
+    loading: boolean;
+    error: boolean;
+
+}
+export interface SubmitAnswerState {
+    loading: boolean;
+    error: boolean;
+}
+export interface SubmitPaperState {
+    loading: boolean;
+    error: boolean;
+}
+export interface  BeginAttemptState{
+    loading:boolean;
+    error:boolean;
+}
+export interface ContestState {
+    notifyMeState: NotifyMeState;
+    contestDataState: ContestDataState;
+    submissionsState: SubmissionsState;
+    standingsState: StandingsState
+    contestProblemsState: ContestProblemsState;
+    submitAnswerState:SubmitAnswerState;
+    submitPaperState:SubmitPaperState;
+    beginAttemptState:BeginAttemptState;
+
+
+    token:string;
 
 }
