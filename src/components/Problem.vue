@@ -1,0 +1,191 @@
+<template>
+  <div class="problem">
+    <span class="Q" style>{{ind+1}}.</span>
+
+    <vue-mathjax :formula="problem.content" class="question"></vue-mathjax>
+    <div v-if="problem.problem_type=='S'">
+      
+      <div v-for="(option,index) in problem.options" class="option" :key="index">
+        <input class="radio" type="radio" :id="problem.uuid" :value="option.uuid" v-model="cOption" />
+
+        <vue-mathjax style="margin-left:10px;" :formula="option.content"></vue-mathjax>
+      </div>
+    </div>
+     <div v-if="problem.problem_type=='M'">
+       
+      <div v-for="(option,index) in problem.options" class="option" :key="index">
+        <input type="checkbox" class="checkbox" :id="problem.uuid" :value="option.uuid" v-model="cOptions" />
+
+        <vue-mathjax style="margin-left:10px;" :formula="option.content"></vue-mathjax>
+      </div>
+    </div>
+     <div v-if="problem.problem_type=='I'">
+      <FormulateInput style="background-color:white;color:black;width:200px;" v-model="cInteger" type="number"></FormulateInput>
+    </div>
+    <br />
+    <button class="save" @click.prevent="save">
+      <v-icon color="white" >mdi-upload</v-icon>save
+    </button>
+     <button class="clear" @click.prevent="clear">
+      <v-icon color="white" >mdi-close</v-icon>clear
+    </button>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue, Watch, Prop } from "vue-property-decorator";
+import { Contest } from "@/interfaces";
+import { getMonth } from "@/utils";
+import { dispatchSubmitAnswerState } from '../store/contest/actions';
+@Component
+export default class Problem extends Vue {
+  @Prop() problem: any;
+  @Prop() ind: any;
+
+  public cOption: string = "";
+  public cOptions: any=[];
+  public cInteger: number|null=null;
+  public beforeMount(){
+    
+      if(this.problem.submission){
+        console.log(this.problem.submission)
+          if(this.problem.submission.integer_content){
+              this.cInteger  = this.problem.submission.integer_content;
+          }
+          if(this.problem.submission.options && this.problem.submission.options.length>0){
+              if(this.problem.problem_type=='S'){
+                  this.cOption = this.problem.submission.options[0].uuid;
+              }
+              if(this.problem.problem_type=='M'){
+                  this.problem.submission.options.map(option=>{
+                    console.log(option)
+                      this.cOptions.push(option.uuid)
+                  })
+              }
+          }
+      }
+  }
+  public  async save(){
+      let answer:any={}
+      if(this.problem.problem_type=='S'){
+          answer.options = [];
+          if(this.cOption)
+          answer.options.push({uuid:this.cOption})
+      }
+      if(this.problem.problem_type=='M'){
+          answer.options=[];
+          this.cOptions.map(cption=>{
+              answer.options.push({uuid:cption})
+          })
+      }
+      if(this.problem.problem_type=='I'){
+        if(this.cInteger)
+          answer.integer_content=this.cInteger;
+      }
+      console.log(answer);
+      dispatchSubmitAnswerState(this.$store,{contest_uuid:this.$route.params['contest_uuid'],problem_uuid:this.problem.uuid,submission:answer,index:this.ind})
+  }
+  public async clear(){
+      this.cOption='';
+      this.cOptions=[];
+      this.cInteger = null;
+      this.save();
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import "@/assets/css/global.scss";
+.problem {
+  // background-color: #ececec;
+  box-shadow: 0 0 10px 0 rgb(187, 187, 187);
+  padding: 20px 10px 20px 10px;
+  margin: 20px 0 10px 0;
+  border-radius: 10px;
+  color: white;
+  background-color: $xSemiDark;
+  @include md {
+    font-size: 15px;
+  }
+}
+.question {
+  padding: 10px 10px;
+  font-weight: bold;
+}
+.Q {
+  font-weight: bold;
+  font-size: 40px;
+  @include md {
+    font-size: 30px;
+  }
+}
+
+.green-option {
+  color: rgb(175, 255, 202);
+  margin-top: 20px;
+  background-color: rgb(0, 42, 14);
+  padding: 10px 10px;
+}
+.save {
+  padding: 10px 25px;
+  background-color: $green2;
+  border-radius: 5px;
+}
+.clear {
+  padding: 10px 25px;
+  background-color: $green2;
+  border-radius: 5px;
+  margin-left:10px;
+}
+.red-option {
+  color: rgb(255, 189, 189);
+  margin-top: 20px;
+  background-color: rgb(0, 0, 0);
+  padding: 10px 10px;
+}
+.option {
+  margin-top: 20px;
+  padding: 10px 10px;
+}
+.radio {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+
+  border: 2px solid rgb(255, 255, 255);
+  transition: 0.2s all linear;
+  margin-right: 5px;
+
+  position: relative;
+  top: 4px;
+}
+
+.radio:checked {
+  border: 6px solid rgb(85, 152, 240);
+  outline: unset !important; /* I added this one for Edge (chromium) support */
+}
+.checkbox {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  width: 16px;
+  height: 16px;
+border-radius: 2px;
+  border: 2px solid rgb(255, 255, 255);
+  transition: 0.2s all linear;
+  margin-right: 5px;
+
+  position: relative;
+  top: 4px;
+}
+
+.checkbox:checked {
+  border: 6px solid rgb(85, 152, 240);
+  outline: unset !important; /* I added this one for Edge (chromium) support */
+}
+</style>

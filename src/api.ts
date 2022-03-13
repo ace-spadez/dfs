@@ -87,33 +87,43 @@ export const api = {
     });
   },
   async getUser(token: string, username: string) {
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+    
     return axios.get(`${apiUrl}/api/auth/users/${username}/`, authHeaders(token))
   },
   async getRankingHistory(token: string, username: string) {
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+
     return axios.get(`${apiUrl}/api/auth/users/${username}/ratings/`, authHeaders(token))
 
   },
   async patchSelf(token: string, user: IPatchSelf) {
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+
     const formData = new FormData();
     if (user.profile)
       formData.append('profile_image', user.profile)
     if (user.bio)
       formData.append('bio', user.bio)
     return axios.post(`${apiUrl}/api/auth/self/`, formData, {
-      headers:{
+      headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Token ${token}`
 
       }
     })
   },
-  async watchToggle(token:string,username:string,value:boolean){
-    return axios.post(`${apiUrl}/api/auth/friends/${username}/`,{value:value},authHeaders(token))
+  async watchToggle(token: string, username: string, value: boolean) {
+    return axios.post(`${apiUrl}/api/auth/friends/${username}/`, { value: value }, authHeaders(token))
   },
   async getHomeContests(token: string) {
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+
     return axios.get(`${apiUrl}/api/core/contests/`, authHeaders(token));
   },
   async getContestPageContests(token: string, page_num: number) {
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+
     return axios.get(`${apiUrl}/api/core/contests/`, {
       params: {
         page: page_num
@@ -126,6 +136,8 @@ export const api = {
     return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/apply/`, {}, authHeaders(token))
   },
   async getRankList(token: string, subject: string | null) {
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+
     return axios.get(`${apiUrl}/api/auth/standings/`, authHeaders(token))
   },
   async getQuadrant(token: string) {
@@ -179,21 +191,35 @@ export const api = {
     return axios.delete(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}/`, authHeaders(token))
   },
   async getContest(token: string, contest_uuid: string) {
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+
     return axios.get(`${apiUrl}/api/core/contests/${contest_uuid}/`, authHeaders(token))
   },
-  async getContestStandings(token: string, contest_uuid: string) {
-    return axios.get(`${apiUrl}/api/core/contests/${contest_uuid}/standings/`, authHeaders(token))
+  async getContestStandings(token: string, contest_uuid: string, page: number) {
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+
+    return axios.get(`${apiUrl}/api/core/contests/${contest_uuid}/standings/`, {
+      params: {
+        page: page,
+
+      },
+      headers: authHeader(token)
+    })
   },
   async getContestProblems(token: string, contest_uuid: string) {
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+    
     return axios.get(`${apiUrl}/api/core/contests/${contest_uuid}/problems/`, authHeaders(token))
   },
   async getContestSubmissions(token: string, contest_uuid: string) {
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+    
     return axios.get(`${apiUrl}/api/core/contests/${contest_uuid}/submissions/`, authHeaders(token))
   },
-  async postContestProblemAnswer(token: string, contest_uuid: string,problem_uuid:string,submission:ISubmission) {
+  async postContestProblemAnswer(token: string, contest_uuid: string, problem_uuid: string, submission: ISubmission) {
     return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/problems/${problem_uuid}/answer/`, submission, authHeaders(token))
   },
   async postBeginAttempt(token: string, contest_uuid: string) {
-    return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/attempt/`,{}, authHeaders(token))
+    return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/attempt/`, {}, authHeaders(token))
   },
 };

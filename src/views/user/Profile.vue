@@ -15,14 +15,31 @@
       <Menu></Menu>
     </v-app-bar>
 
-    <div v-if="userProfileState.loading">
-      <v-progress-circular></v-progress-circular>
+    <div v-if="userProfileState.loading" class="biodata">
+        <v-skeleton-loader
+        type="image"
+        width="150px"
+        height="150px"
+        style="object-fit:cover;border-radius:50%;"
+      ></v-skeleton-loader>
+           <v-skeleton-loader
+        type="list-item"
+        width="250px"
+        style="margin-top:20px;"
+           ></v-skeleton-loader>
+
+            <v-skeleton-loader
+        type="card"
+        width="550px"
+        style="margin-top:20px;"
+           ></v-skeleton-loader>
     </div>
-    <div v-if="userProfileState.error">error</div>
+    <div v-if="userProfileState.error">
+      <Error></Error>
+    </div>
     <div v-if="userProfileState.user" class="biodata">
       <img
         v-if="userProfileState.user.profile_image==null"
-  
         class="profile-image"
         src="@/assets/img/Intersect.png"
         width="150px"
@@ -37,6 +54,7 @@
         height="150px"
         style="object-fit:cover;border-radius:50%;"
       />
+    
       <div class="username">@{{userProfileState.user.username}}</div>
       <div class="bio">{{userProfileState.user.bio}}</div>
       <br />
@@ -76,7 +94,7 @@
         <chart class="subject"></chart>
         <chart class="subject"></chart>
         <chart class="subject"></chart>
-      </div> -->
+      </div>-->
     </div>
   </v-main>
 </template>
@@ -100,11 +118,13 @@ import {
   commitAddNotification,
   commitRemoveNotification
 } from "../../store/main/mutations";
+import Error from "@/components/Error.vue";
 
 @Component({
   components: {
     Menu,
-    Chart
+    Chart,
+    Error
   }
 })
 export default class Profile extends Vue {
@@ -164,8 +184,8 @@ export default class Profile extends Vue {
   color: $xDark;
   font-weight: bold;
 }
-.subject{
-  margin:0 50px;
+.subject {
+  margin: 0 50px;
 }
 .bio {
   font-size: 15px;
@@ -198,6 +218,6 @@ export default class Profile extends Vue {
 }
 .rank-tiles {
   display: flex;
-  color:rgb(208, 255, 255);
+  color: rgb(208, 255, 255);
 }
 </style>

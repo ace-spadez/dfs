@@ -14,7 +14,7 @@
         </v-container>
       </v-main>
       <router-view v-else />
-      <NotificationsManager></NotificationsManager>3
+      <NotificationsManager></NotificationsManager>
     </v-app>
   </div>
 </template>

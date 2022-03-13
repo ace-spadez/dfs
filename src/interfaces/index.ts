@@ -171,6 +171,7 @@ export interface IXProblem{
     uuid:string;
     content: string;
     problem_type:string;
+    problemtype:string;
     content_image?:string;
     tags?:Array<string>;
     writer: IUserPreview;
@@ -193,7 +194,7 @@ export interface IProblem{
     writer: IUserPreview;
     contest:string;
     options : Array<IOptions>;
-    submission : ISubmission;
+    submission : ISubmission|null;
 }
 export interface IStanding{
     user: IUserPreview;

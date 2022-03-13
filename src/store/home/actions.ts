@@ -6,10 +6,9 @@ import { getStoreAccessors } from 'typesafe-vuex';
 import { ActionContext } from 'vuex';
 import { State } from '../state';
 import {
-    commitSetContests, commitApplyContests,commitSetStandings, commitSetContestPage
-   
+   commitApplyContests,commitHomeSetContestsState,commitSetContestPage,commitSetHomeStandingsState
 } from './mutations';
-import { HomeState, ContestPageState } from './state';
+import { HomeState, ContestPageState, HomeContestsState, HomeStandingsState } from './state';
 import {Contest,IUserPreview} from '@/interfaces';
 
 type MainContext = ActionContext<HomeState, State>;
@@ -20,12 +19,28 @@ export const actions = {
         if(!token){
             token = getLocalToken();
         }
+        const homeContestsState:HomeContestsState= context.state.homeContestsState;
+        homeContestsState.error=false;
+        homeContestsState.loading=true;
+        homeContestsState.contests=[];
+        commitHomeSetContestsState(context,homeContestsState);
+        try{
+            var response = await api.getHomeContests(String(token))
+            console.log(response.data)
+            homeContestsState.contests = response.data['body']
+            homeContestsState.loading=false;
+            commitHomeSetContestsState(context,homeContestsState);
+
+        }
+        catch(err){
+            console.log(err)
+            homeContestsState.error=true;
+            homeContestsState.loading=false;
+            commitHomeSetContestsState(context,homeContestsState);
+        }
         
         
-        var response = await api.getHomeContests(String(token))
-        console.log(response.data)
-        var contests : Contest[] =  response.data['body']
-       commitSetContests(context,contests);
+       
 
     },
     async actionApplyContests(context:MainContext,contest_data:any){
@@ -46,13 +61,29 @@ export const actions = {
         if(!token){
             token = getLocalToken();
         }
-        
-        
-        var response = await api.getRankList(String(token),null)
-        console.log(response.data)
-        var standings : IUserPreview[] =  response.data['body']
-       commitSetStandings(context,standings)
+        const HomeStandingsState:HomeStandingsState=context.state.homeStandingsState;
+        HomeStandingsState.error=false;
+        HomeStandingsState.loading=true;
+        HomeStandingsState.standings=[];
+        commitSetHomeStandingsState(context,HomeStandingsState);
+        try{
+            var response = await api.getRankList(String(token),null)
+            console.log(response.data)
+            HomeStandingsState.standings = response.data['body']
+            HomeStandingsState.loading=false;
+            commitSetHomeStandingsState(context,HomeStandingsState);
 
+        }
+        catch(err){
+            console.log(err)
+            HomeStandingsState.error=true;
+            HomeStandingsState.loading=false;
+            commitSetHomeStandingsState(context,HomeStandingsState);
+        }
+
+
+        
+      
     },
     async actionGetContestPageContests(context: MainContext,page_num:number) {
         var token:string|null = context.state.token;

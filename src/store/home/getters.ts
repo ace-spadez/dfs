@@ -1,16 +1,16 @@
-import {HomeState } from './state';
+import {HomeState,HomeContestsState,HomeStandingsState } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
 
 export const getters = {
    
-  homeContests : (state: HomeState)=> state.contests,
-  homeStandings: (state:HomeState)=>state.standings,
+  homeContestsState : (state: HomeState)=> state.homeContestsState,
+  homeStandingsState: (state:HomeState)=>state.homeStandingsState,
   contestPageState: (state:HomeState)=>state.contestPage
 };
 
 const {read} = getStoreAccessors<HomeState, State>('');
 
-export const readHomeContests= read(getters.homeContests);
-export const readHomeStandings= read(getters.homeStandings);
-export const readContestPageState= read(getters.contestPageState);
+export const readHomeContestsState= read(getters.homeContestsState);
+export const readHomeStandingsState= read(getters.homeStandingsState);
+export const readContestPageStateState= read(getters.contestPageState);

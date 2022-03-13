@@ -157,21 +157,27 @@ export default new Router({
         },
 
         {
-          path: 'contests/:id/preview',
+          path: 'contests/:contest_uuid/preview',
           name: 'contest-preview',
           component: () => import("./views/contests/ContestPreview.vue"),
 
         },
         {
-          path: 'contests/:id',
+          path: 'contests/:contest_uuid',
           name: 'contest',
           component: () => import("./views/contests/Contest.vue"),
         },
         {
-          path: 'contests/:id/submission',
+          path: 'contests/:contest_uuid/submissions',
           name: 'submission',
-          component: () => import("./views/contests/Submission.vue"),
+          // component: () => import("./views/contests/Submission.vue"),
         },
+        {
+          path: 'contests/:contest_uuid/standings',
+          name: 'standings',
+          // component: () => import("./views/contests/Submission.vue"),
+          
+        }
         // {
         //   path: "main",
         //   component: () =>

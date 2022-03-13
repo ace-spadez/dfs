@@ -6,10 +6,21 @@ export interface  ContestPageState{
     error:  boolean,
 
 }
-export interface HomeState {
-    contests : Contest[];
-    token:string;
+export interface HomeContestsState{
+    contests: Contest[];
+    loading:boolean;
+    error:boolean;
+}
+
+export interface HomeStandingsState{
+    loading: boolean;
+    error: boolean;
     standings: IUserPreview[];
+}
+export interface HomeState {
+    homeContestsState: HomeContestsState;
+    token:string;
+    homeStandingsState:HomeStandingsState ;
 
     contestPage: ContestPageState
 }

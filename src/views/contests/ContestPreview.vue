@@ -1,74 +1,168 @@
 <template>
   <v-main>
-    <v-app-bar color="#fafafa" elevation="0" app>
+    <v-app-bar color="#fafafa" elevation="1" app>
       <v-list-item-action>
-        <v-img src="@/assets/img/left-arrow.svg" @click.prevent='goback' width="30px"></v-img>
+        <v-img src="@/assets/img/left-arrow.svg" @click.prevent="goback" width="30px"></v-img>
       </v-list-item-action>
     </v-app-bar>
-    <div v-if="contest == null">
-      <v-progress-circular></v-progress-circular>
-    </div>
-    <div v-else class="contest-pre-container">
+    <br />
+
+    <div v-if="contestState.error">Error encountered in retrieving contest. Try again Later.</div>
+    <div class="contest-pre-container">
       <div class="contest-pre-main">
-         <div class="contest-name"> {{contest.contest_name}}</div>
-            <router-link
-            :to="{
-              name: 'contest',
-              params: { id: contest.id },
-              query: contest,
-            }"
-          >
-         <div>
-         <button class="wrap-item-btn">Apply
+        <v-skeleton-loader width="100%" v-if="contestState.loading" class="mx-auto" type="card"></v-skeleton-loader>
+        <ContestItem
+          v-if="contestState.contest"
+          class="item"
+          :contest="contestState.contest"
+          :key="contestState.contest.uuid"
+        ></ContestItem>
+        <br />
+        <hr />
+        <br />
+        <v-tabs fixed-tabs color="deep-purple accent-4" class="tabs">
+          <v-tab>Submission</v-tab>
+          <v-tab>Standings</v-tab>
+          <v-tab-item>
+<div v-if="submissionsState.loading">
+  <v-skeleton-loader type="list-item-three-line" width="100%" v-for="item in [0,1,2,3,4,5,6,7,8,9,10]" :key="item">
 
-        <img src="@/assets/img/information.svg" width="15px"/>
+  </v-skeleton-loader>
+</div>
+<div v-if="submissionsState.submissions">
+  <Submission v-for="(problem,index) in submissionsState.submissions" :key="index" :problem="problem" :index="index"></Submission>
 
-         </button></div></router-link>
-         <div class="resources">
+</div>
 
-         </div>
+          </v-tab-item>
+          <v-tab-item>
+            <br />
+
+            <v-simple-table v-if="standingsState.standings">
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th class="text-left">Name</th>
+                    <th class="text-left">All</th>
+                    <th class="text-left">Physics</th>
+                    <th class="text-left">Chemistry</th>
+                    <th class="text-left">Maths</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item,index) in standingsState.standings" :key="index">
+                    <td>
+                      <UserPreview :standing="item.user"></UserPreview>
+                    </td>
+                    <td>{{ item.score.score_all?item.score.score_all:'-' }}</td>
+                    <td>{{ item.score.score_p?item.score.score_p:'-' }}</td>
+                    <td>{{ item.score.score_c?item.score.score_c:'-' }}</td>
+                    <td>{{ item.score.score_m?item.score.score_m:'-' }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+            <br />
+            <div class="loading-center" v-if="standingsState.loading">
+              <v-progress-circular indeterminate></v-progress-circular>
+            </div>
+            <br />
+            <div class="text-center">
+              <v-pagination
+                v-model="page"
+                v-if="standingsState.pages"
+                :length="standingsState.pages"
+              ></v-pagination>
+            </div>
+          </v-tab-item>
+        </v-tabs>
       </div>
       <div class="contest-pre-side">
-           <div class="rankings-head">Authors</div>
-      <div class="rankings-main">
-      </div>
- <div class="rankings-head">Rankings</div>
-      <div class="rankings-main">
-      </div>
-
-
+        <div class="rankings-head">Authors</div>
+        <div class="rankings-main">
+          <br />
+          <div v-if="contestState.loading">
+            <v-skeleton-loader
+              v-for="(i,index) in [1,2,3,4,5]"
+              :key="index"
+              width="100%"
+              class="mx-auto"
+              type="list-item-avatar"
+            ></v-skeleton-loader>
+          </div>
+          <div v-if="contestState.contest">
+            <UserPreview
+              v-for="(standing,index) in contestState.contest.writers"
+              :key="index"
+              :standing="standing"
+            ></UserPreview>
+          </div>
+        </div>
       </div>
     </div>
   </v-main>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-
+import { Vue, Component, Watch } from "vue-property-decorator";
+import UserPreview from "@/components/UserPreview.vue";
 import { appName } from "@/env";
-
+import ContestItem from "@/components/ContestItem.vue";
 import { Contest } from "@/interfaces";
+import {
+  dispatchGetContestData,
+  dispatchStandingState,
+  dispatchSubmissions
+} from "../../store/contest/actions";
+import {
+  readContestDataState,
+  readStandingsState,
+  readSubmissionsState
+} from "../../store/contest/getters";
+import Submission from '@/components/Submission.vue'
 function stringify(str: string) {
   console.log(str);
   if (str == "undefined") return "";
   return str;
 }
-@Component
-export default class ContestPreview extends Vue {
-  public get contest() {
-    // const query = this.$route.query;
-    // const contest: Contest = {
-    //   id: String(query.id),
-    //   contest_name: String(query.contest_name),
-    //   category: stringify(String(query.category)),
-    //   contest_duration: Number(query.contest_duration),
-    //   difficulty: stringify(String(query.difficulty)),
-    //   contest_total_questions: Number(query.contest_total_questions),
-    // };
-    // return contest;
-    return 0
+@Component({
+  components: {
+    ContestItem,
+    UserPreview,
+    Submission
   }
-  public goback(){
+})
+export default class ContestPreview extends Vue {
+  public page: number = 1;
+  public get contestState() {
+    return readContestDataState(this.$store);
+  }
+  public get contestUUID() {
+    return this.$route.params["contest_uuid"];
+  }
+  public get standingsState() {
+    return readStandingsState(this.$store);
+  }
+  public  get submissionsState(){
+    console.log(readSubmissionsState(this.$store));
+    return readSubmissionsState(this.$store);
+  }
+  public beforeMount() {
+    dispatchGetContestData(this.$store, this.contestUUID);
+    dispatchStandingState(this.$store, {
+      contest_uuid: this.contestUUID,
+      page: 1
+    });
+    dispatchSubmissions(this.$store,this.contestUUID);
+  }
+  @Watch("page")
+  public onPageChange(newPage, prevPage) {
+    dispatchStandingState(this.$store, {
+      contest_uuid: this.contestUUID,
+      page: newPage
+    });
+  }
+  public goback() {
     this.$router.go(-1);
   }
 }
@@ -77,7 +171,8 @@ export default class ContestPreview extends Vue {
 <style lang='scss'>
 @import "@/assets/css/global.scss";
 .contest-pre-container {
-  display: flex;  width: 100%;
+  display: flex;
+  width: 100%;
   height: 100%;
   justify-content: space-between;
 }
@@ -93,50 +188,62 @@ export default class ContestPreview extends Vue {
   height: 40px;
 }
 .contest-pre-main {
-     padding-left: 50px;
+  padding-left: 50px;
   padding-right: 50px;
-    @include sm{
- padding-left: 10px;
-  padding-right: 10px;
+  @include sm {
+    padding-left: 10px;
+    padding-right: 10px;
   }
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-content: flex-start;
 }
 .contest-pre-side {
-   min-width:500px;
-  background-color: $xMedium;
-  padding: 50px 30px 0 30px;
-     @include xl{
-     display : none;
+  min-width: 500px;
+  // background-color: $xMedium;
+  padding: 10px 30px 0 30px;
+  @include xl {
+    display: none;
   }
-
 }
-.contest-name{
-    font-family: 'B612';
-    font-size: 20px;
-    font-weight: bold;
+.tabs {
+  font-size: 10px;
 }
-.rankings-main{
-background-color: $xDark;
-margin: 20px 0 0 0;
-width: 100%;
-height: 300px;
-}
-.rankings-head{
-    margin-top: 20px;
-  color: white;
-  font-family: 'b612';
+.contest-name {
+  font-family: "B612";
+  font-size: 20px;
   font-weight: bold;
-
 }
-.resources{
-    background-color: $xMedium;
-    height : 500px;
-    margin-top: 50px;
-    width: 60vw;
+.rankings-main {
+  background-color: rgb(247, 247, 247);
+  margin: 20px 0 0 0;
+  padding: 0px 0 0 10px;
+  width: 100%;
+  height: 300px;
+}
+.loading-center {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.item {
+  // box-shadow: 0 0 10px 0 rgb(190, 190, 190);
+  padding: 20px;
+}
+.rankings-head {
+  // margin-top: 20px;
+  color: $xDark;
+  font-family: "b612";
+  font-weight: bold;
+}
+.resources {
+  background-color: $xMedium;
+  height: 500px;
+  margin-top: 50px;
+  width: 60vw;
 
-     @include xl{
+  @include xl {
     width: 86vw;
   }
 }

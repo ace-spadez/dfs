@@ -1,199 +1,77 @@
 <template>
   <v-main>
-    <v-app-bar app elevation="0">
-         <v-list-item-action>
-        <img
-          src="@/assets/img/padlock.svg"
-          width="30px"
-       />
+    <v-app-bar app elevation="2" :class="(panic)?'red':''">
+      <v-list-item-action>
+        <img src="@/assets/img/padlock.svg" width="30px" />
       </v-list-item-action>
-        <span class="app-head-contest">Contest</span>
-        <v-spacer></v-spacer>
-         <v-dialog v-model="dialog" persistent max-width="290">
-          <template v-slot:activator="{ on, attrs }">
-           
-            <button
-              v-bind="attrs"
-              v-on="on"
-              class="submit-btn"
-            >
-              Submit
-            </button>
-          </template>
-          <v-card >
-            <v-card-title class="headline">
-             Confirm submission
-            </v-card-title>
-            <v-card-text
-              >You have solved 5 questions. Are you sure yoou wanna Submit the answers???</v-card-text
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="red darken-1" text @click="dialog = false">
-               Cancel
-              </v-btn>
-              <v-btn color="green darken-1" text @click="submit">
-                Submit
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+      <v-skeleton-loader v-if="contestState.loading" type="heading" width="200px"></v-skeleton-loader>
+      <span class="timer">{{countdown}}</span>
+      <v-spacer></v-spacer>
+      <!-- <v-dialog v-model="dialog" persistent max-width="290" v-if="contestState.contest">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn  v-bind="attrs" v-on="on" dark >Submit</v-btn>
 
-       </v-app-bar>
-    <v-navigation-drawer fixed main style="z-index: 0; padding-top: 70px" >
-      <div v-if="!progress && !error && tileview">
-        <div
-          @click="goto(index)"
-          v-for="(question, index) in questions"
-          :key="index"
-        >
-          <div
-            :class="`list-view-item ${
-              index === currentQuestion ? 'current-item' : ''
-            }`"
-            :id="`list-item${index}`"
-          >
-            <div class="index_btn">
-              {{ index + 1 }}
-            </div>
-            {{ question.question }}
-          </div>
-        </div>
-      </div>
+        </template>
+        <v-card>
+          <v-card-title class="headline">Confirm submission</v-card-title>
+          <v-card-text>You have solved 5 questions. Are you sure yoou wanna Submit the answers???</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="red darken-1" text @click="dialog = false">Cancel</v-btn>
+            <v-btn color="green darken-1" text @click="submit">Submit</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>-->
+    </v-app-bar>
 
-      <div v-if="!progress && !error && !tileview" class="grid-view">
-        <button
-          @click="goto(index)"
-          v-for="(question, index) in questions"
-          :key="index"
-          :class="`grid-view-item ${
-            index === currentQuestion
-              ? 'grid-current-item'
-              : script[index] !== null
-              ? 'answered-grid-item'
-              : ''
-          }`"
-        >
-          <!-- <button :class="`grid-view-item ${index===currentQuestion?'grid-current-item':''}`" :id="`grid-list-item${index}`"> -->
-          {{ index + 1 }}
-          <!-- </button> -->
-        </button>
-      </div>
-
-      <!-- <v-progress-circular v-if="progress" indeterminate></v-progress-circular> -->
-      <v-skeleton-loader
-        v-if="progress"
-        type="list-item-three-line"
-      ></v-skeleton-loader>
-      <v-skeleton-loader
-        v-if="progress"
-        type="list-item-three-line"
-      ></v-skeleton-loader>
-      <v-skeleton-loader
-        v-if="progress"
-        type="list-item-three-line"
-      ></v-skeleton-loader>
-      <v-skeleton-loader
-        v-if="progress"
-        type="list-item-three-line"
-      ></v-skeleton-loader>
-      <v-skeleton-loader
-        v-if="progress"
-        type="list-item-three-line"
-      ></v-skeleton-loader>
-      <v-skeleton-loader
-        v-if="progress"
-        type="list-item-three-line"
-      ></v-skeleton-loader>
-      <v-skeleton-loader
-        v-if="progress"
-        type="list-item-three-line"
-      ></v-skeleton-loader>
-      <v-skeleton-loader
-        v-if="progress"
-        type="list-item-three-line"
-      ></v-skeleton-loader>
-    </v-navigation-drawer>
     <div class="cntainer">
-      <!-- <img src="@/assets/img/grid.png" @click.stop="switchGrid" width="30px" /> -->
-      <div class="contest-head">
-        <div class="contest-name">
-          <!-- <img
-            src="@/assets/img/grid.png"
-            @click.stop="switchGrid"
-            width="30px"
-          /> -->
+      <v-progress-linear
+        color="red"
+        style="position:fixed;z-index:100;"
+        :value="progress"
+        width="100%"
+      ></v-progress-linear>
 
-          {{ contest.contest_name }} <strong>{{ contest.category }}</strong>
-        </div>
+      <v-expansion-panels style="position:fixed;">
+        <v-expansion-panel>
+          <v-expansion-panel-header class="exp">
+            Problems
+            <template v-slot:actions>
+              <v-icon color="white">$expand</v-icon>
+            </template>
+          </v-expansion-panel-header>
 
-
-       
+          <v-expansion-panel-content>
+            <div v-if="problemsState.loading">
+              <v-skeleton-loader type="list-item" width="100%"></v-skeleton-loader>
+            </div>
+            <div class="question-numbers" v-if="!problemsState.loading && !problemsState.error">
+              <div
+                :class="`question-number ${problem.submission?'green':'grey'}`"
+                v-for="(problem,i) in problemsState.problems"
+                :key="i+1"
+                @click.prevent="scrollIntoView(i+1)"
+              >{{i+1}}</div>
+            </div>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
+      <br />
+      <br />
+    
+      <Error v-if="problemsState.error" ></Error>
+      <div v-if="problemsState.loading" style="padding:0 10px;">
+        <v-skeleton-loader v-for="i in 10" :key="i" type="card" width="100%"></v-skeleton-loader>
       </div>
-      <div>
-        <v-skeleton-loader
-          v-if="progress"
-          type="card"
-          style="margin-right: 100px"
-        ></v-skeleton-loader>
-      </div>
-      <div v-if="error">Error Loading</div>
-      <div v-if="!progress && !error">
-        <div class="index_btn">
-          {{ currentQuestion + 1 }}
-        </div>
-        <div class="question">
-          {{ questions[currentQuestion].question }}
-        </div>
-
-        <v-container v-if='questions[currentQuestion].multiple_correct_answers=="false"' fluid class="options-container">
-          <v-radio-group
-            v-for="value in ['a', 'b', 'c', 'd', 'e', 'f']"
-            :key="`q${currentQuestion}${value}`"
-            v-model="script[currentQuestion]"
-            dark
-          >
-            <v-radio
-              :id="`q${currentQuestion}${value}`"
-              :value="`q${currentQuestion}${value}`"
-              :label="questions[currentQuestion].answers[`answer_${value}`]"
-              v-if="questions[currentQuestion].answers[`answer_${value}`]"
-            >
-            </v-radio>
-          </v-radio-group>
-        </v-container>
-        <v-container v-if='questions[currentQuestion].multiple_correct_answers=="true"' fluid>
-          <div
-            v-for="value in ['a', 'b', 'c', 'd', 'e', 'f']"
-            :key="`q${currentQuestion}${value}`"
-          >
-            <v-checkbox
-              :value="`q${currentQuestion}${value}`"
-              :label="questions[currentQuestion].answers[`answer_${value}`]"
-              v-if="questions[currentQuestion].answers[`answer_${value}`]"
-            v-model="script[currentQuestion]"
-            dark
-
-
-            >
-            </v-checkbox>
-          </div>
-        </v-container>
-        <button
-          class="next-btn"
-          v-if="questions.length > currentQuestion + 1"
-          @click.prevent="next"
-        >
-          Next
-        </button>
-        <button
-          class="next-btn"
-          v-if="questions.length > currentQuestion"
-          @click.prevent="clear"
-        >
-          clear
-        </button>
-       
+      <div v-if="!problemsState.error && !problemsState.loading" class="problems">
+        <Problem
+          :ref="`index${index+1}`"
+          v-for="(item,index) in problemsState.problems"
+          :key="item.uuid"
+          :id="`index${index+1}`"
+          :ind="index"
+          :problem="item"
+        ></Problem>
       </div>
     </div>
   </v-main>
@@ -203,228 +81,203 @@
 import { Vue, Component } from "vue-property-decorator";
 
 import { appName } from "@/env";
-import {
-  readQuestions,
-  readQuestionsError,
-  readQuestionsProgress,
-  readQuestionsAnswers
-} from "@/store/contest/getters";
-import { commitSetError, commitSetInProgress,commitSetAnswers ,commitSetSubmitted} from "@/store/contest/mutations";
+import Error from '@/components/Error.vue'
 // import { dispatchFetchQuestions,dispatchPostAnswers } from "@/store/contest/actions";
 import { Contest } from "@/interfaces";
-import { Dictionary } from "vue-router/types/router";
-
+import {
+  dispatchGetContestData,
+  dispatchContestProblems
+} from "../../store/contest/actions";
+import {
+  readContestDataState,
+  readContestProblemState
+} from "../../store/contest/getters";
+import Problem from "@/components/Problem.vue";
 function stringify(str: string) {
   console.log(str);
   if (str == "undefined") return "";
   return str;
 }
-@Component
+@Component({
+  components: { Problem,Error }
+})
 export default class ContestView extends Vue {
+  public panic: boolean = false;
   public appName = appName;
+  public progress = 0;
   public selectedChoice: number | null = null;
   public dialog: boolean = false;
-  public tileview: boolean = true;
-  public currentQuestion: number = 0;
-  public script: (any | null|string[])[] = [
-    [],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],
-  ];
+  countdown: string = "";
+  public getDurationData(millis) {
+    var now = new Date().getTime() + 5.5 * 60 * 60 * 1000;
 
-  public get questions() {
-    return readQuestions(this.$store);
-  }
-  public get error() {
-    return readQuestionsError(this.$store);
-  }
-  public get progress() {
-    return readQuestionsProgress(this.$store);
-  }
-   public get answers() {
-    return readQuestionsAnswers(this.$store);
-  }
-  public next() {
-    this.currentQuestion += 1;
+    var distance = millis - now;
 
-    this.$forceUpdate();
+    if (distance < 0) return -1;
+
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor(
+      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    if (minutes + 60 * hours <= 10) this.panic = true;
+    else this.panic = false;
+    if (this.contestState.contest) {
+      this.progress =
+        100 -
+        ((minutes + 60 * hours) * 100) /
+          Number(this.contestState.contest.duration);
+    }
+    return {
+      days,
+      hours,
+      minutes,
+      seconds
+    };
   }
-  public switchGrid() {
-    this.tileview = !this.tileview;
+  public getime() {
+    var x = setInterval(() => {
+      if (this.contestState.contest) {
+        const countDownDate = Date.parse(
+          (this.contestState as any).contest.end_date
+        );
+        const object = this.getDurationData(countDownDate);
+        // console.log('object',object)
+        if (object != -1)
+          this.countdown =
+            object.hours + "h " + object.minutes + "m " + object.seconds + "s ";
+        else {
+          clearInterval(x);
+        }
+      }
+    }, 1000);
   }
-  public submit(){
-    console.log(this.script);
+  public submit() {
     this.dialog = false;
-    // dispatchPostAnswers(this.$store,this.script);
-    this.$router.push('/contests/${this.$route.query.id}/submission');
- 
-
+  }
+  public get contestUUID() {
+    return this.$route.params["contest_uuid"];
   }
 
-  public get contest() {
-    return 0
-    // const contest: Contest = {
-    //   id: String(query.id),
-    //   contest_name: String(query.contest_name),
-    //   category: stringify(String(query.category)),
-    //   contest_duration: Number(query.contest_duration),
-    //   difficulty: stringify(String(query.difficulty)),
-    //   contest_total_questions: Number(query.contest_total_questions),
-    // };
-    // return contest;
+  public get contestState() {
+    return readContestDataState(this.$store);
+  }
+  public get problemsState() {
+    console.log(readContestProblemState(this.$store));
+    return readContestProblemState(this.$store);
   }
 
-  public goto(index: number) {
-    this.currentQuestion = index;
-    this.$forceUpdate();
-  }
-  public clear() {
-    console.log(this.currentQuestion);
-    this.script[this.currentQuestion] = null;
-    this.$forceUpdate();
-  }
+  public goto(index: number) {}
+  public clear() {}
 
-  public beforeCreate() {
-    const query = this.$route.query;
-    const params = this.$route.params;
-    const contest_uuid = String(params.uuid);
+  public beforeMount() {
+    this.getime();
+    window.addEventListener("beforeunload", this.onReload);
 
-    console.log(contest_uuid);
-    // dispatchFetchQuestions(this.$store, contest);
+    dispatchGetContestData(this.$store, this.contestUUID);
+    dispatchContestProblems(this.$store, this.contestUUID);
   }
   public onReload(event) {
-    //  alert("Reload?");
     event.preventDefault();
     event.returnValue = "";
   }
-  public beforeMount() {
-    window.addEventListener("beforeunload", this.onReload);
+
+  public scrollIntoView(index) {
+    (document.getElementById(`index${index}`) as any).scrollIntoView({
+      behavior: "smooth",
+      block: "end"
+    });
   }
   public beforeDestroy() {
     window.removeEventListener("beforeunload", this.onReload);
   }
 
-  public destroyed() {
-    commitSetError(this.$store, false);
-    commitSetInProgress(this.$store, true);
-  }
+  public destroyed() {}
 }
 </script>
 <style scoped lang="scss">
 @import "@/assets/css/global.scss";
-
-.cntainer {
-  padding-left: 300px;
-
-  padding-top: 10px;
-  height: 100%;
-  background-color: #fafafa;
-  width: 100%;
-  flex-direction: column;
-}
-
-.list-view-item {
-  margin-bottom: 10px;
-  margin: 5px 5px;
-  background-color: #f6f6f6;
-  padding: 20px 10px;
-  // font-weight: bold;
-  font-size: 10px;
-  border: 2px solid rgb(246, 246, 246);
-
-  // padding: 0 10px;
-  &:hover {
-    background-color: #d1d1d1;
+.problems {
+  padding: 50px 100px 0 100px;
+  @include md {
+    padding: 50px 10px 0 10px;
   }
-  border-radius: 10px;
-}
-
-.current-item {
-  border: 2px solid rgb(0, 140, 255);
-  box-shadow: #b4b4b4;
-}
-.next-btn {
-  background-color: rgb(149, 213, 255);
-  color: blue;
-  padding: 10px 30px;
-  font-weight: bold;
-  border-radius: 20px;
-  margin-right: 20px;
-}
-.app-head-contest{
-  font-family: 'Raleway';
-  font-weight: bold;
-  font-size: 30px;
 }
 .submit-btn {
-  background-color: rgb(200, 200, 200);
-  color: rgb(0, 0, 0);
-  padding: 10px 30px;
+  background-color: rgb(177, 224, 255);
+  padding: 5px 10px;
+  color: rgb(0, 140, 255);
   font-weight: bold;
-  border-radius: 20px;
-  margin-right: 20px;
 }
-.index_btn {
-  background-color: rgb(68, 68, 68);
-  color: white;
-  font-size: 20px;
-  padding: 4px;
-  width: 40px;
-  height: 40px;
+.red {
+  background-color: rgb(163, 67, 67);
+}
+.cntainer {
+  width: 100%;
+  height: 100%;
+}
+.timer {
   font-weight: bold;
-  text-align: center;
-
-  border-radius: 50% 50% 0 0;
+  font-family: "B612";
+  float: right;
+  padding: 5px 10px;
+  // color:white;
+  // background-color:$green2;
+  border-radius: 15px;
 }
-.contest-name {
-  color: $xDark;
-  font-size: 20px;
-
-  font-family: 'Montserrat';
-  // margin-bottom: 100px;
-}
-.options-container{
-  background-color: $xDark;
+.question-number {
   color: white;
-  margin-top: 4px;
-}
-.options-container > *{
-  color: white;
-}
-.answered-grid-item {
-}
-.question {
-  // margin-top: 10px;
   padding: 10px;
-  color: white;
-  font-size: 16px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-weight: bold;
-  background-color: $xDark;
-}
-.contest-head {
-  display: flex;
-  padding: 10px 30px 10px 0px;
-  margin-bottom: 60px;
-  justify-content: space-between;
-}
-.grid-view {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-}
-.grid-view-item {
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  color: white;
-  background-color: rgb(85, 85, 85);
-  margin: 10px;
   border-radius: 5px;
-  font-size: 20px;
+  margin: 5px;
 }
-.grid-current-item {
-  background-color: rgb(81, 185, 255);
+.grey {
+  background-color: rgb(167, 167, 167);
 }
-.answered-grid-item {
-  background-color: rgb(187, 187, 187);
+.green {
+  background-color: $green2;
+}
+.question-numbers {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.exp {
+  background-color: $xMedium;
+  color: white;
+}
+.error-message-div {
+  flex-direction: column;
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.error-message {.error-message-div {
+  flex-direction: column;
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.error-message {
+  font-weight: bold;
+  color: rgb(146, 146, 146);
+  font-size: 30px;
+  @include md {
+    font-size: 20px;
+  }
+  font-family: "B612";
+}
+  font-weight: bold;
+  color: rgb(146, 146, 146);
+  font-size: 30px;
+  @include md {
+    font-size: 20px;
+  }
+  font-family: "B612";
 }
 </style>

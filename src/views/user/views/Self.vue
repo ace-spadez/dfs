@@ -1,7 +1,25 @@
 <template>
  <v-main>
-     <div v-if="selfProfileState.error">error</div>
-     <div v-if="selfProfileState.loading"><v-progress-circular></v-progress-circular></div>
+     <div v-if="selfProfileState.error"><Error></Error></div>
+       <div v-if="selfProfileState.loading" class="biodata">
+        <v-skeleton-loader
+        type="image"
+        width="150px"
+        height="150px"
+        style="object-fit:cover;border-radius:50%;"
+      ></v-skeleton-loader>
+           <v-skeleton-loader
+        type="list-item"
+        width="250px"
+        style="margin-top:20px;"
+           ></v-skeleton-loader>
+
+            <v-skeleton-loader
+        type="card"
+        width="550px"
+        style="margin-top:20px;"
+           ></v-skeleton-loader>
+    </div>
      <div v-if="selfProfileState.user" class="biodata">
         <img v-if="userProfile.profile_image==null"
         
@@ -46,9 +64,10 @@ import {
 } from "@/store/main/getters";
 import { readUserProfileState } from '../../../store/user/getters';
 import { dispatchGetUserProfile } from '../../../store/user/actions';
+import Error from '@/components/Error.vue'
 @Component({
   components:{
-    Chart
+    Chart,Error
   }
 })
 export default class SelfProfile extends Vue {
