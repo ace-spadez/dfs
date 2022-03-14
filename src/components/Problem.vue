@@ -4,31 +4,38 @@
 
     <vue-mathjax :formula="problem.content" class="question"></vue-mathjax>
     <div v-if="problem.problem_type=='S'">
-      
       <div v-for="(option,index) in problem.options" class="option" :key="index">
-        <input class="radio" type="radio" :id="problem.uuid" :value="option.uuid" v-model="cOption" />
+        <input class="radio" type="radio" :id="problem.uuid" :value="option.uuid" v-model="cOption" @change="saved=false" />
 
         <vue-mathjax style="margin-left:10px;" :formula="option.content"></vue-mathjax>
       </div>
     </div>
-     <div v-if="problem.problem_type=='M'">
-       
+    <div v-if="problem.problem_type=='M'">
       <div v-for="(option,index) in problem.options" class="option" :key="index">
-        <input type="checkbox" class="checkbox" :id="problem.uuid" :value="option.uuid" v-model="cOptions" />
+        <input
+          type="checkbox"
+          class="checkbox"
+          :id="problem.uuid"
+          :value="option.uuid"
+          v-model="cOptions"
+          @change="saved=false"
+        />
 
-        <vue-mathjax style="margin-left:10px;" :formula="option.content"></vue-mathjax>
+        <vue-mathjax style="margin-left:10px;" :formula="option.content" ></vue-mathjax>
       </div>
     </div>
-     <div v-if="problem.problem_type=='I'">
-      <FormulateInput style="background-color:white;color:black;width:200px;" v-model="cInteger" type="number"></FormulateInput>
+    <div v-if="problem.problem_type=='I'">
+      <FormulateInput
+        style="background-color:white;color:black;width:200px;"
+        v-model="cInteger"
+        type="number"
+        @change="saved=false"
+      ></FormulateInput>
     </div>
     <br />
-    <button class="save" @click.prevent="save">
-      <v-icon color="white" >mdi-upload</v-icon>save
-    </button>
-     <button class="clear" @click.prevent="clear">
-      <v-icon color="white" >mdi-close</v-icon>clear
-    </button>
+    <v-btn color="green" :class="`save`" :disabled="saved" dark @click.prevent="save">save</v-btn>
+
+    <v-btn color="red lighten-1" :class="`clear`" :disabled="isClear" dark @click.prevent="clear">clear</v-btn>
   </div>
 </template>
 
@@ -36,60 +43,78 @@
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { Contest } from "@/interfaces";
 import { getMonth } from "@/utils";
-import { dispatchSubmitAnswerState } from '../store/contest/actions';
+import { dispatchSubmitAnswerState } from "../store/contest/actions";
 @Component
 export default class Problem extends Vue {
   @Prop() problem: any;
   @Prop() ind: any;
 
+  public saved = true;
+
   public cOption: string = "";
-  public cOptions: any=[];
-  public cInteger: number|null=null;
-  public beforeMount(){
+  public cOptions: any = [];
+  public cInteger: number | null = null;
+
+
+  public get isClear(){
+    if(this.cOption=="" && this.cOptions.length<=0 && this.cInteger==null) return true;
+    return false;
+  }
+ 
+  public beforeMount() {
+    if (this.problem.submission) {
+      console.log(this.problem.submission);
+      if (this.problem.submission.integer_content) {
+        this.cInteger = this.problem.submission.integer_content;
+      }
+      if (
+        this.problem.submission.options &&
+        this.problem.submission.options.length > 0
+      ) {
+        if (this.problem.problem_type == "S") {
+          this.cOption = this.problem.submission.options[0].uuid;
+        }
+        if (this.problem.problem_type == "M") {
+          this.problem.submission.options.map(option => {
+            console.log(option);
+            this.cOptions.push(option.uuid);
+          });
+        }
+      }
+    }
     
-      if(this.problem.submission){
-        console.log(this.problem.submission)
-          if(this.problem.submission.integer_content){
-              this.cInteger  = this.problem.submission.integer_content;
-          }
-          if(this.problem.submission.options && this.problem.submission.options.length>0){
-              if(this.problem.problem_type=='S'){
-                  this.cOption = this.problem.submission.options[0].uuid;
-              }
-              if(this.problem.problem_type=='M'){
-                  this.problem.submission.options.map(option=>{
-                    console.log(option)
-                      this.cOptions.push(option.uuid)
-                  })
-              }
-          }
-      }
+    this.saved =true;
   }
-  public  async save(){
-      let answer:any={}
-      if(this.problem.problem_type=='S'){
-          answer.options = [];
-          if(this.cOption)
-          answer.options.push({uuid:this.cOption})
-      }
-      if(this.problem.problem_type=='M'){
-          answer.options=[];
-          this.cOptions.map(cption=>{
-              answer.options.push({uuid:cption})
-          })
-      }
-      if(this.problem.problem_type=='I'){
-        if(this.cInteger)
-          answer.integer_content=this.cInteger;
-      }
-      console.log(answer);
-      dispatchSubmitAnswerState(this.$store,{contest_uuid:this.$route.params['contest_uuid'],problem_uuid:this.problem.uuid,submission:answer,index:this.ind})
+  public async save() {
+    let answer: any = {};
+    if (this.problem.problem_type == "S") {
+      answer.options = [];
+      if (this.cOption) answer.options.push({ uuid: this.cOption });
+    }
+    if (this.problem.problem_type == "M") {
+      answer.options = [];
+      this.cOptions.map(cption => {
+        answer.options.push({ uuid: cption });
+      });
+    }
+    if (this.problem.problem_type == "I") {
+      if (this.cInteger) answer.integer_content = this.cInteger;
+    }
+    console.log(answer);
+    await dispatchSubmitAnswerState(this.$store, {
+      contest_uuid: this.$route.params["contest_uuid"],
+      problem_uuid: this.problem.uuid,
+      submission: answer,
+      index: this.ind
+    });
+    this.saved = true;
   }
-  public async clear(){
-      this.cOption='';
-      this.cOptions=[];
-      this.cInteger = null;
-      this.save();
+  public async clear() {
+   this.cOption = "";
+    this.cOptions = [];
+    this.cInteger = null;
+    this.save();
+  
   }
 }
 </script>
@@ -127,15 +152,15 @@ export default class Problem extends Vue {
   padding: 10px 10px;
 }
 .save {
-  padding: 10px 25px;
+  padding: 8px 20px;
   background-color: $green2;
   border-radius: 5px;
 }
 .clear {
-  padding: 10px 25px;
+  padding: 8px 20px;
   background-color: $green2;
   border-radius: 5px;
-  margin-left:10px;
+  margin-left: 10px;
 }
 .red-option {
   color: rgb(255, 189, 189);
@@ -175,7 +200,7 @@ export default class Problem extends Vue {
 
   width: 16px;
   height: 16px;
-border-radius: 2px;
+  border-radius: 2px;
   border: 2px solid rgb(255, 255, 255);
   transition: 0.2s all linear;
   margin-right: 5px;

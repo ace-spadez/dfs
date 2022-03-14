@@ -140,20 +140,20 @@ export const actions = {
   },
   async actionBeginAttemptState(context: MainContext,contest_uuid:string) {
     const token:string = context.state.token;
-    const BeginAttemptState:BeginAttemptState= context.state.beginAttemptState;
-    BeginAttemptState.loading = true;
-    BeginAttemptState.error = false;
-    commitSetBeginAttemptState(context,BeginAttemptState)
-    try {
+    // const BeginAttemptState:BeginAttemptState= context.state.beginAttemptState;
+    // BeginAttemptState.loading = true;
+    // BeginAttemptState.error = false;
+    // commitSetBeginAttemptState(context,BeginAttemptState)
+    // try {
       const res = await api.postBeginAttempt(token,contest_uuid);
-      BeginAttemptState.loading = false;
-      commitSetBeginAttemptState(context,BeginAttemptState);
-    } catch (err) {
-      console.log(err)
-      BeginAttemptState.loading = false;
-      BeginAttemptState.error = true;
-      commitSetBeginAttemptState(context,BeginAttemptState);
-    }
+    //   BeginAttemptState.loading = false;
+    //   commitSetBeginAttemptState(context,BeginAttemptState);
+    // } catch (err) {
+    //   console.log(err)
+    //   BeginAttemptState.loading = false;
+    //   BeginAttemptState.error = true;
+    //   commitSetBeginAttemptState(context,BeginAttemptState);
+    // }
   },
 };
 

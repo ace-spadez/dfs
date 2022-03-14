@@ -17,7 +17,7 @@
     <div class="right-space">
       <div class="rankings-head">Rankings</div>
       <div class='rankings-main' v-if="standingsState.loading">
-        <v-skeleton-loader type="list-item-avatar" width="100%" dark v-for="i in 10"  :key="i"></v-skeleton-loader>
+        <v-skeleton-loader type="list-item-avatar" width="100%" dark v-for="i in 4"  :key="i"></v-skeleton-loader>
       </div>
       <div class="rankings-main" v-if="standingsState.standings.length>0">
         <div

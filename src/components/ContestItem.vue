@@ -17,45 +17,62 @@
       <div class="wrap-item-description">{{contest.description.slice(0,70)}} ...</div>
     </router-link>
 
-      <div class="wrap-item-body">
-        <span class="timestamp">
-          {{contest.target_date.slice(8,10)}} {{getM(contest.target_date.slice(5,7))}} {{contest.target_date.slice(0,4)}}
-          <br />
-          {{contest.target_date.slice(11,16)}} {{contest.duration}} min
-        </span>
-        <v-spacer></v-spacer>
+    <div class="wrap-item-body">
+      <span class="timestamp">
+        {{contest.target_date.slice(8,10)}} {{getM(contest.target_date.slice(5,7))}} {{contest.target_date.slice(0,4)}}
+        <br />
+        {{contest.target_date.slice(11,16)}} {{contest.duration}} min
+      </span>
+      <v-spacer></v-spacer>
 
-        <div v-if="contest.is_applied==false && countdown!=''">
-          <button class="wrap-item-btn" @click.stop="applyContest">Remind Me</button>
-        </div>
-        <!-- <div v-if="countdownOngoing!=''">
-            <button class="wrap-item-btn" @click.stop="applyContest">Enter Contest</button>
-        </div> -->
-        
-        <div v-if="contest.is_applied==true && countdown!=''">
-         <button class="wrap-item-btn-applied">Reminder On</button>
-        </div>
-        <div v-if="contest.status=='Passed' && countdown=='' && countdownOngoing==''">
-          <button class="wrap-item-btn-done">Contest Over</button>
-        </div>
-        <v-dialog v-model="dialog" width="500" v-if="countdownOngoing!=''">
-          <template v-slot:activator="{ on, attrs }">
-<button class="wrap-item-btn"  v-bind="attrs" v-on="on" >Enter Contest</button>          </template>
-
-          <v-card>
-            <v-card-title class="headline grey lighten-2">Privacy Policy</v-card-title>
-
-            <v-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</v-card-text>
-
-            <v-divider></v-divider>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click.prevent="enterContest">I accept</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+      <div v-if="contest.is_applied==false && countdown!='' && !this.loading">
+        <button class="wrap-item-btn" @click.stop="applyContest">Remind Me</button>
       </div>
+      <!-- <div v-if="countdownOngoing!=''">
+            <button class="wrap-item-btn" @click.stop="applyContest">Enter Contest</button>
+      </div>-->
+      <FormulateInput v-if="tloading" type="button" disabled>
+        Loading
+        <v-progress-circular size="20" color="white" indeterminate style="margin-left:6px;"></v-progress-circular>
+      </FormulateInput>
+      <div v-if="contest.is_applied==true && countdown!='' &&  !this.loading">
+        <button class="wrap-item-btn-applied">Reminder On</button>
+      </div>
+      <div v-if="contest.status=='Passed' && countdown=='' && countdownOngoing==''">
+        <button class="wrap-item-btn-done">Contest Over</button>
+      </div>
+      <div v-if="countdownOngoing!='' && contest.attempt==true" class="resume-div">
+        <router-link :to="{name:'contest',params:{contest_uuid:contest.uuid}}">
+          <button class="wrap-item-btn-resume">
+            <img src="@/assets/img/play.svg" width="20px" height="20px" />
+            <span>Resume</span>
+          </button>
+        </router-link>
+      </div>
+      <v-dialog v-model="dialog" width="500" v-if="countdownOngoing!='' && contest.attempt==false">
+        <template v-slot:activator="{ on, attrs }">
+          <button class="wrap-item-btn" v-bind="attrs" v-on="on">Enter Contest</button>
+        </template>
+
+        <v-card>
+          <v-card-title>Enter the Contest?</v-card-title>
+
+          <v-card-text>Remember, once you enter the contest, your score will be counted in the standings. If you don't answer any question at all, you'll get a straight zero score and your rating will fall considerably.</v-card-text>
+          <v-card-text>Total time left is {{this.countdownOngoing}}</v-card-text>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click.prevent="enterContest" v-if="!attemptLoading">I accept</v-btn>
+             <FormulateInput v-if="attemptLoading" type="button" disabled>
+        Loading
+        <v-progress-circular size="20" color="white" indeterminate style="margin-left:6px;"></v-progress-circular>
+      </FormulateInput>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
   </div>
 </template>
 
@@ -68,27 +85,36 @@ import {
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { Contest } from "@/interfaces";
 import { getMonth } from "@/utils";
-import { dispatchBeginAttemptState } from '../store/contest/actions';
+import { dispatchBeginAttemptState } from "../store/contest/actions";
 @Component
 export default class ContestItem extends Vue {
   public dialog = false;
   @Prop() contest: Contest | undefined;
   @Prop() ind: number | undefined;
 
+  public loading = false;
+
+  public attemptLoading = false;
   countdown: string = "";
   countdownOngoing: string = "";
   public getM(str: string) {
     return getMonth(Number(str));
   }
-  public applyContest() {
-    if (this.contest != undefined)
-      dispatchApplyContests(this.$store, {
-        uuid: this.contest["uuid"],
+  public async applyContest() {
+    this.loading = true;
+    try {
+      await dispatchApplyContests(this.$store, {
+        uuid: (this.contest as any)["uuid"],
         id: this.ind
       });
+      this.loading = false;
+    } catch (err) {
+      console.log(err);
+      this.loading = false;
+    }
   }
   public getDurationData(millis) {
-    var now = new Date().getTime()  +(5.5 * 60 * 60 * 1000);
+    var now = new Date().getTime() + 5.5 * 60 * 60 * 1000;
 
     var distance = millis - now;
 
@@ -133,8 +159,17 @@ export default class ContestItem extends Vue {
       }
     }
   }
-  public enterContest(){
-    dispatchBeginAttemptState(this.$store,(this.contest as any).uuid)
+  public async enterContest() {
+    this.attemptLoading = true;
+    try {
+      await dispatchBeginAttemptState(this.$store, (this.contest as any).uuid);
+      this.attemptLoading = false;
+    } catch (err) {
+      console.log(err);
+      this.attemptLoading = false;
+
+    }
+    this.$router.push({name:'contest',params:{contest_uuid:(this.contest as any).uuid}})
   }
   public getime() {
     this.runOnce();
@@ -188,6 +223,26 @@ export default class ContestItem extends Vue {
 
   font-size: 13px;
 }
+.wrap-item-btn-resume img {
+  margin-right: 10px;
+}
+.wrap-item-btn-resume {
+  color: rgb(0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-content: space-between;
+  // background: $green2;
+  border: 3px solid $green2;
+  padding: 6px 30px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgb(180, 179, 179);
+  margin-top: 10px;
+
+  font-size: 13px;
+}
 .chips-container {
   display: flex;
   flex-wrap: wrap;
@@ -196,7 +251,7 @@ export default class ContestItem extends Vue {
   text-decoration: none;
 }
 .wrap-item-btn-applied {
-  color:white;
+  color: white;
   background: $xLightDark;
   padding: 6px 30px;
   font-family: "Montserrat";
@@ -208,6 +263,9 @@ export default class ContestItem extends Vue {
 }
 .allgreen {
   background-color: rgb(234, 255, 234);
+}
+.resume-div a {
+  text-decoration: none;
 }
 .wrap-item-btn-done {
   color: rgb(255, 255, 255);

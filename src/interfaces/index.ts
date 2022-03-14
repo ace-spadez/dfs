@@ -92,6 +92,7 @@ export interface Contest{
     is_attempted:boolean;
     status:string;
     question_count: number;
+    attempt: boolean;
 
 }
 export interface ITag{

@@ -88,7 +88,7 @@ export const api = {
   },
   async getUser(token: string, username: string) {
     await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
-    
+
     return axios.get(`${apiUrl}/api/auth/users/${username}/`, authHeaders(token))
   },
   async getRankingHistory(token: string, username: string) {
@@ -133,6 +133,8 @@ export const api = {
     });
   },
   async applyForContest(token: string, contest_uuid: string) {
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 5000));
+
     return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/apply/`, {}, authHeaders(token))
   },
   async getRankList(token: string, subject: string | null) {
@@ -220,6 +222,8 @@ export const api = {
     return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/problems/${problem_uuid}/answer/`, submission, authHeaders(token))
   },
   async postBeginAttempt(token: string, contest_uuid: string) {
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 5000));
+
     return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/attempt/`, {}, authHeaders(token))
   },
 };
