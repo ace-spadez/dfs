@@ -286,10 +286,14 @@ class QuadContestProblemView(views.APIView):
         user =  request.user
         contest = Contest.objects.get(uuid=contest_uuid)
         problem = contest.problems.get(uuid=problem_uuid)
+        print(request.data)
 
         serializer = QuadProblemPatchSerializer(data=request.data)
+
+
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
+        print(data)
 
 
 

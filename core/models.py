@@ -1,6 +1,7 @@
 from django.db import models
 from appauth.models import User
 import uuid
+from datetime import datetime
 from django.utils import timezone 
 # Create your models here.
 class Contestchip(models.Model):
@@ -52,7 +53,10 @@ class Contest(models.Model):
     def status(self):
         td =self.target_date
         ed = self.end_date
-        dt =timezone.now()
+        dt =timezone.now()+timezone.timedelta(hours=5,minutes=30)
+        print("ed",ed)
+        print("td",td)
+        print("dt",dt)
         if dt<td:
             return 'Pending'
         elif dt<ed:
@@ -64,14 +68,15 @@ class Contest(models.Model):
             setattr(self, field, value)
         self.save(update_fields=kwargs.keys())
         return self
-
+    def  __str__(self):
+        return self.name
 class Score(models.Model):
     uuid = models.UUIDField(
         default=uuid.uuid4, editable=False, unique=True, primary_key=True)
-    score_all = models.IntegerField(null=True)
-    score_m = models.IntegerField(null=True)
-    score_p = models.IntegerField(null=True)
-    score_c = models.IntegerField(null=True)
+    score_all = models.IntegerField(null=True,blank=True)
+    score_m = models.IntegerField(null=True,blank=True)
+    score_p = models.IntegerField(null=True,blank=True)
+    score_c = models.IntegerField(null=True,blank=True)
 
 class  Contestprocess(models.Model):
     PENDING = 'P'
@@ -91,7 +96,7 @@ class  Contestprocess(models.Model):
     rating = models.ForeignKey('appauth.Rating',on_delete=models.CASCADE,null=True,related_name='processes')
     rating_change = models.ForeignKey('appauth.Rating',on_delete=models.CASCADE,null=True,related_name='ch_processes')
     score = models.ForeignKey(Score,on_delete=models.PROTECT,null=True)
-    rated_date = models.DateTimeField(null=True)
+    rated_date = models.DateTimeField(null=True,blank=True)
     def get_total_marks(self):
         sum = 0
         sum_p = 0
@@ -112,7 +117,8 @@ class  Contestprocess(models.Model):
         self.score.score_m = sum_m
         self.score.save()
         return sum
-
+    def __str__(self):
+        return self.user.username+" "+self.contest.name
 
 class Problem(models.Model):
     SINGLE = 'S'

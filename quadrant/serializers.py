@@ -68,7 +68,7 @@ class QuadOptionUUIDSerializer(serializers.Serializer):
 class QuadProblemPatchSerializer(serializers.Serializer):
     content = serializers.CharField(required=False)
     content_image = serializers.ImageField(required=False)
-    subject =  serializers.ChoiceField(choices=Problem.QUESTION_SUBJECT_CHOICES)
+    subject =  serializers.ChoiceField(choices=Problem.QUESTION_SUBJECT_CHOICES,required=False)
     correct_integer = serializers.IntegerField(required=False)
 
     new_options = QuadOptionCheckSerializer(many=True,required=False)

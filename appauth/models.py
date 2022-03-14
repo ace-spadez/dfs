@@ -27,7 +27,7 @@ class User(AbstractUser):
     isVerified = models.BooleanField(default=False)
 
     def is_friend(self,req_user):
-        if self.watchees.filter(watchee=req_user).exists():
+        if self.watchers.filter(watcher=req_user).exists():
             return True
         return False
 

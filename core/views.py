@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, get_object_or_404
 from rest_framework import views, status, response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -147,23 +148,23 @@ class AnswerView(views.APIView):
         
         options = data.get('options',None)
         integer_content = data.get('integer_content',None)
-        if options==None and integer_content==None:
-            return response.Response({},status=status.HTTP_400_BAD_REQUEST)
+        if (options==None or len(options)==0) and integer_content==None:
+            submission.delete()
+        else:
+            if integer_content is not None:
+                submission.integer_content = integer_content
+            if options is not None:
+                submission.options.clear()
+                for option in options:
+                    opt = Option.objects.get(uuid=option['uuid'])
+                    submission.options.add(opt)
+            submission.save()
 
-        if integer_content is not None:
-            submission.integer_content = integer_content
-        if options is not None:
-            for option in options:
-                opt = Option.objects.get(uuid=option['uuid'])
-                submission.options.add(opt)
 
-        serializer = AnswerModelSerializer(submission,context={'request':request})
 
         return response.Response(
             {
-                'body':serializer.data,
                 "message": "ok",
-               
             },
             status=status.HTTP_200_OK
         )
@@ -197,7 +198,7 @@ class StandingsView(views.APIView):
     def get(self,request,contest_uuid):
         contest = Contest.objects.get(uuid=contest_uuid)
         user = request.user
-        contestprocesses = Contestprocess.objects.filter(contest=contest)
+        contestprocesses = Contestprocess.objects.filter(contest=contest,attempt=True)
         paginator = ContestsPagination()
         page = paginator.paginate_queryset(contestprocesses, request)
         serializer = StandingsModelSerializer(page,many=True,context={'request':request})
