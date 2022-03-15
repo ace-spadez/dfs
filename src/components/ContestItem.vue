@@ -91,7 +91,7 @@ export default class ContestItem extends Vue {
   public dialog = false;
   @Prop() contest: Contest | undefined;
   @Prop() ind: number | undefined;
-
+  public x:any;
   public loading = false;
 
   public attemptLoading = false;
@@ -162,6 +162,11 @@ export default class ContestItem extends Vue {
   public async enterContest() {
     this.attemptLoading = true;
     try {
+      if((this.contest as any).is_applied==false)
+        await dispatchApplyContests(this.$store, {
+        uuid: (this.contest as any)["uuid"],
+        id: this.ind
+      });
       await dispatchBeginAttemptState(this.$store, (this.contest as any).uuid);
       this.attemptLoading = false;
     } catch (err) {
@@ -173,7 +178,7 @@ export default class ContestItem extends Vue {
   }
   public getime() {
     this.runOnce();
-    var x = setInterval(() => {
+    this.x = setInterval(() => {
       const countDownDate = Date.parse((this.contest as any).target_date);
       const object = this.getDurationData(countDownDate);
 
@@ -194,11 +199,17 @@ export default class ContestItem extends Vue {
         // durationData.seconds +
         // "s ";
         else {
-          clearInterval(x);
+          clearInterval(this.x);
           this.countdownOngoing = "";
         }
       }
     }, 60 * 1000);
+  }
+  public beforeDestroy(){
+    if(this.countdown!='' || this.countdownOngoing!=''){
+      clearInterval(this.x);
+      console.log('destroyed')
+    }
   }
 
   public created() {

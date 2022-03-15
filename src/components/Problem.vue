@@ -5,7 +5,14 @@
     <vue-mathjax :formula="problem.content" class="question"></vue-mathjax>
     <div v-if="problem.problem_type=='S'">
       <div v-for="(option,index) in problem.options" class="option" :key="index">
-        <input class="radio" type="radio" :id="problem.uuid" :value="option.uuid" v-model="cOption" @change="saved=false" />
+        <input
+          class="radio"
+          type="radio"
+          :id="problem.uuid"
+          :value="option.uuid"
+          v-model="cOption"
+          @change="saved=false"
+        />
 
         <vue-mathjax style="margin-left:10px;" :formula="option.content"></vue-mathjax>
       </div>
@@ -21,7 +28,7 @@
           @change="saved=false"
         />
 
-        <vue-mathjax style="margin-left:10px;" :formula="option.content" ></vue-mathjax>
+        <vue-mathjax style="margin-left:10px;" :formula="option.content"></vue-mathjax>
       </div>
     </div>
     <div v-if="problem.problem_type=='I'">
@@ -35,7 +42,13 @@
     <br />
     <v-btn color="green" :class="`save`" :disabled="saved" dark @click.prevent="save">save</v-btn>
 
-    <v-btn color="red lighten-1" :class="`clear`" :disabled="isClear" dark @click.prevent="clear">clear</v-btn>
+    <v-btn
+      color="red lighten-1"
+      :class="`clear`"
+      :disabled="isClear"
+      dark
+      @click.prevent="clear"
+    >clear</v-btn>
   </div>
 </template>
 
@@ -55,12 +68,22 @@ export default class Problem extends Vue {
   public cOptions: any = [];
   public cInteger: number | null = null;
 
+  @Watch("cInteger")
+  public onChange(n, o) {
+    if (this.problem.submission && o == null) return;
+    this.saved = false;
+  }
 
-  public get isClear(){
-    if(this.cOption=="" && this.cOptions.length<=0 && this.cInteger==null) return true;
+  public get isClear() {
+    if (
+      this.cOption == "" &&
+      this.cOptions.length <= 0 &&
+      this.cInteger == null
+    )
+      return true;
     return false;
   }
- 
+
   public beforeMount() {
     if (this.problem.submission) {
       console.log(this.problem.submission);
@@ -82,8 +105,8 @@ export default class Problem extends Vue {
         }
       }
     }
-    
-    this.saved =true;
+
+    this.saved = true;
   }
   public async save() {
     let answer: any = {};
@@ -110,11 +133,10 @@ export default class Problem extends Vue {
     this.saved = true;
   }
   public async clear() {
-   this.cOption = "";
+    this.cOption = "";
     this.cOptions = [];
     this.cInteger = null;
     this.save();
-  
   }
 }
 </script>

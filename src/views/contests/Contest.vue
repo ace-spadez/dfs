@@ -107,6 +107,7 @@ export default class ContestView extends Vue {
   public progress = 0;
   public selectedChoice: number | null = null;
   public dialog: boolean = false;
+  public  x:any;
   countdown: string = "";
   public getDurationData(millis) {
     var now = new Date().getTime() + 5.5 * 60 * 60 * 1000;
@@ -137,7 +138,7 @@ export default class ContestView extends Vue {
     };
   }
   public getime() {
-    var x = setInterval(() => {
+    this.x = setInterval(() => {
       if (this.contestState.contest) {
         const countDownDate = Date.parse(
           (this.contestState as any).contest.end_date
@@ -147,8 +148,10 @@ export default class ContestView extends Vue {
         if (object != -1)
           this.countdown =
             object.hours + "h " + object.minutes + "m " + object.seconds + "s ";
+          
         else {
-          clearInterval(x);
+          clearInterval(this.x);
+          this.$router.go(-1);
         }
       }
     }, 1000);
@@ -178,6 +181,7 @@ export default class ContestView extends Vue {
     dispatchGetContestData(this.$store, this.contestUUID);
     dispatchContestProblems(this.$store, this.contestUUID);
   }
+
   public onReload(event) {
     event.preventDefault();
     event.returnValue = "";
@@ -190,6 +194,7 @@ export default class ContestView extends Vue {
     });
   }
   public beforeDestroy() {
+    clearInterval(this.x)
     window.removeEventListener("beforeunload", this.onReload);
   }
 
