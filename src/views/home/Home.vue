@@ -252,7 +252,7 @@ export default class Main extends Vue {
     return readDashboardShowDrawer(this.$store);
   }
 
-  set showDrawer(value) {
+  public xshowDrawer(value) {
     commitSetDashboardShowDrawer(this.$store, value);
   }
 
@@ -268,6 +268,9 @@ export default class Main extends Vue {
       this.$store,
       !readDashboardMiniDrawer(this.$store)
     );
+  }
+  public beforeMount(){
+    if(this.$isMobile()) this.xshowDrawer(false)
   }
 }
 </script>

@@ -16,6 +16,8 @@ import VueFormulate from '@braid/vue-formulate'
 import VueKatex from 'vue-katex';
 import VueMathjax from 'vue-mathjax'
 import 'katex/dist/katex.min.css';
+import VueMobileDetection from 'vue-mobile-detection'
+Vue.use(VueMobileDetection)
 Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
 Vue.config.productionTip = false;
 Vue.use(VueFormulate)

@@ -31,7 +31,7 @@
       <!-- <div v-if="countdownOngoing!=''">
             <button class="wrap-item-btn" @click.stop="applyContest">Enter Contest</button>
       </div>-->
-      <FormulateInput v-if="tloading" type="button" disabled>
+      <FormulateInput v-if="loading" type="button" disabled>
         Loading
         <v-progress-circular size="20" color="white" indeterminate style="margin-left:6px;"></v-progress-circular>
       </FormulateInput>
