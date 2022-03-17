@@ -3,6 +3,10 @@
     <span class="Q" style>{{ind+1}}.</span>
 
     <vue-mathjax :formula="problem.content" class="question"></vue-mathjax>
+    <div class="chips">
+      <span class="subject">{{problem.subject=='M'?'Maths':problem.subject=='P'?'Physics':'Chemsitry'}}</span>
+      <span class="type">{{problem.problem_type=='S'?'Single Option Correct':problem.problem_type=='M'?'Multiple Options Correct':'Integer-type'}}</span>
+    </div>
     <div v-if="problem.problem_type=='S'">
       <div v-for="(option,index) in problem.options" class="option" :key="index">
         <input
@@ -234,5 +238,25 @@ export default class Problem extends Vue {
 .checkbox:checked {
   border: 6px solid rgb(85, 152, 240);
   outline: unset !important; /* I added this one for Edge (chromium) support */
+}
+.subject{
+padding:5px 10px;
+background-color:rgb(0, 0, 0);
+margin: 3px;
+border-radius: 4px;
+
+
+}
+.chips{
+  margin:10px 0;
+  color:rgb(148, 148, 148);
+  display:flex;
+  flex-wrap: wrap;
+}
+.type{
+padding:5px 10px;
+background-color:$xDark;
+border-radius: 4px;
+margin:3px;
 }
 </style>

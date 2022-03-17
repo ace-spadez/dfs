@@ -191,6 +191,7 @@ export interface IProblem{
     content: string;
     problem_type:string;
     content_image?:string;
+    subject: string;
     tags?:Array<string>;
     writer: IUserPreview;
     contest:string;

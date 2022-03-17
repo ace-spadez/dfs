@@ -8,7 +8,7 @@
         <v-img @click.stop="switchShowDrawer" src="@/assets/img/menu.png"></v-img>
       </v-list-item-action>
 
-      <img src="@/assets/img/logo.png" width="35px" />
+      <!-- <img src="@/assets/img/logo.png" width="35px" /> -->
       <!-- </v-toolbar-side-icon> -->
       <div class="v-toolbar-title">
         {{ appName }}
@@ -307,7 +307,7 @@ background: linear-gradient(90deg, rgba(98,204,167,1) 3%, rgba(0,255,162,1) 57%)
   // color: $color;
   color: $xDark;
   margin-left: 10px;
-  font-size: 1.5em;
+  font-size: 1.4em;
 }
 
 .profile-name {

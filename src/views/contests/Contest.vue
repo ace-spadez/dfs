@@ -45,21 +45,45 @@
             <div v-if="problemsState.loading">
               <v-skeleton-loader type="list-item" width="100%"></v-skeleton-loader>
             </div>
-            <div class="question-numbers" v-if="!problemsState.loading && !problemsState.error">
+            <div v-if="!problemsState.loading && !problemsState.error">
+              <div class="subject-name">Physics</div>
+              <div class="question-numbers">
+                <div
+                  :class="`question-number ${problem.submission?'green':'grey'}`"
+                  v-for="(problem,i) in arrfilter('P')"
+                  :key="i+1"
+                  @click.prevent="scrollIntoView(i+1)"
+                >{{i+1}}</div>
+              </div>
+
+              <div class="subject-name">Maths</div>
+              <div class="question-numbers">
+              
               <div
                 :class="`question-number ${problem.submission?'green':'grey'}`"
-                v-for="(problem,i) in problemsState.problems"
-                :key="i+1"
-                @click.prevent="scrollIntoView(i+1)"
-              >{{i+1}}</div>
+                v-for="(problem,i) in arrfilter('M')"
+                :key="arrfiltercount('P')+i+1"
+                @click.prevent="scrollIntoView(arrfiltercount('P')+i+1)"
+              >{{arrfiltercount('P')+i+1}}</div>
+              </div>
+              <div class="subject-name">Chemistry</div>
+              <div class="question-numbers">
+              
+              <div
+                :class="`question-number ${problem.submission?'green':'grey'}`"
+                v-for="(problem,i) in arrfilter('C')"
+                :key="arrfiltercount('M')+arrfiltercount('P')+i+1"
+                @click.prevent="scrollIntoView(arrfiltercount('M')+arrfiltercount('P')+i+1)"
+              >{{arrfiltercount('M')+arrfiltercount('P')+i+1}}</div>
+              </div>
             </div>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
       <br />
       <br />
-    
-      <Error v-if="problemsState.error" ></Error>
+
+      <Error v-if="problemsState.error"></Error>
       <div v-if="problemsState.loading" style="padding:0 10px;">
         <v-skeleton-loader v-for="i in 10" :key="i" type="card" width="100%"></v-skeleton-loader>
       </div>
@@ -81,7 +105,7 @@
 import { Vue, Component } from "vue-property-decorator";
 
 import { appName } from "@/env";
-import Error from '@/components/Error.vue'
+import Error from "@/components/Error.vue";
 // import { dispatchFetchQuestions,dispatchPostAnswers } from "@/store/contest/actions";
 import { Contest } from "@/interfaces";
 import {
@@ -99,7 +123,7 @@ function stringify(str: string) {
   return str;
 }
 @Component({
-  components: { Problem,Error }
+  components: { Problem, Error }
 })
 export default class ContestView extends Vue {
   public panic: boolean = false;
@@ -107,8 +131,16 @@ export default class ContestView extends Vue {
   public progress = 0;
   public selectedChoice: number | null = null;
   public dialog: boolean = false;
-  public  x:any;
+  public x: any;
+
   countdown: string = "";
+
+  public arrfiltercount(subject) {
+    return this.problemsState.problems.filter(p => p.subject == subject).length;
+  }
+  public arrfilter(subject) {
+    return this.problemsState.problems.filter(p => p.subject == subject);
+  }
   public getDurationData(millis) {
     var now = new Date().getTime() + 5.5 * 60 * 60 * 1000;
 
@@ -148,7 +180,6 @@ export default class ContestView extends Vue {
         if (object != -1)
           this.countdown =
             object.hours + "h " + object.minutes + "m " + object.seconds + "s ";
-          
         else {
           clearInterval(this.x);
           this.$router.go(-1);
@@ -194,7 +225,7 @@ export default class ContestView extends Vue {
     });
   }
   public beforeDestroy() {
-    clearInterval(this.x)
+    clearInterval(this.x);
     window.removeEventListener("beforeunload", this.onReload);
   }
 
@@ -233,9 +264,13 @@ export default class ContestView extends Vue {
 }
 .question-number {
   color: white;
-  padding: 10px;
+  padding: 5px 10px;
   border-radius: 5px;
   margin: 5px;
+}
+.subject-name{
+  color:grey;
+  font-size:0.9em;
 }
 .grey {
   background-color: rgb(167, 167, 167);
@@ -260,23 +295,24 @@ export default class ContestView extends Vue {
   justify-content: center;
   align-items: center;
 }
-.error-message {.error-message-div {
-  flex-direction: column;
-  width: 100%;
-  height: 90%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .error-message {
-  font-weight: bold;
-  color: rgb(146, 146, 146);
-  font-size: 30px;
-  @include md {
-    font-size: 20px;
+  .error-message-div {
+    flex-direction: column;
+    width: 100%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-  font-family: "B612";
-}
+  .error-message {
+    font-weight: bold;
+    color: rgb(146, 146, 146);
+    font-size: 30px;
+    @include md {
+      font-size: 20px;
+    }
+    font-family: "B612";
+  }
   font-weight: bold;
   color: rgb(146, 146, 146);
   font-size: 30px;

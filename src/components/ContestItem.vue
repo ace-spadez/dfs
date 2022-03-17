@@ -1,5 +1,5 @@
 <template>
-  <div :class="countdownOngoing!=''?'contest-item allgreen':'contest-item'">
+  <div :class="countdownOngoing!=''?'contest-item allgreen':countdown!=''?'contest-item':'contest-item greyish'">
     <router-link :to="{name:'contest-preview',params:{contest_uuid:contest.uuid}}">
       <div class="wrap-item-head">
         <div>{{ contest.name }}</div>
@@ -262,8 +262,8 @@ export default class ContestItem extends Vue {
   text-decoration: none;
 }
 .wrap-item-btn-applied {
-  color: white;
-  background: $xLightDark;
+  // color: white;
+  // background: $xLightDark;
   padding: 6px 30px;
   font-family: "Montserrat";
   font-weight: bold;
@@ -271,6 +271,8 @@ export default class ContestItem extends Vue {
   // box-shadow: 0px 0px 12px 0px rgb(180, 179, 179);
   margin-top: 10px;
   font-size: 13px;
+  border-radius:5px;
+  border: 2px solid grey;
 }
 .allgreen {
   background-color: rgb(234, 255, 234);
@@ -319,6 +321,10 @@ export default class ContestItem extends Vue {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+.greyish{
+
+  background-color: rgb(249, 249, 249);
 }
 .timestamp {
   //   margin-right: 10px;
