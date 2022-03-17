@@ -16,7 +16,7 @@ class ContestsView(views.APIView):
     permission_classes = [IsAuthenticated, ]
 
     def get(self,request):
-        queryset = Contest.objects.all().exclude(contest_status=Contest.PROPOSED)
+        queryset = Contest.objects.all().exclude(contest_status=Contest.PROPOSED).order_by('-target_date')
         paginator = ContestsPagination()
         page = paginator.paginate_queryset(queryset, request)
         serializer = ContestPreviewSerializer(
@@ -96,7 +96,9 @@ class ProblemsView(views.APIView):
     def get(self,request,contest_uuid):
         contest = Contest.objects.get(uuid=contest_uuid)
         user = request.user  
-        problems = contest.problems.all()
+
+        #remember,  the random ordering "?" is time consuming and expensive.
+        problems = contest.problems.all().order_by('-subject','-problem_type','?')
         if  contest.status()!='Active':
             return response.Response({},status=status.HTTP_404_NOT_FOUND)
         

@@ -154,7 +154,8 @@ class Problem(models.Model):
             setattr(self, field, value)
         self.save(update_fields=kwargs.keys())
         return self
-
+    def __str__(self):
+        return f"{self.contest.name} {self.subject} {self.problem_type}"
 class Option(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True)
     problem = models.ForeignKey(Problem,on_delete=models.CASCADE,related_name= 'options')
