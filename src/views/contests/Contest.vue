@@ -46,7 +46,8 @@
               <v-skeleton-loader type="list-item" width="100%"></v-skeleton-loader>
             </div>
             <div v-if="!problemsState.loading && !problemsState.error">
-              <div class="subject-name">Physics</div>
+            
+              <!-- <div class="subject-name">Physics</div>
               <div class="question-numbers">
                 <div
                   :class="`question-number ${problem.submission?'green':'grey'}`"
@@ -75,6 +76,35 @@
                 :key="arrfiltercount('M')+arrfiltercount('P')+i+1"
                 @click.prevent="scrollIntoView(arrfiltercount('M')+arrfiltercount('P')+i+1)"
               >{{arrfiltercount('M')+arrfiltercount('P')+i+1}}</div>
+
+              </div>
+
+              </div>-->
+              <div class="question-numbers">
+                <div class="subject-name">Physics</div>
+
+                <div
+                  :class="`question-number ${problem.submission?'green':'grey'}`"
+                  v-for="(problem,i) in arrfilter('P')"
+                  :key="i+1"
+                  @click.prevent="scrollIntoView(i+1)"
+                >{{i+1}}</div>
+                <div class="subject-name">Maths</div>
+
+                <div
+                  :class="`question-number ${problem.submission?'green':'grey'}`"
+                  v-for="(problem,i) in arrfilter('M')"
+                  :key="arrfiltercount('P')+i+1"
+                  @click.prevent="scrollIntoView(arrfiltercount('P')+i+1)"
+                >{{arrfiltercount('P')+i+1}}</div>
+                <div class="subject-name">Chemistry</div>
+
+                <div
+                  :class="`question-number ${problem.submission?'green':'grey'}`"
+                  v-for="(problem,i) in arrfilter('C')"
+                  :key="arrfiltercount('M')+arrfiltercount('P')+i+1"
+                  @click.prevent="scrollIntoView(arrfiltercount('M')+arrfiltercount('P')+i+1)"
+                >{{arrfiltercount('M')+arrfiltercount('P')+i+1}}</div>
               </div>
             </div>
           </v-expansion-panel-content>
@@ -266,11 +296,25 @@ export default class ContestView extends Vue {
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
+  @include md {
+    font-size: 0.8em;
+  }
   margin: 5px;
 }
-.subject-name{
-  color:grey;
-  font-size:0.9em;
+.subject-name {
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin: 5px;
+  background-color: $xMedium;
+  font-family: "B612";
+  color: white;
+  @include md {
+    font-size: 0.8em;
+  }
+}
+.subject-name {
+  color: grey;
+  font-size: 0.9em;
 }
 .grey {
   background-color: rgb(167, 167, 167);
