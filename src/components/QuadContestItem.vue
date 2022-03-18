@@ -62,19 +62,19 @@ public getM(str:string){
     return getMonth(Number(str))
 
 }
-public getyear(t:datetime){
+public getyear(t:Date){
     return (moment(t).local().format("YYYY"))
 
 }
-public getdate(t:datetime){
+public getdate(t:Date){
     return (moment(t).local().format("DD"))
 
 }
-public getMonth(t:datetime){
+public getMonth(t:Date){
     return (moment(t).local().format("MM"))
 
 }
-public gettime(t:datetime){
+public gettime(t:Date){
     return (moment(t).local().format("HH:mm"))
 
 }
