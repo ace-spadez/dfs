@@ -6,7 +6,9 @@ from datetime import datetime, timedelta
 from elo.elo_calc import update_ratings
 @receiver(post_save, sender=Contest)
 def contest(sender, instance, **kwargs):
-    if instance.status  != "Pending":
+    print("Detected signal")
+    if instance.status()  != "Pending":
         return
-    change_ratings.apply_async((instance.pk),instance.end_date)
+    print("In da thank")
+    change_ratings.apply_async((instance.pk, instance.end_date.timestamp()),eta=instance.end_date)
 

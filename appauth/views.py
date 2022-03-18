@@ -273,6 +273,7 @@ class GeneralStandingsView(views.APIView):
         paginator =GeneralStandingsPagination()
         page = paginator.paginate_queryset(users, request)
         serializer =UserPreviewSerializer(page,many=True,context={'request':request})
+        print(serializer.data)
         return response.Response(
             {
                 "message": "All the standings",

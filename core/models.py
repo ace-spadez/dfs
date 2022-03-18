@@ -54,9 +54,6 @@ class Contest(models.Model):
         td =self.target_date
         ed = self.end_date
         dt =timezone.now()+timezone.timedelta(hours=5,minutes=30)
-        print("ed",ed)
-        print("td",td)
-        print("dt",dt)
         if dt<td:
             return 'Pending'
         elif dt<ed:
@@ -102,8 +99,11 @@ class  Contestprocess(models.Model):
         sum_p = 0
         sum_c = 0
         sum_m = 0
-        for submission in self.submissions:
+        print("Getting total marks")
+        for submission in self.submissions.all():
+            print("In da loop")
             sum += submission.get_marks()
+            print("Got da first sum")
             if submission.problem.subject == Problem.PHYSICS:
                 sum_p+=submission.get_marks()
             elif submission.problem.subject == Problem.CHEMISTRY:
@@ -178,26 +178,31 @@ class Submission(models.Model):
     integer_content = models.IntegerField(null=True)
 
     def get_marks(self):
+        print("In get marks")
         if self.problem.problem_type == Problem.INTEGER:
             if self.integer_content == self.problem.correct_integer:
                 return 3
             else:
                 return -1
         if self.problem.problem_type == Problem.SINGLE:
-            if len(self.options)==0:
+            print("In the correct thang")
+            le = self.options.all().count()
+            if le ==0:
                 return 0
-            if len(self.options)>1:
+            if le>1:
                 return -1
+            print("In the right dir")
             option = self.options.first()
             if option.is_correct:
                 return 3
             else:
                 return -1
         elif self.problem.problem_type == Problem.MULTIPLE:
-            if len(self.options)==0:
+            le = self.options.all().count()
+            if le==0:
                 return 0
             sum = 0
-            for option in self.options:
+            for option in self.options.all():
                 if not option.is_correct:
                     return -2
                 else:
