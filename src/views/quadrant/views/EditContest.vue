@@ -81,6 +81,7 @@
 </template>
 
 <script lang="ts">
+import moment from 'moment'
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { ICreateContest } from "@/interfaces";
 import { readQuadrantCreateContestsState } from "@/store/quadrant/getters";
@@ -118,7 +119,7 @@ export default class EditContest extends Vue {
     this.contest = contestState.contest;
 
     if (this.contest != undefined) {
-      this.contest.target_date = this.contest.target_date.slice(0, 16);
+      this.contest.target_date = moment(this.contest.target_date).local().format("YYYY-MM-DDTHH:mm:ssTZD").slice(0, 16);
       this.contest.contest_chips.map((e, i) => {
         (this.contest as any).contest_chips[i] = { name: e };
       });

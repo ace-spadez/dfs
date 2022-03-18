@@ -63,19 +63,19 @@ public getM(str:string){
 
 }
 public getyear(t:datetime){
-    return (moment(t).format("YYYY"))
+    return (moment(t).local().format("YYYY"))
 
 }
 public getdate(t:datetime){
-    return (moment(t).format("DD"))
+    return (moment(t).local().format("DD"))
 
 }
 public getMonth(t:datetime){
-    return (moment(t).format("MM"))
+    return (moment(t).local().format("MM"))
 
 }
 public gettime(t:datetime){
-    return (moment(t).format("HH:mm"))
+    return (moment(t).local().format("HH:mm"))
 
 }
 public applyContest(){
