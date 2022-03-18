@@ -39,6 +39,10 @@ export const api = {
 
     return axios.post(`${apiUrl}/api/auth/login/`, data);
   },
+  async verify(key: string) {
+
+    return axios.get(`${apiUrl}/api/auth/verify/${key}`);
+  },
   async getMe(token: string) {
     console.log(token)
     return axios.get<IUserProfile>(
