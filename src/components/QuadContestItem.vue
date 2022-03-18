@@ -1,3 +1,5 @@
+from
+
 <template>
 <div class="quadcontestitem">
         <router-link :to="{name:'quadcontest',params:{id:contest.uuid}}">
@@ -13,8 +15,8 @@
 
         <div class="wrap-item-body">
           <span class="timestamp">
-{{contest.target_date.slice(8,10)}} {{getM(contest.target_date.slice(5,7))}} {{contest.target_date.slice(0,4)}}<br/>
-{{contest.target_date.slice(11,16)}} {{contest.duration}} min
+{{getdate(contest.target_date)}} {{getM(getMonth(contest.target_date))}} {{getyear(contest.target_date)}}<br/>
+{{gettime(contest.target_date)}} {{contest.duration}} min
 
 </span>
           <v-spacer></v-spacer>
@@ -46,6 +48,7 @@
 </template>
 
 <script lang="ts">
+import moment from 'moment'
 import { dispatchHomeGetContests ,dispatchApplyContests} from "@/store/home/actions";
 
 import { Component, Vue, Watch,Prop } from "vue-property-decorator";
@@ -57,6 +60,22 @@ export default class ContestItem extends Vue {
 @Prop() ind:number|undefined;
 public getM(str:string){
     return getMonth(Number(str))
+
+}
+public getyear(t:datetime){
+    return (moment(t).format("YYYY"))
+
+}
+public getdate(t:datetime){
+    return (moment(t).format("DD"))
+
+}
+public getMonth(t:datetime){
+    return (moment(t).format("MM"))
+
+}
+public gettime(t:datetime){
+    return (moment(t).format("HH:mm"))
 
 }
 public applyContest(){
