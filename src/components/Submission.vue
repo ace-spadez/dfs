@@ -14,12 +14,12 @@
       :class="option.is_correct==true && problem.submission && problem.submission.options.find(item=>item.uuid==option.uuid)?'green-option':option.is_correct==true?'yellow-option':problem.submission && problem.submission.options.find(item=>item.uuid==option.uuid)?'red-option':'normal-option'"
       :key="ind"
     >
-      <span style="font-weight:bold;font-size:22px;">{{alpha[ind]}}.</span>
+      <span style="font-weight:bold;font-size:22px;margin-right:10px;">{{alpha[ind]}}.</span>
       <vue-mathjax :formula="option.content"></vue-mathjax>
     </div>
     <div v-if="problem.problem_type=='I'">
-     <div> corect integer: <vue-mathjax :formula="`\$${problem.correct_integer}\$`"></vue-mathjax></div>
-     <div v-if="problem.submission"> your integer: <vue-mathjax :formula="`\$${problem.submission.integer_content}\$`"></vue-mathjax></div>
+     <div class='green-option'> CORRECT INTEGER: <vue-mathjax :formula="`\$${problem.correct_integer}\$`"></vue-mathjax></div>
+     <div :class="isCorrect>0?`green-option`:'red-option'" v-if="problem.submission"> YOUR ANSWER: <vue-mathjax :formula="`\$${problem.submission.integer_content}\$`"></vue-mathjax></div>
     </div>
   </div>
 </template>
@@ -74,23 +74,28 @@ export default class Submission extends Vue {
 @import "@/assets/css/global.scss";
 .problem {
   font-size: 15px;
-  padding: 10px 10px 10px 10px;
-  margin: 10px 0px 10px 0px;
+  padding: 10px 20px 10px 20px;
+  margin: 15px 0px 15px 0px;
   border-radius: 10px;
   color:white;
 }
 .correct-question {
   background-color: rgb(29, 66, 7);
   background-color: $xMedium;
+border-left: 20px solid $green2;
 
 }
 .incorrect-question {
   background-color: rgb(165, 7, 7);
   background-color: $xMedium;
+border-left: 20px solid rgb(156, 51, 51);
+
 
 }
 .unattempted-question {
   background-color: $xMedium;
+border-left: 20px solid grey;
+
 }
 .question {
   padding: 10px 10px 10px 10px;
@@ -142,7 +147,10 @@ margin:3px;
   padding: 10px 10px;
   color: $green2;
     border-radius: 10px;
-  background-color: rgba(29, 202, 87, 0.13);
+    border-left: 4px solid $green2;
+    border-right: 4px solid $green2;
+
+  background-color: rgba(29, 202, 87, 0.027);
 }
 .yellow-option {
   margin-top: 20px;
@@ -150,17 +158,23 @@ margin:3px;
   color: rgb(180, 180, 180);
   border-radius: 10px;
   background-color: $xDark;
+     border-left: 4px solid grey;
+    border-right: 4px solid grey;
 }
 .red-option {
   margin-top: 20px;
+  
   padding: 10px 10px;
-  color: rgb(255, 255, 255);
+  color: rgb(207, 76, 76);
     border-radius: 10px;
-  background-color: rgba(218, 51, 51, 0.13);
+    border-left: 4px solid rgb(146, 50, 50);
+    border-right: 4px solid rgb(146, 50, 50);
+  background-color: rgba(230, 96, 96, 0.041);
 }
 .normal-option {
   margin-top: 20px;
   padding: 10px 10px;
+  
 }
 .marks{
   float:right;

@@ -18,7 +18,6 @@
           :key="contestState.contest.uuid"
         ></ContestItem>
         <br />
-        <hr />
         <br />
         <v-tabs fixed-tabs color="deep-purple accent-4" class="tabs">
           <v-tab>Submission</v-tab>
@@ -228,7 +227,7 @@ export default class ContestPreview extends Vue {
   justify-content: center;
 }
 .item {
-  // box-shadow: 0 0 10px 0 rgb(190, 190, 190);
+  box-shadow: 0 0 20px 0 rgb(121, 121, 121);
   padding: 20px;
 }
 .rankings-head {
