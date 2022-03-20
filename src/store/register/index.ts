@@ -5,6 +5,7 @@ import { RegisterState } from './state';
 
 const defaultState: RegisterState = {
   registerError: false,
+  registerErrorMessage: "",
   registerInProgress: false,
   registerSuccess: false,
 };

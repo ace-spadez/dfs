@@ -70,10 +70,12 @@ import { api } from "@/api";
 import { appName } from "@/env";
 import {
   readRegisterError,
+  readRegisterErrorMessage,
   readRegisterInProgress,
   readRegisterSuccess
 } from "@/store/register/getters";
 import { dispatchRegister } from "@/store/register/actions";
+import { commitAddNotification, commitRemoveNotification } from "@/store/main/mutations";
 
 @Component
 export default class Register extends Vue {
@@ -102,6 +104,10 @@ export default class Register extends Vue {
     return readRegisterInProgress(this.$store);
   }
 
+  public get registerErrorMessage() {
+    return readRegisterErrorMessage(this.$store);
+  }
+
   
   @Watch("username")
   public onUsernameChange(ne, oe) {
@@ -109,16 +115,29 @@ export default class Register extends Vue {
     this.invalidUsername = false;
   }
 
-  public submit() {
+  public async submit() {
    
 
    
 
-    dispatchRegister(this.$store, {
+    await dispatchRegister(this.$store, {
       username: (this.data as any).username,
       password: (this.data as any).password,
       email: (this.data as any).email
     });
+    
+    if ( this.registerError ) {
+      console.log("In Register view", String(this.registerErrorMessage));
+      const notif = {
+      content: String(this.registerErrorMessage),
+      color: "danger"
+      };
+      commitAddNotification(this.$store, notif);
+      await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+      commitRemoveNotification(this.$store, notif);
+    }
+      
+
   }
 }
 </script>
