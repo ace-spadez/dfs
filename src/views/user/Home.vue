@@ -16,23 +16,6 @@
       <div class="v-toolbar-title">{{ appName }}</div>
       <v-spacer></v-spacer>
       <v-spacer></v-spacer>
-        <select name="searchtype" id="searchtype">
-    <option value="all">All</option>
-    <option value="posts">Posts</option>
-    <option value="users">Users</option>
-  </select>
-      <form>
-        <input
-          class="search"
-          @keyup.enter="submit"
-          v-model="search"
-          name="search"
-          label="Search"
-          type="text"
-          placeholder="Search in rankr"
-          v-on:change="onchange"
-        />
-      </form>
       <span class="search-s">
         <span>
          <img
@@ -98,27 +81,6 @@
               >
             </v-list-item-content>
           </v-list-item>
-          <v-list-item
-            :class="
-              currentRoute == '/self/settings'
-                ? 'v-list-item highlight'
-                : 'v-list-item'
-            "
-            to="/home/problemsets"
-          >
-            <v-list-item-action>
-              <v-img src="@/assets/img/settings.png"></v-img>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title
-                :class="currentRoute == '/self/settings' ? 'highlight' : ''"
-                >Settings</v-list-item-title
-              >
-            </v-list-item-content>
-          </v-list-item>
-     
-         
-     
         </v-list>
 
         <v-spacer></v-spacer>

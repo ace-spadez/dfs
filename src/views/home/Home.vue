@@ -16,23 +16,6 @@
       </div>
       <v-spacer></v-spacer>
       <v-spacer></v-spacer>
-      <select name="searchtype" id="searchtype">
-        <option value="all">All</option>
-        <option value="posts">Posts</option>
-        <option value="users">Users</option>
-      </select>
-      <form>
-        <input
-          class="search"
-          @keyup.enter="submit"
-          v-model="search"
-          name="search"
-          label="Search"
-          type="text"
-          placeholder="Search in rankr"
-          v-on:change="onchange"
-        />
-      </form>
       <!-- <span class="search-s">
         <span>
           <img src="@/assets/img/loupe.svg" width="15px" height="15px" />

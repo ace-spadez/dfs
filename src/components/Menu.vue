@@ -66,14 +66,6 @@
                   <v-list-item-title>Analysis</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item class="v-list-item" to="">
-                <v-list-item-action>
-                  <v-img src="@/assets/img/settings.png"></v-img>
-                </v-list-item-action>
-                <v-list-item-content>
-                  <v-list-item-title>Settings</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
               <v-list-item @click="logout" class="v-list-item">
                 <v-list-item-action>
                   <v-img src="@/assets/img/logout.png"></v-img>
