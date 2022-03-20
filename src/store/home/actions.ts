@@ -16,7 +16,7 @@ type MainContext = ActionContext<HomeState, State>;
 export const actions = {
     async actionGetContests(context: MainContext) {
         var token:string|null = context.state.token;
-        if(!token){
+        if(token==="null" || !token){
             token = getLocalToken();
         }
         const homeContestsState:HomeContestsState= context.state.homeContestsState;
@@ -45,7 +45,7 @@ export const actions = {
     },
     async actionApplyContests(context:MainContext,contest_data:any){
         var token:string|null = context.state.token;
-        if(!token){
+        if(token==="null" || !token){
             token = getLocalToken();
         }
         try{
@@ -58,7 +58,7 @@ export const actions = {
     },
     async actionGetStandings(context: MainContext) {
         var token:string|null = context.state.token;
-        if(!token){
+        if(token==="null" || !token){
             token = getLocalToken();
         }
         const HomeStandingsState:HomeStandingsState=context.state.homeStandingsState;
@@ -87,7 +87,7 @@ export const actions = {
     },
     async actionGetContestPageContests(context: MainContext,page_num:number) {
         var token:string|null = context.state.token;
-        if(!token){
+        if(token==="null" || !token){
             token = getLocalToken();
         }
         const contestPageState:ContestPageState = context.state.contestPage;
