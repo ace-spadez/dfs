@@ -37,7 +37,7 @@
             <router-link
               :to="{name:'usersprofile',params:{username:standing['username']}}"
             >{{standing['username']}}</router-link>·
-            <span style="color:grey">{{standing['rating']['r_all']}}</span>
+            <span style="color:grey">{{Math.round(standing['rating']['r_all'])}}</span>
             #{{ind+1}}
           </span>
         </div>
