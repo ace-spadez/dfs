@@ -13,8 +13,8 @@ def send_verification_email(user_id):
     try:
         user = UserModel.objects.get(pk=user_id)
         send_mail(
-            'Verify your QuickPublisher account',
-            f'Follow this link to verify your account: localhost:8080/verify?ab={user.secret_key}',
+            'Rankr Verification',
+            f'Thank you for registering with Rankr!\n Follow [this](localhost:8080/verify?ab={user.secret_key}) link to verify your account.',
             EMAIL_HOST_USER,
             [user.email],
             fail_silently=False,
