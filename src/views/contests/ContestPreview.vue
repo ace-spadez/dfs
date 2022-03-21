@@ -227,7 +227,7 @@ export default class ContestPreview extends Vue {
   justify-content: center;
 }
 .item {
-  box-shadow: 0 0 20px 0 rgb(121, 121, 121);
+  // box-shadow: 0 0 10px 0 rgb(190, 190, 190);
   padding: 20px;
 }
 .rankings-head {
