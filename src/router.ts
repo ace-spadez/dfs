@@ -39,6 +39,11 @@ export default new Router({
             import(/* webpackChunkName: "login" */ "./views/Register.vue"),
         },
         {
+          path: "successful-registration",
+          component: () =>
+            import(/* webpackChunkName: "login" */ "./views/successReg.vue"),
+        },
+        {
           path: "recover-password",
           component: () =>
             import(

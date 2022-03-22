@@ -1,61 +1,10 @@
 <template>
   <div class="login-container">
     <div class="main">
-      <div>
-        <img src="@/assets/img/logo.png" width="80px" />
-      </div>
-      <div class="sign-in">Sign Up</div>
-
-      <FormulateForm class="login-form" v-model="data" @submit="submit">
-        <FormulateInput
-          name="username"
-          type="text"
-          label="Username"
-          placeholder="Username"
-          validation="required"
-        />
-        <FormulateInput
-          name="email"
-          type="email"
-          label="Email address"
-          placeholder="Email address"
-          validation="required|email"
-        />
-        <div class="double-wide">
-          <FormulateInput
-            name="password"
-            type="password"
-            label="Password"
-            placeholder="Your password"
-            validation="required"
-          />
-          <FormulateInput
-            name="password_confirm"
-            type="password"
-            label="Confirm your password"
-            placeholder="Confirm password"
-            validation="required|confirm"
-            validation-name="Confirmation"
-          />
-        </div>
-        <br/>
-        
-        <button type="submit" class="btn" >Register</button>
-      </FormulateForm>
-
-      
-      <br />
-
-      <router-link to="/login">
-        <button class="register">Already a user? login</button>
-      </router-link>
-
-      <div v-if="registerInProgress">
-        <v-progress-circular indeterminate color="primary"></v-progress-circular>
-      </div>
-
-      <div v-if="!registerInProgress" style="height:32px"></div>
+      Registration Successful. Verify the email by clicking on the link we have sent you in mail and then
+      <router-link to="/login">login</router-link>
     </div>
+    <div class="side-log">hello</div>
   </div>
 </template>
 
@@ -130,10 +79,6 @@ export default class Register extends Vue {
       commitAddNotification(this.$store, notif);
       await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
       commitRemoveNotification(this.$store, notif);
-    }
-    if ( this.registerSuccess){
-      this.$router.push('successful-registration')
-
     }
       
 
