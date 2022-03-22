@@ -11,9 +11,9 @@
         ></v-img>
       </v-list-item-action>
 
-      <img src="@/assets/img/logo.png" width="35px" />
+      <img @click="moveToHome" src="@/assets/img/logo.png" width="35px" />
       <!-- </v-toolbar-side-icon> -->
-      <div class="v-toolbar-title">{{ appName }}</div>
+      <div @click="moveToHome" class="v-toolbar-title">{{ appName }}</div>
       <v-spacer></v-spacer>
       <v-spacer></v-spacer>
       <span class="search-s">
@@ -150,6 +150,13 @@ const routeGuardMain = async (to, from, next) => {
 export default class UserHome extends Vue {
   public appName = appName;
   public search = '';
+
+  public moveToHome() {
+    console.log("here")
+    if (this.currentRoute !== '/home/main' ) {
+      this.$router.push('/home/main')
+    }
+  }
 
   public beforeRouteEnter(to, from, next) {
     routeGuardMain(to, from, next);

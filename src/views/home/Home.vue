@@ -10,7 +10,7 @@
 
       <!-- <img src="@/assets/img/logo.png" width="35px" /> -->
       <!-- </v-toolbar-side-icon> -->
-      <div class="v-toolbar-title">
+      <div @click="moveToHome" class="v-toolbar-title">
         {{ appName }}
         <sup class="beta">BETA</sup>
       </div>
@@ -196,6 +196,13 @@ const routeGuardMain = async (to, from, next) => {
 export default class Main extends Vue {
   public appName = appName;
   public search = "";
+
+  public moveToHome() {
+    console.log("here")
+    if (this.currentRoute !== '/home/main' ) {
+      this.$router.push('/home/main')
+    }
+  }
 
   public beforeRouteEnter(to, from, next) {
     routeGuardMain(to, from, next);
