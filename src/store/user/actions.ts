@@ -18,6 +18,7 @@ export const actions = {
     async actionGetUserProfile(context: MainContext, username: string) {
         var token = context.state.token;
         const userProfileState: UserProfileState = context.state.userProfile;
+        userProfileState.user = undefined;
         userProfileState.loading = true;
         commitSetUserProfileState(context, userProfileState);
         try {
@@ -43,6 +44,8 @@ export const actions = {
         var token = context.state.token;
         const userRatingHistoryState: UserRatingHistoryState = context.state.userRatingHistoryState;
         userRatingHistoryState.loading = true;
+        userRatingHistoryState.ratingHistory = [];
+
         commitSetUserRankingsHistory(context, userRatingHistoryState);
         try {
 

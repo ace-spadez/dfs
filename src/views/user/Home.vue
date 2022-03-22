@@ -11,26 +11,13 @@
         ></v-img>
       </v-list-item-action>
 
-      <img @click="moveToHome" src="@/assets/img/logo.png" width="35px" />
       <!-- </v-toolbar-side-icon> -->
-      <div @click="moveToHome" class="v-toolbar-title">{{ appName }}</div>
+      <div @click="moveToHome" class="v-toolbar-title"> USER</div>
       <v-spacer></v-spacer>
       <v-spacer></v-spacer>
-      <span class="search-s">
-        <span>
-         <img
-          src="@/assets/img/loupe.svg"
-          width="15px"
-          height="15px"
-        /></span>
-        <span style="marginLeft:5px;font-size:20px;">Search</span>
-      </span>
+     
       <v-spacer></v-spacer>
-      <div v-if="isLoggedIn" class="profile-name">
-        {{ userProfile.username }}
-      </div>
-
-      <Menu></Menu>
+      
     </v-app-bar>
 
     <v-navigation-drawer

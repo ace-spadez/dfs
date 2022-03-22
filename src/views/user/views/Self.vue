@@ -44,12 +44,28 @@
      <br/>
 
      <v-btn outlined :to="{name:'editprofile'}">Edit</v-btn>
- <div class="chart">
-     <chart ></chart>
+ <div class="chart"  v-if="!userRankingsState.loading &&  !userRankingsState.error">
+    <v-tabs color="deep-purple accent-4" right>
+          <v-tab>All</v-tab>
+          <v-tab>Physics</v-tab>
+          <v-tab>Maths</v-tab>
+          <v-tab>Chemistry</v-tab>
+
+          <v-tab-item>
+            <chart :ratinghistory="userRankingsState.ratingHistory" category="all"></chart>
+          </v-tab-item>
+          <v-tab-item>
+            <chart :ratinghistory="userRankingsState.ratingHistory" category="physics"></chart>
+          </v-tab-item>
+          <v-tab-item>
+            <chart :ratinghistory="userRankingsState.ratingHistory" category="maths"></chart>
+          </v-tab-item>
+          <v-tab-item>
+            <chart :ratinghistory="userRankingsState.ratingHistory" category="chemistry"></chart>
+          </v-tab-item>
+        </v-tabs>
+ </div>
      </div>
-      </div>
-    
-     <br/>
  </v-main>
 </template>
 
@@ -62,8 +78,8 @@ import Chart from './Chart.vue'
 import {
   readUserProfile,
 } from "@/store/main/getters";
-import { readUserProfileState } from '../../../store/user/getters';
-import { dispatchGetUserProfile } from '../../../store/user/actions';
+import { readUserProfileState, readUserRatingHistoryState } from '../../../store/user/getters';
+import { dispatchGetUserProfile, dispatchGetUserRankings } from '../../../store/user/actions';
 import Error from '@/components/Error.vue'
 @Component({
   components:{
@@ -80,6 +96,10 @@ export default class SelfProfile extends Vue {
   }
   public  beforeMount(){
       dispatchGetUserProfile(this.$store,this.userProfile.username)
+    dispatchGetUserRankings(this.$store, this.userProfile.username)
+  }
+    public get userRankingsState() {
+    return readUserRatingHistoryState(this.$store);
   }
 }
 </script>

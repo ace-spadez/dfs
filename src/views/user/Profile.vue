@@ -16,23 +16,15 @@
     </v-app-bar>
 
     <div v-if="userProfileState.loading" class="biodata">
-        <v-skeleton-loader
+      <v-skeleton-loader
         type="image"
         width="150px"
         height="150px"
         style="object-fit:cover;border-radius:50%;"
       ></v-skeleton-loader>
-           <v-skeleton-loader
-        type="list-item"
-        width="250px"
-        style="margin-top:20px;"
-           ></v-skeleton-loader>
+      <v-skeleton-loader type="list-item" width="250px" style="margin-top:20px;"></v-skeleton-loader>
 
-            <v-skeleton-loader
-        type="card"
-        width="550px"
-        style="margin-top:20px;"
-           ></v-skeleton-loader>
+      <v-skeleton-loader type="card" width="550px" style="margin-top:20px;"></v-skeleton-loader>
     </div>
     <div v-if="userProfileState.error">
       <Error></Error>
@@ -54,7 +46,7 @@
         height="150px"
         style="object-fit:cover;border-radius:50%;"
       />
-    
+
       <div class="username">@{{userProfileState.user.username}}</div>
       <div class="bio">{{userProfileState.user.bio}}</div>
       <br />
@@ -79,22 +71,35 @@
         <v-btn disabled>This is you</v-btn>
       </div>
       <br />
-      <div class="rank-tiles">
+      <!-- <div class="rank-tiles">
         <div class="rank-tile dragon">
           <img src="@/assets/img/tier/dragon.svg" width="100px" />
         </div>
         <div class="rank-tile unicorn">
           <img src="@/assets/img/tier/unicorn.svg" width="100px" />
         </div>
-      </div>
-      <div class="chart">
-        <chart></chart>
-      </div>
-      <!-- <div class="subjects" style="display:flex;">
-        <chart class="subject"></chart>
-        <chart class="subject"></chart>
-        <chart class="subject"></chart>
       </div>-->
+      <div v-if="!userRankingsState.loading &&  !userRankingsState.error" class="chart">
+        <v-tabs color="deep-purple accent-4" right>
+          <v-tab>All</v-tab>
+          <v-tab>Physics</v-tab>
+          <v-tab>Maths</v-tab>
+          <v-tab>Chemistry</v-tab>
+
+          <v-tab-item>
+            <chart :ratinghistory="userRankingsState.ratingHistory" category="all"></chart>
+          </v-tab-item>
+          <v-tab-item>
+            <chart :ratinghistory="userRankingsState.ratingHistory" category="physics"></chart>
+          </v-tab-item>
+          <v-tab-item>
+            <chart :ratinghistory="userRankingsState.ratingHistory" category="maths"></chart>
+          </v-tab-item>
+          <v-tab-item>
+            <chart :ratinghistory="userRankingsState.ratingHistory" category="chemistry"></chart>
+          </v-tab-item>
+        </v-tabs>
+      </div>
     </div>
   </v-main>
 </template>
@@ -107,11 +112,13 @@ import { readUserProfile, readIsLoggedIn } from "../../store/main/getters";
 import { dispatchUserLogOut } from "../../store/main/actions";
 import {
   readUserProfileState,
-  readAddToWatchlistyState
+  readAddToWatchlistyState,
+  readUserRatingHistoryState
 } from "@/store/user/getters";
 import {
   dispatchGetUserProfile,
-  dispatchWatchToggle
+  dispatchWatchToggle,
+  dispatchGetUserRankings
 } from "@/store/user/actions";
 import Menu from "@/components/Menu.vue";
 import {
@@ -139,8 +146,12 @@ export default class Profile extends Vue {
   public get userProfileState() {
     return readUserProfileState(this.$store) as any;
   }
+  public get userRankingsState() {
+    return readUserRatingHistoryState(this.$store);
+  }
   public async beforeMount() {
     dispatchGetUserProfile(this.$store, this.username);
+    dispatchGetUserRankings(this.$store, this.username);
   }
   public get userProfile() {
     return readUserProfile(this.$store);

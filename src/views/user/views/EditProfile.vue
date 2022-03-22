@@ -69,7 +69,7 @@ export default class EditProfile extends Vue {
       const notif = {
       content: this.patchState.error
         ? "Error encountered"
-        : "Problem Created",
+        : "Profile Edited",
       color: this.patchState.error ? "danger" : "success"
     };
     commitAddNotification(this.$store, notif);
