@@ -14,7 +14,7 @@ def send_verification_email(user_id):
         user = UserModel.objects.get(pk=user_id)
         send_mail(
             'Rankr Verification',
-            f'Thank you for registering with Rankr!\n Follow [this](localhost:8080/verify?ab={user.secret_key}) link to verify your account.',
+            f'Thank you for registering with Rankr!\n Click <a href="localhost:8080/verify?ab={user.secret_key}">Here</a>to verify your account.',
             EMAIL_HOST_USER,
             [user.email],
             fail_silently=False,
