@@ -1,15 +1,39 @@
-pages: # the job must be named pages
-  image: node:latest
-  stage: deploy
+image: node:10.15.3
+
+cache:
+  untracked: true
+  paths:
+    - node_modules/
+
+stages:
+  - setup
+  - test
+  - build
+  - deploy
+
+setup:
+  stage: setup
   script:
     - npm ci
+  only:
+    - master
+
+build:
+  stage: build
+  script:
     - npm run build
-    - mv public public-vue # GitLab Pages hooks on the public folder
-    - mv dist public # rename the dist folder (result of npm run build)
-    # optionally, you can activate gzip support with the following line:
-    - find public -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\)$' -exec gzip -f -k {} \;
   artifacts:
     paths:
-      - public # artifact path must be /public for GitLab Pages to pick it up
+      - dist
+  only:
+    - master
+
+deploy:
+  stage: deploy
+  script:
+    - npm i -g netlify-cli
+    - netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --prod
+  dependencies:
+    - build
   only:
     - master
