@@ -1,6 +1,6 @@
 const env = process.env.VUE_APP_ENV;
 
-let envApiUrl = 'http://localhost:8000';
+let envApiUrl = 'http://20.188.120.20:1337';
 
 // if (env === 'production') {
 //   envApiUrl = `https://${process.env.VUE_APP_DOMAIN_PROD}`;
@@ -10,5 +10,5 @@ let envApiUrl = 'http://localhost:8000';
 //   envApiUrl = `http://${process.env.VUE_APP_DOMAIN_DEV}`;
 // }
 
-export const apiUrl = 'http://localhost:8000';
+export const apiUrl = 'http://20.188.120.20:1337';
 export const appName = process.env.VUE_APP_NAME;
