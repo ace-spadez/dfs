@@ -7,6 +7,7 @@
       <v-skeleton-loader v-if="contestState.loading" type="heading" width="200px"></v-skeleton-loader>
       <span class="timer">{{countdown}}</span>
       <v-spacer></v-spacer>
+                <button type="submit" class="submit-btn"  @click="Endcontest " >Return to Home</button>
       <!-- <v-dialog v-model="dialog" persistent max-width="290" v-if="contestState.contest">
         <template v-slot:activator="{ on, attrs }">
           <v-btn  v-bind="attrs" v-on="on" dark >Submit</v-btn>
@@ -218,7 +219,13 @@ export default class ContestView extends Vue {
     }, 1000);
   }
   public submit() {
+    console.log("YASSSSS");
     this.dialog = false;
+  }
+  public Endcontest(){
+    console.log("YASSSSSSSSSS");
+    this.$router.go(-1);
+
   }
   public get contestUUID() {
     return this.$route.params["contest_uuid"];
