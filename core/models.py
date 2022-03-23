@@ -209,3 +209,5 @@ class Submission(models.Model):
                     sum+=1
             return sum
         return 0
+    def __str__(self):
+        return f"{self.contestprocess.contest.name} {self.user.username}"
