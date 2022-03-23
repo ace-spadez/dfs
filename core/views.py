@@ -200,7 +200,7 @@ class StandingsView(views.APIView):
     def get(self,request,contest_uuid):
         contest = Contest.objects.get(uuid=contest_uuid)
         user = request.user
-        contestprocesses = Contestprocess.objects.filter(contest=contest,attempt=True)
+        contestprocesses = Contestprocess.objects.filter(contest=contest,attempt=True).order_by('-score__score_all').exclude(score__score_all__isnull=True)
         paginator = ContestsPagination()
         page = paginator.paginate_queryset(contestprocesses, request)
         serializer = StandingsModelSerializer(page,many=True,context={'request':request})
