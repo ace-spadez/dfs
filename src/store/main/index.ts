@@ -10,7 +10,7 @@ const defaultState: MainState = {
   userProfile: null,
   logInProgress: false,
   dashboardMiniDrawer: false,
-  dashboardShowDrawer: true,
+  dashboardShowDrawer: false,
   notifications: [],
 };
 

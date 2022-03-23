@@ -103,14 +103,7 @@
         </div>
       </div>
       <div class="split-right">
-        <div class="formula-div">
-          <div class="formula-label">Type a math equation below to copy</div>
-          <mathlive-mathfield
-            v-model="formula"
-            class="formula"
-            :options="{smartFence:false, virtualKeyboardMode:'manual'}"
-          >f(x)=</mathlive-mathfield>
-        </div>
+       
         <div class="preview" v-if="problem">
           <div class="formula-label">Question preview</div>
 

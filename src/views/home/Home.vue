@@ -260,7 +260,6 @@ export default class Main extends Vue {
     );
   }
   public beforeMount(){
-    if(this.$isMobile()) this.xshowDrawer(false)
   }
 }
 </script>

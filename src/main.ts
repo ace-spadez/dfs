@@ -22,9 +22,9 @@ Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
 Vue.config.productionTip = false;
 Vue.use(VueFormulate)
 Vue.config.devtools = true;
-import MathLive from "mathlive/dist/mathlive";
-import Mathfield from "mathlive/dist/vue-mathlive.mjs";
-Vue.use(Mathfield, MathLive);
+// import MathLive from "mathlive/dist/mathlive";
+// import Mathfield from "mathlive/dist/vue-mathlive.mjs";
+// Vue.use(Mathfield, MathLive);
 Vue.use(VueMathjax)
 Vue.use(VueKatex, {
   globalOptions: {

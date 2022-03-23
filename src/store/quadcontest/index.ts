@@ -1,7 +1,7 @@
 import { mutations } from './mutations';
 import { getters } from './getters';
 import { actions } from './actions';
-import { QuadContestState, QuadContestPatchState, QuadProblemCreateState, QuadProblemsState, QuadrantContestState, QuadProblemPatchState } from './state';
+import { QuadContestState,QuadProblemDeleteState, QuadContestPatchState, QuadProblemCreateState, QuadProblemsState, QuadrantContestState, QuadProblemPatchState } from './state';
 import { getLocalToken } from '@/utils'
 import { readUserProfile } from '@/store/main/getters'
 const quadContestState: QuadContestState = {
@@ -20,6 +20,11 @@ const quadContestPatchState: QuadContestPatchState = {
   patched: false
 
 }
+const quadProblemDeleteState: QuadProblemDeleteState = {
+  loading: false,
+  error: false,
+
+}
 const quadProblemsState: QuadProblemsState = {
   loading: true,
   error: false
@@ -36,7 +41,8 @@ export const defaultState: QuadrantContestState = {
   problemCreateState: quadProblemCreateState,
   problemsState: quadProblemsState,
   problemPatchState: quadProblemPatchState,
-  token: String(getLocalToken())
+  token: String(getLocalToken()),
+  problemDeleteState:quadProblemDeleteState,
 
 
 
