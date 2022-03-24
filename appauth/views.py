@@ -32,7 +32,7 @@ class RegisterView(views.APIView):
         rating = Rating()
         rating.save()
         new_user = User.objects.create_user(
-            username=username, email=email, password=password, rating=rating,secret_key=get_random_string(length=64))
+            username=username, email=email, password=password, rating=rating,secret_key=get_random_string(length=64), isVerified=True)
 
         new_user.save()
         send_verification_email.delay(new_user.pk)

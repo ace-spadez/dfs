@@ -159,8 +159,8 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:8080',
+        'http://localhost:8080', 'https://rankf.netlify.app'
 ]
 CORS_ORIGIN_REGEX_WHITELIST = [
-    'http://localhost:8080',
+        'http://localhost:8080','https://rankf.netlify.app'
 ]
