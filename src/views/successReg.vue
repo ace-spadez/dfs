@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="main">
-      Registration Successful. Verify the email by clicking on the link we have sent you in mail and then
+      Registration Successful. You can now
       <router-link to="/login">login</router-link>
     </div>
     <div class="side-log">hello</div>

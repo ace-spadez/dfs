@@ -1,6 +1,6 @@
 const env = process.env.VUE_APP_ENV;
 
-let envApiUrl = 'http://20.188.120.20:1337';
+let envApiUrl = 'https://rankf.southeastasia.cloudapp.azure.com';
 
 // if (env === 'production') {
 //   envApiUrl = `https://${process.env.VUE_APP_DOMAIN_PROD}`;
@@ -10,5 +10,5 @@ let envApiUrl = 'http://20.188.120.20:1337';
 //   envApiUrl = `http://${process.env.VUE_APP_DOMAIN_DEV}`;
 // }
 
-export const apiUrl = 'http://20.188.120.20:1337';
+export const apiUrl = 'https://rankf.southeastasia.cloudapp.azure.com';
 export const appName = process.env.VUE_APP_NAME;
