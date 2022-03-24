@@ -7,7 +7,9 @@
             <img  v-if="standing['tier']=='2'" src="@/assets/img/tier/unicorn.svg"  width='30px'  height='30px' style='filter: invert(75%) sepia(67%) saturate(340%) hue-rotate(348deg) brightness(104%) contrast(103%);'/>
             <img  v-if="standing['tier']=='1'" src="@/assets/img/tier/dragon.svg"  width='30px'  height='30px' style='filter: invert(75%) sepia(67%) saturate(340%) hue-rotate(348deg) brightness(104%) contrast(103%);'/>
           </span>
-          <span class='ranking-main-item-name' > {{standing['username']}}  ·  <span style='color:grey'>  {{standing['rating']['r_all']}} </span></span>
+          <span class='ranking-main-item-name' ><router-link
+              :to="{name:'usersprofile',params:{username:standing['username']}}"
+            > {{standing['username']}}</router-link>  ·  <span style='color:grey'>  {{Math.round(standing['rating']['r_all'])}} </span></span>
 </span> 
 </template>
 
