@@ -16,7 +16,7 @@ type MainContext = ActionContext<UserState, State>;
 
 export const actions = {
     async actionGetUserProfile(context: MainContext, username: string) {
-        var token = context.state.token;
+        var token = getLocalToken();
         const userProfileState: UserProfileState = context.state.userProfile;
         userProfileState.user = undefined;
         userProfileState.loading = true;
@@ -41,7 +41,7 @@ export const actions = {
 
     },
     async actionGetUserRankings(context: MainContext, username: string) {
-        var token = context.state.token;
+        var token = getLocalToken();
         const userRatingHistoryState: UserRatingHistoryState = context.state.userRatingHistoryState;
         userRatingHistoryState.loading = true;
         userRatingHistoryState.ratingHistory = [];
@@ -67,7 +67,7 @@ export const actions = {
 
     },
     async actionPatchSelf(context: MainContext, user: IPatchSelf) {
-        var token = context.state.token;
+        var token = getLocalToken();
         const userProfilePatchState: UserProfilePatchState = context.state.userProfilePatchState;
         userProfilePatchState.loading = true;
         commitSetUserProfilePatchState(context, userProfilePatchState);
@@ -92,7 +92,7 @@ export const actions = {
 
     },
     async actionToggleWatchList(context: MainContext, payload: any) {
-        var token = context.state.token;
+        var token = getLocalToken();
         const addToWatchList: AddToWatchlist = context.state.addToWatchList;
         const userProfileState: UserProfileState = context.state.userProfile;
         addToWatchList.loading = true;

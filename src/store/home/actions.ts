@@ -15,10 +15,7 @@ type MainContext = ActionContext<HomeState, State>;
 
 export const actions = {
     async actionGetContests(context: MainContext) {
-        var token:string|null = context.state.token;
-        if(token==="null" || !token){
-            token = getLocalToken();
-        }
+        var token:string|null = getLocalToken();
         const homeContestsState:HomeContestsState= context.state.homeContestsState;
         homeContestsState.error=false;
         homeContestsState.loading=true;
@@ -44,10 +41,7 @@ export const actions = {
 
     },
     async actionApplyContests(context:MainContext,contest_data:any){
-        var token:string|null = context.state.token;
-        if(token==="null" || !token){
-            token = getLocalToken();
-        }
+        var token:string|null = getLocalToken();
         try{
         var response = await api.applyForContest(String(token),contest_data.uuid)
         commitApplyContests(context,contest_data.id);
@@ -57,10 +51,7 @@ export const actions = {
         }
     },
     async actionGetStandings(context: MainContext) {
-        var token:string|null = context.state.token;
-        if(token==="null" || !token){
-            token = getLocalToken();
-        }
+        var token:string|null = getLocalToken();
         const HomeStandingsState:HomeStandingsState=context.state.homeStandingsState;
         HomeStandingsState.error=false;
         HomeStandingsState.loading=true;
@@ -86,10 +77,7 @@ export const actions = {
       
     },
     async actionGetContestPageContests(context: MainContext,page_num:number) {
-        var token:string|null = context.state.token;
-        if(token==="null" || !token){
-            token = getLocalToken();
-        }
+        var token:string|null = getLocalToken();
         const contestPageState:ContestPageState = context.state.contestPage;
         contestPageState.loading = true;
         commitSetContestPage(context,contestPageState);

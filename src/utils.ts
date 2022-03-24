@@ -1,4 +1,4 @@
-export const getLocalToken = () => localStorage.getItem('token');
+export const getLocalToken = () => {var a = localStorage.getItem('token'); if(!a){return "abcd";} else {return a;}}
 
 export const saveLocalToken = (token: string) => localStorage.setItem('token', token);
 

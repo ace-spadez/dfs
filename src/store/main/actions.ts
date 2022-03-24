@@ -28,8 +28,8 @@ export const actions = {
             const token = response.data.token;
             
             if (token) {
-                saveLocalToken(token);
-                commitSetToken(context, token);
+                await saveLocalToken(token);
+                await commitSetToken(context, token);
                 commitSetLoggedIn(context, true);
                 commitSetLogInError(context, false);
                 await dispatchGetUserProfil(context);
@@ -48,10 +48,10 @@ export const actions = {
     },
     async actionGetUserProfil(context: MainContext) {
         try {
-            const response = await api.getMe(context.state.token);
+            const response = await api.getMe(getLocalToken());
 
             if (response.data) {
-                commitSetUserProfile(context, response.data['body']);
+                await commitSetUserProfile(context, response.data['body']);
             }
         } catch (error) {
             await dispatchCheckApiError(context, error);
@@ -62,7 +62,7 @@ export const actions = {
             const loadingNotification = { content: 'saving', showProgress: true };
             commitAddNotification(context, loadingNotification);
             const response = (await Promise.all([
-                api.updateMe(context.state.token, payload),
+                api.updateMe(getLocalToken(), payload),
                 await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
             ]))[0];
             commitSetUserProfile(context, response.data);
@@ -74,7 +74,7 @@ export const actions = {
     },
     async actionCheckLoggedIn(context: MainContext) {
         if (!context.state.isLoggedIn) {
-            let token = context.state.token;
+            let token = getLocalToken();
             if (!token) {
                 const localToken = getLocalToken();
                 if (localToken) {

@@ -29,7 +29,7 @@ type MainContext = ActionContext<QuadrantContestState, State>;
 
 export const actions = {
     async actionGetQuadrantContest(context:MainContext,contest_uuid:string){
-        var token:string = context.state.token;
+        var token:string = getLocalToken();
         const quadContestState:QuadContestState = context.state.contestState;
         try{
             const response = await api.getQuadrantContest(token,contest_uuid);
@@ -47,7 +47,7 @@ export const actions = {
     },
     async actionGetQuadrantContestProblems(context:MainContext,contest_uuid:string){
 
-        var token:string = context.state.token;
+        var token:string = getLocalToken();
         const quadProblemsState:QuadProblemsState = context.state.problemsState;
         quadProblemsState.loading = true;
         commitSetQuadrantProblems(context,quadProblemsState);
@@ -67,7 +67,7 @@ export const actions = {
         }
     },
     async actionPatchQuadrantContest(context:MainContext,payload:any){
-        var token:string = context.state.token;
+        var token:string = getLocalToken();
         const quadContestPatchState:QuadContestPatchState = context.state.contestPatchState;
         quadContestPatchState.loading = true
         commitSetQuadrantContestPatch(context,quadContestPatchState)
@@ -90,7 +90,7 @@ export const actions = {
         }
     },
     async actionQuadPostContestProblem(context:MainContext,_problem:IQuadProblemCreate){
-        var token:string = context.state.token;
+        var token:string = getLocalToken();
         const quadProblemCreateState:QuadProblemCreateState = context.state.problemCreateState;
         quadProblemCreateState.loading = true;
         commitSetQuadrantProblemCreate(context,quadProblemCreateState);
@@ -111,7 +111,7 @@ export const actions = {
     },
 
     async actionPatchQuadrantProblem(context:MainContext,payload:any){
-        var token:string = context.state.token;
+        var token:string = getLocalToken();
         const quadProblemPatchState:QuadProblemPatchState = context.state.problemPatchState;
         quadProblemPatchState.loading = true
         commitSetQuadrantProblemPatch(context,quadProblemPatchState)
@@ -135,7 +135,7 @@ export const actions = {
     },
 
     async actionDeleteQuadrantProblem(context:MainContext,payload:any){
-        var token:string = context.state.token;
+        var token:string = getLocalToken();
         const quadProblemDeleteState:QuadProblemDeleteState = context.state.problemPatchState;
         quadProblemDeleteState.loading = true
         commitSetQuadrantProblemDelete(context,quadProblemDeleteState)

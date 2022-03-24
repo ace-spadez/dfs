@@ -92,7 +92,8 @@ export const api = {
   },
   async getUser(token: string, username: string) {
     // await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
-
+	console.log(token);
+	console.log("WOLOLO");
     return axios.get(`${apiUrl}/api/auth/users/${username}/`, authHeaders(token))
   },
   async getRankingHistory(token: string, username: string) {

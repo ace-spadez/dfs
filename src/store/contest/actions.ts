@@ -22,7 +22,7 @@ type MainContext = ActionContext<ContestState, State>;
 
 export const actions = {
   async actionGetContestData(context: MainContext, contest_uuid:string) {
-    const token:string = context.state.token;
+    const token:string = getLocalToken();
     const contestDataState:ContestDataState= context.state.contestDataState;
     contestDataState.loading = true;
     contestDataState.error = false;
@@ -41,7 +41,7 @@ export const actions = {
     }
   },
   async actionNotifyMe(context: MainContext, contest_uuid:string) {
-    const token:string = context.state.token;
+    const token:string = getLocalToken();
     const notifyMeState:NotifyMeState= context.state.notifyMeState;
     notifyMeState.loading = true;
     notifyMeState.error = false;
@@ -58,7 +58,7 @@ export const actions = {
     }
   },
   async actionSubmissions(context: MainContext, contest_uuid:string) {
-    const token:string = context.state.token;
+    const token:string = getLocalToken();
     const SubmissionsState:SubmissionsState= context.state.submissionsState;
     SubmissionsState.loading = true;
     SubmissionsState.error = false;
@@ -77,7 +77,7 @@ export const actions = {
     }
   },
   async actionStandingsState(context: MainContext,payload:{ contest_uuid:string,page:number}) {
-    const token:string = context.state.token;
+    const token:string = getLocalToken();
     const StandingsState:StandingsState= context.state.standingsState;
     StandingsState.loading = true;
     StandingsState.error = false;
@@ -97,7 +97,7 @@ export const actions = {
     }
   },
   async actionContestProblems(context: MainContext, contest_uuid:string) {
-    const token:string = context.state.token;
+    const token:string = getLocalToken();
     const ContestProblemsState:ContestProblemsState= context.state.contestProblemsState;
     ContestProblemsState.loading = true;
     ContestProblemsState.error = false;
@@ -118,7 +118,7 @@ export const actions = {
   },
   async actionSubmitAnswerState(context: MainContext,payload:{contest_uuid:string,problem_uuid:string,submission:ISubmission,index:number}) {
     console.log(payload.submission)
-    const token:string = context.state.token;
+    const token:string = getLocalToken();
     const SubmitAnswerState:SubmitAnswerState= context.state.submitAnswerState;
     const ContestProblemsState:ContestProblemsState = context.state.contestProblemsState;
     ContestProblemsState.problems[payload.index].submission=(payload.submission && (payload.submission.integer_content || (payload.submission.options && payload.submission.options.length>0)))?payload.submission:null;
@@ -139,7 +139,7 @@ export const actions = {
     }
   },
   async actionBeginAttemptState(context: MainContext,contest_uuid:string) {
-    const token:string = context.state.token;
+    const token:string = getLocalToken();
     // const BeginAttemptState:BeginAttemptState= context.state.beginAttemptState;
     // BeginAttemptState.loading = true;
     // BeginAttemptState.error = false;

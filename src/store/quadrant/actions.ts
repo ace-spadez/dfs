@@ -22,7 +22,7 @@ type MainContext = ActionContext<QuadrantState, State>;
 
 export const actions = {
     async actionGetQuadrant(context: MainContext) {
-        var token: string = context.state.token;
+        var token: string = getLocalToken();
         const quadrantLoginState: QuadrantLoginState = context.state.quadrantLoginState;
         try {
             var response = await api.getQuadrant(String(token))
@@ -44,7 +44,7 @@ export const actions = {
 
     },
     async actionPostSOP(context:MainContext,sop:string){
-        var token: string = context.state.token;
+        var token: string = getLocalToken();
         const postSOP:PostSOP = context.state.postSOP;
         postSOP.loading = true;
         commitSetPostSOPState(context,postSOP);
@@ -64,7 +64,7 @@ export const actions = {
 
     },
     async actionGetQuadrantContests(context: MainContext, page: number = 1) {
-        var token: string = context.state.token;
+        var token: string = getLocalToken();
         const quadrantContestsState: QuadrantContestsState = context.state.quadrantContestsState;
         try {
             const response = await api.getQuadrantContests(token, page);
@@ -80,7 +80,7 @@ export const actions = {
         }
     },
     async actionPostQuadrantContest(context: MainContext,contest:ICreateContest) {
-        var token: string = context.state.token;
+        var token: string = getLocalToken();
         const createQuadrantContestState: CreateQuadrantContestState = context.state.createQuadrantContestState;
         createQuadrantContestState.loading = true;
         commitSetCreateQuadrantContestState(context, createQuadrantContestState);
