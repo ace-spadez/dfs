@@ -25,6 +25,7 @@
           :key="ind"
           class="ranking-main-item"
         >
+        <div v-if="ind<10">
           <span class="ranking-main-item-logo">
             <img
               src="@/assets/img/tier/dragon.svg"
@@ -40,6 +41,7 @@
             <span style="color:grey">{{Math.round(standing['rating']['r_all'])}}</span>
             #{{ind+1}}
           </span>
+        </div>
         </div>
       </div>
     </div>
@@ -59,7 +61,7 @@ import Error from '@/components/Error.vue'
 import {
   dispatchHomeGetContests,
   dispatchApplyContests,
-  dispatchHomeStandings
+  dispatchHomeStandings 
 } from "@/store/home/actions";
 import { Contest } from "@/interfaces";
 import { readUserProfile } from "../../../store/main/getters";
