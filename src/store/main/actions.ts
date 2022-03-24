@@ -32,7 +32,7 @@ export const actions = {
                 commitSetToken(context, token);
                 commitSetLoggedIn(context, true);
                 commitSetLogInError(context, false);
-                await dispatchGetUserProfile(context);
+                await dispatchGetUserProfil(context);
                 await dispatchRouteLoggedIn(context);
                 commitAddNotification(context, { content: 'Logged in', color: 'success' });
             } else {
@@ -46,7 +46,7 @@ export const actions = {
         commitSetLogInProgress(context, false);
 
     },
-    async actionGetUserProfile(context: MainContext) {
+    async actionGetUserProfil(context: MainContext) {
         try {
             const response = await api.getMe(context.state.token);
 
@@ -169,7 +169,7 @@ const { dispatch } = getStoreAccessors<MainState | any, State>('');
 
 export const dispatchCheckApiError = dispatch(actions.actionCheckApiError);
 export const dispatchCheckLoggedIn = dispatch(actions.actionCheckLoggedIn);
-export const dispatchGetUserProfile = dispatch(actions.actionGetUserProfile);
+export const dispatchGetUserProfil = dispatch(actions.actionGetUserProfil);
 export const dispatchLogIn = dispatch(actions.actionLogIn);
 export const dispatchLogOut = dispatch(actions.actionLogOut);
 export const dispatchUserLogOut = dispatch(actions.actionUserLogOut);
