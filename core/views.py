@@ -213,3 +213,18 @@ class StandingsView(views.APIView):
             },
             status=status.HTTP_200_OK
         )
+class FriendsStandingsView(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self,request,contest_uuid):
+        contest = Contest.objects.get(uuid=contest_uuid)
+        user = request.user
+        contestprocesses = Contestprocess.objects.filter(contest=contest,attempt=True,user__watchers__watcher=user).order_by('-score__score_all').exclude(score__score_all__isnull=True)
+        serializer = StandingsModelSerializer(contestprocesses,many=True,context={'request':request})
+        return response.Response(
+            {
+                "message": "All the standings",
+                "body": serializer.data,
+            },
+            status=status.HTTP_200_OK
+        )
