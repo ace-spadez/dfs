@@ -1,5 +1,5 @@
 import logging
-
+from django.db import transaction
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
@@ -10,6 +10,7 @@ from elo.elo_calc import update_ratings
 from datetime import datetime
 from appauth.models import User
 @app.task
+@transaction.atomic
 def change_ratings(contest_id, timestamp):
     print("Started")
     contest = Contest.objects.get(pk=contest_id)
@@ -21,8 +22,12 @@ def change_ratings(contest_id, timestamp):
     p = []
     c = []
     m = []
+    nxt = datetime.now()
     for contestprocess in contestprocesses:
         print(contestprocess)
+        contestprocess.status = Contestprocess.PASSED
+        contestprocess.rated_date = nxt
+        contestprocess.save()
         print("Printed a contestprocesse")
         tot_marks = contestprocess.get_total_marks()
         print("Got total marks")

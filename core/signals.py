@@ -10,5 +10,5 @@ def contest(sender, instance, **kwargs):
     if instance.status()  != "Pending":
         return
     print("In da thank")
-    change_ratings.apply_async((instance.pk, instance.end_date.timestamp()),eta=instance.end_date)
+    #change_ratings.apply_async((instance.pk, instance.end_date.timestamp()),eta=instance.end_date)
 
