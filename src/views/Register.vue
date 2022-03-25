@@ -71,6 +71,7 @@ import {
 } from "@/store/register/getters";
 import { dispatchRegister } from "@/store/register/actions";
 import { commitAddNotification, commitRemoveNotification } from "@/store/main/mutations";
+import { commitSetRegisterSuccess } from "@/store/register/mutations";
 
 @Component
 export default class Register extends Vue {
@@ -123,6 +124,7 @@ export default class Register extends Vue {
     
     if ( this.registerError ) {
       console.log("In Register view", String(this.registerErrorMessage));
+      console.log('this register success', this.registerSuccess);
       const notif = {
       content: String(this.registerErrorMessage),
       color: "danger"
@@ -132,8 +134,9 @@ export default class Register extends Vue {
       commitRemoveNotification(this.$store, notif);
     }
     if ( this.registerSuccess){
+      console.log("register success")
       this.$router.push('successful-registration')
-
+      commitSetRegisterSuccess(this.$store, false);
     }
       
 
