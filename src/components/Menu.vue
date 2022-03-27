@@ -65,9 +65,16 @@
                 <v-list-item-content>
                   <v-list-item-title>Analysis</v-list-item-title>
                 </v-list-item-content>
-                     <v-list-item-action>
-<div class="commingsoon">
-  ASAP</div>                </v-list-item-action>
+       <v-list-item-action>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn icon v-bind="attrs" v-on="on">
+                    <v-icon color="grey lighten-1">mdi-clock-time-five</v-icon>
+                  </v-btn>
+                </template>
+                <span>Coming Soon</span>
+              </v-tooltip>
+            </v-list-item-action>
               </v-list-item>
               <v-list-item @click="logout" class="v-list-item">
                 <v-list-item-action>
@@ -95,6 +102,8 @@ export default class Menu extends Vue {
     public async logout() {
   
     await dispatchUserLogOut(this.$store);
+      window.location.reload()
+
   }
     public get userProfile() {
    

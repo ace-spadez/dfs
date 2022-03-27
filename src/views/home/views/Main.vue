@@ -1,5 +1,20 @@
 <template>
   <div class="main-container">
+    <div class="right-space">
+      <div class="rankings-head">Rankings</div>
+      <div class='rankings-main' v-if="standingsState.loading">
+        <v-skeleton-loader type="list-item-avatar" width="100%" dark v-for="i in 4"  :key="i"></v-skeleton-loader>
+      </div>
+      <div class="rankings-main" v-if="standingsState.standings.length>0">
+        <div
+          v-for="(standing,ind) in standingsState.standings"
+          :key="ind"
+          class="ranking-main-item"
+        >
+        <UserPreview :standing="standing"></UserPreview>
+        </div>
+      </div>
+    </div>
     <Error v-if="contestsState.error"></Error>
     <div class="wrap" v-if="!contestsState.error && !contestsState.loading">
       <ContestItem
@@ -13,38 +28,8 @@
     <div class="wrap" v-if="contestsState.loading">
       <v-skeleton-loader class="wrap-item-skeleton" v-for="i in 6" :key="i" type="card" ></v-skeleton-loader>
     </div>
-    <v-spacer></v-spacer>
-    <div class="right-space">
-      <div class="rankings-head">Rankings</div>
-      <div class='rankings-main' v-if="standingsState.loading">
-        <v-skeleton-loader type="list-item-avatar" width="100%" dark v-for="i in 4"  :key="i"></v-skeleton-loader>
-      </div>
-      <div class="rankings-main" v-if="standingsState.standings.length>0">
-        <div
-          v-for="(standing,ind) in standingsState.standings"
-          :key="ind"
-          class="ranking-main-item"
-        >
-        <div v-if="ind<10">
-          <span class="ranking-main-item-logo">
-            <img
-              src="@/assets/img/tier/dragon.svg"
-              width="30px"
-              height="30px"
-              style="filter: invert(75%) sepia(67%) saturate(340%) hue-rotate(348deg) brightness(104%) contrast(103%);"
-            />
-          </span>
-          <span class="ranking-main-item-name">
-            <router-link
-              :to="{name:'usersprofile',params:{username:standing['username']}}"
-            >{{standing['username']}}</router-link>·
-            <span style="color:grey">{{Math.round(standing['rating']['r_all'])}}</span>
-            #{{ind+1}}
-          </span>
-        </div>
-        </div>
-      </div>
-    </div>
+    <!-- <v-spacer></v-spacer> -->
+    
   </div>
 </template>
 
@@ -65,10 +50,12 @@ import {
 } from "@/store/home/actions";
 import { Contest } from "@/interfaces";
 import { readUserProfile } from "../../../store/main/getters";
+import UserPreview from '@/components/UserPreview.vue';
 @Component({
   components: {
     ContestItem,
-    Error
+    Error,
+    UserPreview
   }
 })
 export default class HomeMain extends Vue {
@@ -104,20 +91,30 @@ export default class HomeMain extends Vue {
 @import "@/assets/css/global.scss";
 .main-container {
   display: flex;
+  flex-wrap:wrap;
+  // flex-direction: row-reverse;
+    @include sm {
+  //  flex-direction: row-reverse;
+  }
   width: 100%;
-  height: 100%;
+  // height: 100%;
+  align-content: center;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .right-space {
-  min-width: 600px;
+  min-width: 400px;
+  flex:1;
   box-shadow: 0 0 12px 0 grey;
   border-radius: 10px;
   background-color: $xMedium;
   float: right;
-  padding: 50px 0px 0 0px;
-  @include xl {
-    display: none;
-  }
+  padding: 20px 0px 0 0px;
+  // @include xl {
+    margin:20px;
+    // padding: 20px;
+  // }
 }
 .ranking-main-item {
   margin-left: 20px;
@@ -141,7 +138,8 @@ export default class HomeMain extends Vue {
   margin: 10px 0px 0 0px;
   width: 100%;
   // height: 300px;
-  padding-top: 10px;
+  padding: 10px 0;
+  
 }
 .rankings-head {
   margin-left: 20px;
@@ -159,6 +157,7 @@ export default class HomeMain extends Vue {
   /* padding-top:20px; */
   display: flex;
   flex-wrap: wrap;
+  flex:4;
 }
 .wrap-item {
   // width: 40vw;

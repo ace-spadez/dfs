@@ -21,7 +21,7 @@
           <img src="@/assets/img/loupe.svg" width="15px" height="15px" />
         </span>
         <span style="marginLeft:5px;font-size:20px;">Search</span>
-      </span> -->
+      </span>-->
       <v-spacer></v-spacer>
       <div v-if="isLoggedIn" class="profile-name">{{ userProfile.username }}</div>
 
@@ -52,7 +52,6 @@
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title :class="currentRoute == '/home/main' ? 'highlight' : ''">Home</v-list-item-title>
-            
             </v-list-item-content>
           </v-list-item>
           <v-list-item
@@ -61,21 +60,25 @@
                 ? 'v-list-item highlight'
                 : 'v-list-item'
             "
-            to="/home/rankings"
           >
             <v-list-item-action>
               <v-img src="@/assets/img/ratings.png"></v-img>
             </v-list-item-action>
-            <v-list-item-content  >
+            <v-list-item-content>
               <v-list-item-title
                 :class="currentRoute == '/home/rankings' ? 'highlight' : ''"
               >Rankings</v-list-item-title>
-
             </v-list-item-content>
-          <v-list-item-action>
-                   <div class="commingsoon">ASAP</div>
-
-        </v-list-item-action>
+            <v-list-item-action>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn icon v-bind="attrs" v-on="on">
+                    <v-icon color="grey lighten-1">mdi-clock-time-five</v-icon>
+                  </v-btn>
+                </template>
+                <span>Coming Soon</span>
+              </v-tooltip>
+            </v-list-item-action>
           </v-list-item>
           <v-list-item
             :class="
@@ -83,7 +86,6 @@
                 ? 'v-list-item highlight'
                 : 'v-list-item'
             "
-            to="/home/problemsets"
           >
             <v-list-item-action>
               <v-img src="@/assets/img/test.png"></v-img>
@@ -92,11 +94,17 @@
               <v-list-item-title
                 :class="currentRoute == '/home/problemsets' ? 'highlight' : ''"
               >Problemsets</v-list-item-title>
-
             </v-list-item-content>
-                <v-list-item-action>
-             <div class="commingsoon">ASAP</div>
-        </v-list-item-action>
+            <v-list-item-action>
+             <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn icon v-bind="attrs" v-on="on">
+                    <v-icon color="grey lighten-1">mdi-clock-time-five</v-icon>
+                  </v-btn>
+                </template>
+                <span>Coming Soon</span>
+              </v-tooltip>
+            </v-list-item-action>
           </v-list-item>
           <v-list-item
             :class="
@@ -104,7 +112,6 @@
                 ? 'v-list-item highlight'
                 : 'v-list-item'
             "
-            to="/home/contests"
           >
             <v-list-item-action>
               <v-img src="@/assets/img/quiz.png"></v-img>
@@ -113,7 +120,18 @@
               <v-list-item-title
                 :class="currentRoute == '/home/contests' ? 'highlight' : ''"
               >Contests</v-list-item-title>
+              
             </v-list-item-content>
+                   <v-list-item-action>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn icon v-bind="attrs" v-on="on">
+                    <v-icon color="grey lighten-1">mdi-clock-time-five</v-icon>
+                  </v-btn>
+                </template>
+                <span>Coming Soon</span>
+              </v-tooltip>
+            </v-list-item-action>
           </v-list-item>
           <v-list-item
             :class="
@@ -132,17 +150,23 @@
               >Quadrant</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item class="v-list-item-prime" to="/home/prime">
+          <v-list-item class="v-list-item-prime">
             <v-list-item-action>
               <v-img src="@/assets/img/crown.png"></v-img>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title class="v-list-item-prime">Prime</v-list-item-title>
-
             </v-list-item-content>
-               <v-list-item-action>
-           <div class="commingsoon">ASAP</div>
-        </v-list-item-action>
+            <v-list-item-action>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn icon v-bind="attrs" v-on="on">
+                    <v-icon color="grey lighten-1">mdi-clock-time-five</v-icon>
+                  </v-btn>
+                </template>
+                <span>Coming Soon</span>
+              </v-tooltip>
+            </v-list-item-action>
           </v-list-item>
         </v-list>
 
@@ -212,9 +236,9 @@ export default class Main extends Vue {
   public search = "";
 
   public moveToHome() {
-    console.log("here")
-    if (this.currentRoute !== '/home/main' ) {
-      this.$router.push('/home/main')
+    console.log("here");
+    if (this.currentRoute !== "/home/main") {
+      this.$router.push("/home/main");
     }
   }
 
@@ -273,8 +297,7 @@ export default class Main extends Vue {
       !readDashboardMiniDrawer(this.$store)
     );
   }
-  public beforeMount(){
-  }
+  public beforeMount() {}
 }
 </script>
 <style scoped lang="scss">
@@ -297,11 +320,15 @@ export default class Main extends Vue {
 .beta {
   font-family: "B612";
   color: black;
-  font-size:12px;
+  font-size: 12px;
   padding: 5px;
   border-radius: 5px;
- background: rgb(98,204,167);
-background: linear-gradient(90deg, rgba(98,204,167,1) 3%, rgba(0,255,162,1) 57%);
+  background: rgb(98, 204, 167);
+  background: linear-gradient(
+    90deg,
+    rgba(98, 204, 167, 1) 3%,
+    rgba(0, 255, 162, 1) 57%
+  );
 }
 .v-toolbar-title {
   font-family: "valorant";
@@ -394,17 +421,21 @@ background: linear-gradient(90deg, rgba(98,204,167,1) 3%, rgba(0,255,162,1) 57%)
     display: none;
   }
 }
-.item{
-  display:flex;
+.item {
+  display: flex;
 }
-.commingsoon{
-   font-family: "B612";
-   float:right;
+.commingsoon {
+  font-family: "B612";
+  float: right;
   color: rgb(0, 0, 0);
-  font-size:11px;
+  font-size: 11px;
   padding: 3px;
   border-radius: 5px;
- background: rgb(98,204,167);
-background: linear-gradient(90deg, rgba(98,204,167,1) 3%, rgba(0,255,162,1) 57%);
+  background: rgb(98, 204, 167);
+  background: linear-gradient(
+    90deg,
+    rgba(98, 204, 167, 1) 3%,
+    rgba(0, 255, 162, 1) 57%
+  );
 }
 </style>
