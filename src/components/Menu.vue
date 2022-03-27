@@ -65,6 +65,9 @@
                 <v-list-item-content>
                   <v-list-item-title>Analysis</v-list-item-title>
                 </v-list-item-content>
+                     <v-list-item-action>
+<div class="commingsoon">
+  ASAP</div>                </v-list-item-action>
               </v-list-item>
               <v-list-item @click="logout" class="v-list-item">
                 <v-list-item-action>
@@ -134,6 +137,17 @@ export default class Menu extends Vue {
   align-items: center;
   justify-content: center;
   align-content: center;
+}
+
+.commingsoon{
+   font-family: "B612";
+   float:right;
+  color: rgb(0, 0, 0);
+  font-size:11px;
+  padding: 3px;
+  border-radius: 5px;
+ background: rgb(98,204,167);
+background: linear-gradient(90deg, rgba(98,204,167,1) 3%, rgba(0,255,162,1) 57%);
 }
 
 </style>
