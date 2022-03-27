@@ -99,7 +99,7 @@ export const actions = {
     }
   },
   async actionFriends(context: MainContext,payload:{ contest_uuid:string,page:number}) {
-    const token:string = context.state.token;
+    const token:string = getLocalToken();
     const FriendsState:FriendsState= context.state.friendsState;
     FriendsState.loading = true;
     FriendsState.error = false;
