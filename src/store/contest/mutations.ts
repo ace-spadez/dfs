@@ -1,5 +1,5 @@
 
-import { ContestState, NotifyMeState, ContestDataState, SubmissionsState, StandingsState, ContestProblemsState, SubmitAnswerState, SubmitPaperState, BeginAttemptState,} from './state';
+import { ContestState, NotifyMeState, ContestDataState, SubmissionsState, StandingsState, ContestProblemsState, SubmitAnswerState, SubmitPaperState, BeginAttemptState, FriendsState,} from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
 
@@ -13,6 +13,9 @@ export const mutations = {
     },
     setSubmissionsState(state: ContestState, payload:SubmissionsState ) {
         state.submissionsState = payload;
+    },
+    setFriendsState(state: ContestState, payload:FriendsState ) {
+        state.friendsState = payload;
     },
     setStandingsState(state: ContestState, payload:StandingsState ) {
         state.standingsState = payload;
@@ -36,6 +39,7 @@ const {commit} = getStoreAccessors<ContestState | any, State>('');
 export const commitSetNotifyMeState = commit(mutations.setNotifyMeState);
 export const commitSetContestDataState = commit(mutations.setContestDataState);
 export const commitSetSubmissionsState = commit(mutations.setSubmissionsState);
+export const commitSetFriendsState = commit(mutations.setFriendsState);
 export const commitSetStandingsState = commit(mutations.setStandingsState);
 export const commitSetContestProblemsState = commit(mutations.setContestProblemsState);
 export const commitSetSubmitAnswerState = commit(mutations.setSubmitAnswerState);

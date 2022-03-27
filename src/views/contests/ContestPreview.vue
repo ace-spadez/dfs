@@ -22,17 +22,25 @@
         <v-tabs fixed-tabs color="deep-purple accent-4" class="tabs">
           <v-tab>Submission</v-tab>
           <v-tab>Standings</v-tab>
+          <v-tab>Friends</v-tab>
+
           <v-tab-item>
-<div v-if="submissionsState.loading">
-  <v-skeleton-loader type="list-item-three-line" width="100%" v-for="item in [0,1,2,3,4,5,6,7,8,9,10]" :key="item">
-
-  </v-skeleton-loader>
-</div>
-<div v-if="submissionsState.submissions">
-  <Submission v-for="(problem,index) in submissionsState.submissions" :key="index" :problem="problem" :index="index"></Submission>
-
-</div>
-
+            <div v-if="submissionsState.loading">
+              <v-skeleton-loader
+                type="list-item-three-line"
+                width="100%"
+                v-for="item in [0,1,2,3,4,5,6,7,8,9,10]"
+                :key="item"
+              ></v-skeleton-loader>
+            </div>
+            <div v-if="submissionsState.submissions">
+              <Submission
+                v-for="(problem,index) in submissionsState.submissions"
+                :key="index"
+                :problem="problem"
+                :index="index"
+              ></Submission>
+            </div>
           </v-tab-item>
           <v-tab-item>
             <br />
@@ -74,6 +82,38 @@
               ></v-pagination>
             </div>
           </v-tab-item>
+          <v-tab-item>
+            <br />
+
+            <v-simple-table v-if="friendsState.standings">
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th class="text-left">Name</th>
+                    <th class="text-left">All</th>
+                    <th class="text-left">Physics</th>
+                    <th class="text-left">Chemistry</th>
+                    <th class="text-left">Maths</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item,index) in friendsState.standings" :key="index">
+                    <td>
+                      <UserPreview :standing="item.user"></UserPreview>
+                    </td>
+                    <td>{{ item.score.score_all?item.score.score_all:'-' }}</td>
+                    <td>{{ item.score.score_p?item.score.score_p:'-' }}</td>
+                    <td>{{ item.score.score_c?item.score.score_c:'-' }}</td>
+                    <td>{{ item.score.score_m?item.score.score_m:'-' }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+            <br />
+            <div class="loading-center" v-if="friendsState.loading">
+              <v-progress-circular indeterminate></v-progress-circular>
+            </div>
+          </v-tab-item>
         </v-tabs>
       </div>
       <div class="contest-pre-side">
@@ -111,14 +151,16 @@ import { Contest } from "@/interfaces";
 import {
   dispatchGetContestData,
   dispatchStandingState,
-  dispatchSubmissions
+  dispatchSubmissions,
+  dispatchFriends
 } from "../../store/contest/actions";
 import {
   readContestDataState,
   readStandingsState,
-  readSubmissionsState
+  readSubmissionsState,
+  readFriendsState
 } from "../../store/contest/getters";
-import Submission from '@/components/Submission.vue'
+import Submission from "@/components/Submission.vue";
 function stringify(str: string) {
   console.log(str);
   if (str == "undefined") return "";
@@ -142,9 +184,13 @@ export default class ContestPreview extends Vue {
   public get standingsState() {
     return readStandingsState(this.$store);
   }
-  public  get submissionsState(){
+  public get submissionsState() {
     console.log(readSubmissionsState(this.$store));
     return readSubmissionsState(this.$store);
+  }
+  public get friendsState() {
+    console.log(readFriendsState(this.$store));
+    return readFriendsState(this.$store);
   }
   public beforeMount() {
     dispatchGetContestData(this.$store, this.contestUUID);
@@ -152,7 +198,11 @@ export default class ContestPreview extends Vue {
       contest_uuid: this.contestUUID,
       page: 1
     });
-    dispatchSubmissions(this.$store,this.contestUUID);
+   dispatchFriends(this.$store, {
+      contest_uuid: this.contestUUID,
+      page: 1
+    });
+    dispatchSubmissions(this.$store, this.contestUUID);
   }
   @Watch("page")
   public onPageChange(newPage, prevPage) {

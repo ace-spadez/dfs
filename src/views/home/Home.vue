@@ -52,6 +52,7 @@
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title :class="currentRoute == '/home/main' ? 'highlight' : ''">Home</v-list-item-title>
+            
             </v-list-item-content>
           </v-list-item>
           <v-list-item
@@ -65,11 +66,16 @@
             <v-list-item-action>
               <v-img src="@/assets/img/ratings.png"></v-img>
             </v-list-item-action>
-            <v-list-item-content>
+            <v-list-item-content  >
               <v-list-item-title
                 :class="currentRoute == '/home/rankings' ? 'highlight' : ''"
               >Rankings</v-list-item-title>
+
             </v-list-item-content>
+          <v-list-item-action>
+                   <div class="commingsoon">ASAP</div>
+
+        </v-list-item-action>
           </v-list-item>
           <v-list-item
             :class="
@@ -86,7 +92,11 @@
               <v-list-item-title
                 :class="currentRoute == '/home/problemsets' ? 'highlight' : ''"
               >Problemsets</v-list-item-title>
+
             </v-list-item-content>
+                <v-list-item-action>
+             <div class="commingsoon">ASAP</div>
+        </v-list-item-action>
           </v-list-item>
           <v-list-item
             :class="
@@ -128,7 +138,11 @@
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title class="v-list-item-prime">Prime</v-list-item-title>
+
             </v-list-item-content>
+               <v-list-item-action>
+           <div class="commingsoon">ASAP</div>
+        </v-list-item-action>
           </v-list-item>
         </v-list>
 
@@ -379,5 +393,18 @@ background: linear-gradient(90deg, rgba(98,204,167,1) 3%, rgba(0,255,162,1) 57%)
   @include lg {
     display: none;
   }
+}
+.item{
+  display:flex;
+}
+.commingsoon{
+   font-family: "B612";
+   float:right;
+  color: rgb(0, 0, 0);
+  font-size:11px;
+  padding: 3px;
+  border-radius: 5px;
+ background: rgb(98,204,167);
+background: linear-gradient(90deg, rgba(98,204,167,1) 3%, rgba(0,255,162,1) 57%);
 }
 </style>

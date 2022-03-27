@@ -13,9 +13,10 @@ commitSetStandingsState,
 commitSetSubmitAnswerState,
 commitSetSubmitPaperState,
 commitSetSubmissionsState,
-commitSetBeginAttemptState
+commitSetBeginAttemptState,
+commitSetFriendsState
 } from "./mutations";
-import { ContestState, ContestDataState, NotifyMeState, SubmissionsState, StandingsState, ContestProblemsState, SubmitAnswerState, BeginAttemptState } from "./state";
+import { ContestState, ContestDataState, NotifyMeState, SubmissionsState, StandingsState, ContestProblemsState, SubmitAnswerState, BeginAttemptState, FriendsState } from "./state";
 import { Contest, IStanding, ISubmission } from "@/interfaces";
 import axios from "axios";
 type MainContext = ActionContext<ContestState, State>;
@@ -76,6 +77,7 @@ export const actions = {
       commitSetSubmissionsState(context,SubmissionsState);
     }
   },
+  
   async actionStandingsState(context: MainContext,payload:{ contest_uuid:string,page:number}) {
     const token:string = getLocalToken();
     const StandingsState:StandingsState= context.state.standingsState;
@@ -94,6 +96,24 @@ export const actions = {
       StandingsState.loading = false;
       StandingsState.error = true;
       commitSetStandingsState(context,StandingsState);
+    }
+  },
+  async actionFriends(context: MainContext,payload:{ contest_uuid:string,page:number}) {
+    const token:string = context.state.token;
+    const FriendsState:FriendsState= context.state.friendsState;
+    FriendsState.loading = true;
+    FriendsState.error = false;
+    commitSetFriendsState(context,FriendsState)
+    try {
+      const res = await api.getContestFriendsStandings(token,payload.contest_uuid,payload.page)
+      FriendsState.standings = res.data['body'];
+      FriendsState.loading = false;
+      commitSetFriendsState(context,FriendsState);
+    } catch (err) {
+      console.log(err)
+      FriendsState.loading = false;
+      FriendsState.error = true;
+      commitSetFriendsState(context,FriendsState);
     }
   },
   async actionContestProblems(context: MainContext, contest_uuid:string) {
@@ -162,6 +182,7 @@ const { dispatch } = getStoreAccessors<ContestState | any, State>("");
 export const dispatchGetContestData = dispatch(actions.actionGetContestData);
 export const dispatchNotifyMe = dispatch(actions.actionNotifyMe);
 export const dispatchSubmissions = dispatch(actions.actionSubmissions);
+export const dispatchFriends = dispatch(actions.actionFriends);
 export const dispatchStandingState = dispatch(actions.actionStandingsState);
 export const dispatchContestProblems = dispatch(actions.actionContestProblems);
 export const dispatchSubmitAnswerState = dispatch(actions.actionSubmitAnswerState);

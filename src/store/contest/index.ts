@@ -1,11 +1,16 @@
 import { mutations } from './mutations';
 import { getters } from './getters';
 import { actions } from './actions';
-import { ContestState,ContestDataState,ContestProblemsState,NotifyMeState,StandingsState,SubmissionsState,SubmitAnswerState,SubmitPaperState, BeginAttemptState } from './state';
+import { ContestState,ContestDataState,FriendsState, ContestProblemsState,NotifyMeState,StandingsState,SubmissionsState,SubmitAnswerState,SubmitPaperState, BeginAttemptState } from './state';
 import { getLocalToken } from '@/utils';
 const contestDataState:ContestDataState={
   loading:false,
   error:false,
+}
+const friendsState:FriendsState={
+  standings:[],
+  loading:false,
+  error:false
 }
 const notifyMeState:NotifyMeState={
   loading:false,
@@ -49,7 +54,8 @@ const defaultState: ContestState = {
   contestProblemsState,
   submitAnswerState,
   submitPaperState,
-  beginAttemptState
+  beginAttemptState,
+  friendsState:friendsState
 
 };
 

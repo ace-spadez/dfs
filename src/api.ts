@@ -213,6 +213,13 @@ export const api = {
       headers: authHeader(token)
     })
   },
+  async getContestFriendsStandings(token: string, contest_uuid: string, page: number) {
+    // await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+
+    return axios.get(`${apiUrl}/api/core/contests/${contest_uuid}/friendsstandings/`, {
+      headers: authHeader(token)
+    })
+  },
   async getContestProblems(token: string, contest_uuid: string) {
     // await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
     
@@ -228,7 +235,7 @@ export const api = {
   },
   async postBeginAttempt(token: string, contest_uuid: string) {
     // await new Promise((resolve, reject) => setTimeout(() => resolve(), 5000));
-
+//
     return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/attempt/`, {}, authHeaders(token))
   },
 };

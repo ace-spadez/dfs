@@ -1,5 +1,6 @@
 const env = process.env.VUE_APP_ENV;
 
+
 let envApiUrl = 'https://rankf.southeastasia.cloudapp.azure.com';
 
 // if (env === 'production') {
@@ -10,5 +11,7 @@ let envApiUrl = 'https://rankf.southeastasia.cloudapp.azure.com';
 //   envApiUrl = `http://${process.env.VUE_APP_DOMAIN_DEV}`;
 // }
 
+
 export const apiUrl = 'https://rankf.southeastasia.cloudapp.azure.com';
+
 export const appName = process.env.VUE_APP_NAME;

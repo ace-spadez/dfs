@@ -23,6 +23,11 @@ export interface StandingsState {
     pages?: Number;
     page: Number;
 }
+export interface FriendsState{
+    standings : IStanding[];
+    loading:boolean;
+    error:boolean;
+}
 export interface ContestProblemsState {
     problems: IProblem[];
     loading: boolean;
@@ -50,6 +55,7 @@ export interface ContestState {
     submitAnswerState:SubmitAnswerState;
     submitPaperState:SubmitPaperState;
     beginAttemptState:BeginAttemptState;
+    friendsState:FriendsState;
 
 
     token:string;
