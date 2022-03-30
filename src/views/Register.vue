@@ -56,6 +56,9 @@
 
       <div v-if="!registerInProgress" style="height:32px"></div>
     </div>
+     <div class="side-log">
+  </div>
+
   </div>
 </template>
 
@@ -221,7 +224,7 @@ export default class Register extends Vue {
   border-radius: 8px;
   width:80%;
   margin: 0 40px;
-  left:calc(50% - 60px)
+  // left:calc(50% - 60px)
 
   &:hover {
     background-color: rgb(90, 90, 90);

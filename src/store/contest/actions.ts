@@ -32,6 +32,7 @@ export const actions = {
     try {
       const res = await api.getContest(token,contest_uuid);
       contestDataState.contest = res.data['body']
+      console.log(res.data['body'])
       contestDataState.loading = false;
       commitSetContestDataState(context,contestDataState);
     } catch (err) {

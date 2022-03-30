@@ -17,6 +17,43 @@
           :contest="contestState.contest"
           :key="contestState.contest.uuid"
         ></ContestItem>
+        <div
+          v-if="contestState.contest && contestState.contest.status=='Passed' && contestState.contest.contest_process"
+        >
+          <div v-if="contestState.contest.contest_process.status=='P'" class="status">
+            <v-btn icon>
+              <v-icon color="black">mdi-clock-time-five</v-icon>
+            </v-btn>Rating Evaluations Pending
+          </div>
+          <div
+            v-if="contestState.contest.contest_process.status=='X' && contestState.contest.contest_process.score.score_all"
+          >
+            <v-simple-table >
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th class="text-left">Name</th>
+                    <th class="text-left">All</th>
+                    <th class="text-left">Physics</th>
+                    <th class="text-left">Chemistry</th>
+                    <th class="text-left">Maths</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <UserPreview :standing="contestState.contest.contest_process"></UserPreview>
+                    </td>
+                    <td>{{ contestState.contest.contest_process.score.score_all?contestState.contest.contest_process.score.score_all:'-' }}</td>
+                    <td>{{ contestState.contest.contest_process.score.score_p?contestState.contest.contest_process.score.score_p:'-' }}</td>
+                    <td>{{ contestState.contest.contest_process.score.score_c?contestState.contest.contest_process.score.score_c:'-' }}</td>
+                    <td>{{ contestState.contest.contest_process.score.score_m?contestState.contest.contest_process.score.score_m:'-' }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </div>
+        </div>
         <br />
         <br />
         <v-tabs fixed-tabs color="deep-purple accent-4" class="tabs">
@@ -33,7 +70,8 @@
                 :key="item"
               ></v-skeleton-loader>
             </div>
-            <div v-if="submissionsState.submissions">
+            <div v-if="submissionsState.submissions.length>0">
+              <div class="total">{{total}}m</div>
               <Submission
                 v-for="(problem,index) in submissionsState.submissions"
                 :key="index"
@@ -175,6 +213,8 @@ function stringify(str: string) {
 })
 export default class ContestPreview extends Vue {
   public page: number = 1;
+
+  public total: number = NaN;
   public get contestState() {
     return readContestDataState(this.$store);
   }
@@ -192,17 +232,18 @@ export default class ContestPreview extends Vue {
     console.log(readFriendsState(this.$store));
     return readFriendsState(this.$store);
   }
-  public beforeMount() {
+  public async beforeMount() {
     dispatchGetContestData(this.$store, this.contestUUID);
     dispatchStandingState(this.$store, {
       contest_uuid: this.contestUUID,
       page: 1
     });
-   dispatchFriends(this.$store, {
+    dispatchFriends(this.$store, {
       contest_uuid: this.contestUUID,
       page: 1
     });
-    dispatchSubmissions(this.$store, this.contestUUID);
+    await dispatchSubmissions(this.$store, this.contestUUID);
+    this.total = this.gettotal();
   }
   @Watch("page")
   public onPageChange(newPage, prevPage) {
@@ -213,6 +254,42 @@ export default class ContestPreview extends Vue {
   }
   public goback() {
     this.$router.go(-1);
+  }
+  public gettotal() {
+    let total = 0;
+    this.submissionsState.submissions.map((problem, i) => {
+      total += this.isCorrect(problem);
+    });
+    return total;
+  }
+  public isCorrect(problem) {
+    let marks = 0;
+    if (!problem.submission) return 0;
+    if (problem.problem_type == "I") {
+      if (problem.correct_integer == problem.submission.integer_content)
+        return 5;
+      else return 0;
+    }
+    if (problem.problem_type == "S") {
+      const c = problem.submission.options[0];
+      return problem.options.find(item => item.uuid == c.uuid)["is_correct"]
+        ? 3
+        : -1;
+    }
+    if (problem.problem_type == "M") {
+      problem.submission.options.map(option => {
+        const opt = problem.options.find(item => item.uuid == option.uuid);
+        if (opt) {
+          if (opt["is_correct"] == true) {
+            marks += 3;
+          } else {
+            marks -= 1;
+          }
+        }
+      });
+      return marks;
+    }
+    return marks;
   }
 }
 </script>
@@ -269,7 +346,15 @@ export default class ContestPreview extends Vue {
   margin: 20px 0 0 0;
   padding: 0px 0 0 10px;
   width: 100%;
-  height: 300px;
+}
+.total {
+  padding: 20px 0 20px 30px;
+  margin: 20px 0 20px 0;
+  font-family: "B612";
+  font-weight: bold;
+  font-size: 30px;
+  color: $green2;
+  background-color: rgb(218, 255, 218);
 }
 .loading-center {
   width: 100%;
@@ -295,5 +380,11 @@ export default class ContestPreview extends Vue {
   @include xl {
     width: 86vw;
   }
+}
+.status {
+  background: rgb(255, 255, 215);
+  padding: 10px 0 10px 10px;
+  font-family: "B612";
+  margin-top:10px;
 }
 </style>

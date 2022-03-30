@@ -73,28 +73,12 @@ export interface IUserPreview{
     profile_image?:Number;
     
 }
-
-export interface Contest{
-    uuid:string;
-    name:string;
-    contest_status:string;
-    date_created: Date;
-    target_date:Date;
-    end_date: Date;
-    duration:Number;
-    tags: Array<string>;
-    contest_type: string;
-    contest_difficulty:string;
-    writers : Array<IUserPreview>
-    description:string;
-    contest_chips:Array<string>;
-    is_applied:boolean;
-    is_attempted:boolean;
-    status:string;
-    question_count: number;
-    attempt: boolean;
-
+export interface IContestProcess{
+    rating : Rating;
+    score: Score;
+    attempt: string;
 }
+
 export interface ITag{
     name:string
 }
@@ -204,4 +188,26 @@ export interface IStanding{
     rating_change: Rating;
     score:Score;
     rated_date: Date;
+}
+export interface Contest{
+    uuid:string;
+    name:string;
+    contest_status:string;
+    date_created: Date;
+    target_date:Date;
+    end_date: Date;
+    duration:Number;
+    tags: Array<string>;
+    contest_type: string;
+    contest_difficulty:string;
+    writers : Array<IUserPreview>
+    description:string;
+    contest_chips:Array<string>;
+    is_applied:boolean;
+    is_attempted:boolean;
+    status:string;
+    question_count: number;
+    attempt: boolean;
+    contest_process ?:IStanding;
+
 }
