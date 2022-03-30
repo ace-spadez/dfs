@@ -2,8 +2,8 @@ FROM python:3
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /code
 WORKDIR /code
-RUN apt-get -y update && apt-get -y upgrade
-RUN apt-get install  -y binutils libproj-dev gdal-bin ffmpeg
+RUN apt-get -y update 
+RUN apt-get install  -y binutils libproj-dev gdal-bin 
 
 COPY entrypoint.sh /entrypoint.sh
 COPY wait-for-it.sh /wait-for-it.sh
