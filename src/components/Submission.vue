@@ -16,6 +16,8 @@
       <span
         class="type"
       >{{problem.problem_type=='S'?'Single Option Correct':problem.problem_type=='M'?'Multiple Options Correct':'Integer-type'}}</span>
+      <span class="correct_answer">+3</span>
+      <span class="wrong_answer">-1</span>
     </div>
     <div
       v-for="(option,ind) in problem.options"
@@ -187,5 +189,20 @@ export default class Submission extends Vue {
   background-color: $xDark;
   border-radius: 15px;
   font-family: "B612";
+}
+
+.wrong_answer{
+padding:5px 10px;
+background-color:$xDark;
+color: rgb(248, 83, 83);
+border-radius: 4px;
+margin:3px;
+}
+.correct_answer{
+padding:5px 10px;
+background-color:$xDark;
+color: rgb(112, 236, 74);
+border-radius: 4px;
+margin:3px;
 }
 </style>

@@ -6,6 +6,8 @@
     <div class="chips">
       <span class="subject">{{problem.subject=='M'?'Maths':problem.subject=='P'?'Physics':'Chemsitry'}}</span>
       <span class="type">{{problem.problem_type=='S'?'Single Option Correct':problem.problem_type=='M'?'Multiple Options Correct':'Integer-type'}}</span>
+      <span class="correct_answer">+3</span>
+      <span class="wrong_answer">-1</span>
     </div>
     <div v-if="problem.problem_type=='S'">
       <div v-for="(option,index) in problem.options" class="option" :key="index">
@@ -72,6 +74,7 @@ export default class Problem extends Vue {
   public cOptions: any = [];
   public cInteger: number | null = null;
 
+
   @Watch("cInteger")
   public onChange(n, o) {
     if (this.problem.submission && o == null) return;
@@ -79,6 +82,7 @@ export default class Problem extends Vue {
   }
 
   public get isClear() {
+    console.log(this.problem)
     if (
       this.cOption == "" &&
       this.cOptions.length <= 0 &&
@@ -256,6 +260,20 @@ border-radius: 4px;
 .type{
 padding:5px 10px;
 background-color:$xDark;
+border-radius: 4px;
+margin:3px;
+}
+.wrong_answer{
+padding:5px 10px;
+background-color:$xDark;
+color: rgb(248, 83, 83);
+border-radius: 4px;
+margin:3px;
+}
+.correct_answer{
+padding:5px 10px;
+background-color:$xDark;
+color: rgb(112, 236, 74);
 border-radius: 4px;
 margin:3px;
 }
