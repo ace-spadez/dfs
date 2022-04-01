@@ -71,6 +71,7 @@
         <v-btn disabled>This is you</v-btn>
       </div>
       <br />
+      <br />
       <!-- <div class="rank-tiles">
         <div class="rank-tile dragon">
           <img src="@/assets/img/tier/dragon.svg" width="100px" />
@@ -79,6 +80,30 @@
           <img src="@/assets/img/tier/unicorn.svg" width="100px" />
         </div>
       </div>-->
+       <v-simple-table >
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th class="text-left">Name</th>
+                    <th class="text-left">All</th>
+                    <th class="text-left">Physics</th>
+                    <th class="text-left">Chemistry</th>
+                    <th class="text-left">Maths</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <UserPreview :standing="userProfileState.user"></UserPreview>
+                    </td>
+                    <td>{{ userProfileState.user.rating.r_all?userProfileState.user.rating.r_all:'-' }}</td>
+                    <td>{{ userProfileState.user.rating.r_p?userProfileState.user.rating.r_p:'-' }}</td>
+                    <td>{{ userProfileState.user.rating.r_c?userProfileState.user.rating.r_c:'-' }}</td>
+                    <td>{{ userProfileState.user.rating.r_m?userProfileState.user.rating.r_m:'-' }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
       <div v-if="!userRankingsState.loading &&  !userRankingsState.error" class="chart">
         <v-tabs color="deep-purple accent-4" right>
           <v-tab>All</v-tab>
@@ -126,12 +151,14 @@ import {
   commitRemoveNotification
 } from "../../store/main/mutations";
 import Error from "@/components/Error.vue";
+import UserPreview from '@/components/UserPreview.vue';
 
 @Component({
   components: {
     Menu,
     Chart,
-    Error
+    Error,
+    UserPreview
   }
 })
 export default class Profile extends Vue {

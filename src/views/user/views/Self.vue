@@ -41,9 +41,36 @@
           />
           <div class="username">{{selfProfileState.user.username}}</div>
           <div class="bio">{{selfProfileState.user.bio}}</div>
+    
      <br/>
-
      <v-btn outlined :to="{name:'editprofile'}">Edit</v-btn>
+
+     <br/>
+     <br/>
+ <v-simple-table >
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th class="text-left">Name</th>
+                    <th class="text-left">All</th>
+                    <th class="text-left">Physics</th>
+                    <th class="text-left">Chemistry</th>
+                    <th class="text-left">Maths</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <UserPreview :standing="selfProfileState.user"></UserPreview>
+                    </td>
+                    <td>{{ selfProfileState.user.rating.r_all?selfProfileState.user.rating.r_all:'-' }}</td>
+                    <td>{{ selfProfileState.user.rating.r_p?selfProfileState.user.rating.r_p:'-' }}</td>
+                    <td>{{ selfProfileState.user.rating.r_c?selfProfileState.user.rating.r_c:'-' }}</td>
+                    <td>{{ selfProfileState.user.rating.r_m?selfProfileState.user.rating.r_m:'-' }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
  <div class="chart"  v-if="!userRankingsState.loading &&  !userRankingsState.error">
     <v-tabs color="deep-purple accent-4" right>
           <v-tab>All</v-tab>
@@ -74,7 +101,7 @@ import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { Contest } from "@/interfaces";
 import { getMonth } from "@/utils";
 import Chart from './Chart.vue'
-
+import UserPreview from '@/components/UserPreview.vue';
 import {
   readUserProfile,
 } from "@/store/main/getters";
@@ -83,7 +110,7 @@ import { dispatchGetUserProfile, dispatchGetUserRankings } from '../../../store/
 import Error from '@/components/Error.vue'
 @Component({
   components:{
-    Chart,Error
+    Chart,Error,UserPreview
   }
 })
 export default class SelfProfile extends Vue {

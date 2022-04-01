@@ -3,11 +3,11 @@
     <div class="right-space">
       <div class="rankings-head">Rankings</div>
       <div class='rankings-main' v-if="standingsState.loading">
-        <v-skeleton-loader type="list-item-avatar" width="100%" dark v-for="i in 4"  :key="i"></v-skeleton-loader>
+        <v-skeleton-loader type="list-item-avatar" width="100%" dark v-for="i in 10"  :key="i"></v-skeleton-loader>
       </div>
       <div class="rankings-main" v-if="standingsState.standings.length>0">
         <div
-          v-for="(standing,ind) in standingsState.standings"
+          v-for="(standing,ind) in standingsState.standings.slice(0,10)"
           :key="ind"
           class="ranking-main-item"
         >
@@ -26,7 +26,7 @@
       ></ContestItem>
     </div>
     <div class="wrap" v-if="contestsState.loading">
-      <v-skeleton-loader class="wrap-item-skeleton" v-for="i in 6" :key="i" type="card" ></v-skeleton-loader>
+      <v-skeleton-loader class="wrap-item-skeleton" v-for="i in 10" :key="i" type="card" ></v-skeleton-loader>
     </div>
     <!-- <v-spacer></v-spacer> -->
     

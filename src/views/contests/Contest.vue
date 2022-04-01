@@ -7,22 +7,23 @@
       <v-skeleton-loader v-if="contestState.loading" type="heading" width="200px"></v-skeleton-loader>
       <span class="timer">{{countdown}}</span>
       <v-spacer></v-spacer>
-                <button type="submit" class="submit-btn"  @click="Endcontest " >Return to Home</button>
-      <!-- <v-dialog v-model="dialog" persistent max-width="290" v-if="contestState.contest">
+      <!-- <button type="submit" class="submit-btn" @click="Endcontest ">RETURN TO HOME</button> -->
+      <v-dialog v-model="dialog" persistent max-width="290" v-if="contestState.contest">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn  v-bind="attrs" v-on="on" dark >Submit</v-btn>
+          <!-- <v-btn  v-bind="attrs" v-on="on" dark >Submit</v-btn> -->
+      <button type="submit" v-bind="attrs" v-on="on"  class="submit-btn" >RETURN TO HOME</button>
 
         </template>
         <v-card>
-          <v-card-title class="headline">Confirm submission</v-card-title>
-          <v-card-text>You have solved 5 questions. Are you sure yoou wanna Submit the answers???</v-card-text>
+          <v-card-title class="headline">Go back to home?</v-card-title>
+          <v-card-text>Your submissions are with us. You can resume the contest later.</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="red darken-1" text @click="dialog = false">Cancel</v-btn>
-            <v-btn color="green darken-1" text @click="submit">Submit</v-btn>
+            <v-btn color="green darken-1" text @click="Endcontest">GO To Home</v-btn>
           </v-card-actions>
         </v-card>
-      </v-dialog>-->
+      </v-dialog>
     </v-app-bar>
 
     <div class="cntainer">
@@ -47,7 +48,6 @@
               <v-skeleton-loader type="list-item" width="100%"></v-skeleton-loader>
             </div>
             <div v-if="!problemsState.loading && !problemsState.error">
-            
               <!-- <div class="subject-name">Physics</div>
               <div class="question-numbers">
                 <div
@@ -222,10 +222,9 @@ export default class ContestView extends Vue {
     console.log("YASSSSS");
     this.dialog = false;
   }
-  public Endcontest(){
+  public Endcontest() {
     console.log("YASSSSSSSSSS");
     this.$router.go(-1);
-
   }
   public get contestUUID() {
     return this.$route.params["contest_uuid"];
@@ -278,10 +277,14 @@ export default class ContestView extends Vue {
   }
 }
 .submit-btn {
-  background-color: rgb(177, 224, 255);
-  padding: 5px 10px;
-  color: rgb(0, 140, 255);
+  color: rgb(4, 105, 172);
+  padding: 7px 12px;
+  background-color: rgb(167, 213, 250);
   font-weight: bold;
+  font-family: "B612";
+  font-size: 12px;
+  border-radius: 15px ;
+  box-shadow: 0 0 5px 0 rgb(218, 218, 218);
 }
 .red {
   background-color: rgb(163, 67, 67);
