@@ -1,0 +1,52 @@
+version: '3'
+    
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - ./.env.dev
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres_da:/var/lib/rankr/
+
+  redis:
+    image: redis:alpine
+  celery:
+    restart: always
+    build:
+      context: .
+    command: celery -A rankr_server worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+      - web
+    env_file:
+      - ./.env.dev
+
+  pgadmin:
+      image: dpage/pgadmin4
+      depends_on:
+        - db
+      ports:
+        - "5051:80"
+      environment:
+        PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+        PGADMIN_DEFAULT_PASSWORD: root
+      restart: always
+volumes:
+  postgres_da:
