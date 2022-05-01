@@ -29,7 +29,7 @@
             type="select"
             name="contest_type"
             label="Type"
-            :options="{F: 'All', P: 'Physics', C: 'Chemistry',M: 'Maths'}"
+            :options="{F: 'All', P: 'Machine Learning', C: 'Artificial Intelligence',M: 'Deep Learning'}"
           />
           <br />
           <br />

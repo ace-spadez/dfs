@@ -12,7 +12,7 @@
     <div class="chips">
       <span
         class="subject"
-      >{{problem.subject=='M'?'Maths':problem.subject=='P'?'Physics':'Chemsitry'}}</span>
+      >{{problem.subject=='M'?'Deep Learning':problem.subject=='P'?'Machine Learning':'Artificial Intelligence'}}</span>
       <span
         class="type"
       >{{problem.problem_type=='S'?'Single Option Correct':problem.problem_type=='M'?'Multiple Options Correct':'Integer-type'}}</span>

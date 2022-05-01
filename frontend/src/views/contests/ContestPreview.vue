@@ -34,9 +34,9 @@
                   <tr>
                     <th class="text-left">Name</th>
                     <th class="text-left">All</th>
-                    <th class="text-left">Physics</th>
-                    <th class="text-left">Chemistry</th>
-                    <th class="text-left">Maths</th>
+                    <th class="text-left">Machine Learning</th>
+                    <th class="text-left">Artificial Intelligence</th>
+                    <th class="text-left">Deep Learning</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -89,9 +89,9 @@
                   <tr>
                     <th class="text-left">Name</th>
                     <th class="text-left">All</th>
-                    <th class="text-left">Physics</th>
-                    <th class="text-left">Chemistry</th>
-                    <th class="text-left">Maths</th>
+                    <th class="text-left">Machine Learning</th>
+                    <th class="text-left">Artificial Intelligence</th>
+                    <th class="text-left">Deep Learning</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -129,9 +129,9 @@
                   <tr>
                     <th class="text-left">Name</th>
                     <th class="text-left">All</th>
-                    <th class="text-left">Physics</th>
-                    <th class="text-left">Chemistry</th>
-                    <th class="text-left">Maths</th>
+                    <th class="text-left">Machine Learning</th>
+                    <th class="text-left">Artificial Intelligence</th>
+                    <th class="text-left">Deep Learning</th>
                   </tr>
                 </thead>
                 <tbody>

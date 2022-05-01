@@ -86,9 +86,9 @@
                   <tr>
                     <th class="text-left">Name</th>
                     <th class="text-left">All</th>
-                    <th class="text-left">Physics</th>
-                    <th class="text-left">Chemistry</th>
-                    <th class="text-left">Maths</th>
+                    <th class="text-left">Machine Learning</th>
+                    <th class="text-left">Artificial Intelligence</th>
+                    <th class="text-left">Deep Learning</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -107,21 +107,21 @@
       <div v-if="!userRankingsState.loading &&  !userRankingsState.error" class="chart">
         <v-tabs color="deep-purple accent-4" right>
           <v-tab>All</v-tab>
-          <v-tab>Physics</v-tab>
-          <v-tab>Maths</v-tab>
-          <v-tab>Chemistry</v-tab>
+          <v-tab>Machine Learning</v-tab>
+          <v-tab>Deep Learning</v-tab>
+          <v-tab>Artificial Intelligence</v-tab>
 
           <v-tab-item>
             <chart :ratinghistory="userRankingsState.ratingHistory" category="all"></chart>
           </v-tab-item>
           <v-tab-item>
-            <chart :ratinghistory="userRankingsState.ratingHistory" category="physics"></chart>
+            <chart :ratinghistory="userRankingsState.ratingHistory" category="ml"></chart>
           </v-tab-item>
           <v-tab-item>
-            <chart :ratinghistory="userRankingsState.ratingHistory" category="maths"></chart>
+            <chart :ratinghistory="userRankingsState.ratingHistory" category="dl"></chart>
           </v-tab-item>
           <v-tab-item>
-            <chart :ratinghistory="userRankingsState.ratingHistory" category="chemistry"></chart>
+            <chart :ratinghistory="userRankingsState.ratingHistory" category="ai"></chart>
           </v-tab-item>
         </v-tabs>
       </div>

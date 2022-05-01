@@ -23,7 +23,7 @@
                   type="select"
                   name="subject"
                   label="Subject"
-                  :options="{ P: 'Physics', C: 'Chemistry',M: 'Maths'}"
+                  :options="{ P: 'Machine Learning', C: 'Artificial Intelligence',M: 'Maths'}"
                 />
               </span>
             </div>
