@@ -17,11 +17,16 @@ import VueKatex from 'vue-katex';
 import VueMathjax from 'vue-mathjax'
 import 'katex/dist/katex.min.css';
 import VueMobileDetection from 'vue-mobile-detection'
+import AxiosPlugin from 'vue-axios-cors';
+ 
+Vue.use(AxiosPlugin)
 Vue.use(VueMobileDetection)
 Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
 Vue.config.productionTip = false;
 Vue.use(VueFormulate)
 Vue.config.devtools = true;
+
+
 // import MathLive from "mathlive/dist/mathlive";
 // import Mathfield from "mathlive/dist/vue-mathlive.mjs";
 // Vue.use(Mathfield, MathLive);

@@ -23,13 +23,13 @@
             type="select"
             name="contest_difficulty"
             label="Difficulty"
-            :options="{MX: 'Mixed', MN: 'Mains', AV: 'Advanced'}"
+            :options="{MX: 'Mixed', MN: 'Basic', AV: 'Advanced'}"
           />
           <FormulateInput
             type="select"
             name="contest_type"
             label="Type"
-            :options="{F: 'All', P: 'Physics', C: 'Chemistry',M: 'Maths'}"
+            :options="{F: 'All', P: 'Machine Learning', C: 'Artificial Intelligence',M: 'Deep Learning'}"
           />
           <br />
           <br />

@@ -1,4 +1,6 @@
 module.exports = {
+  publicPath: '',
+  // devServer: {proxy: "http://20.24.100.104:8000"},
   // Fix Vuex-typescript in prod: https://github.com/istrib/vuex-typescript/issues/13#issuecomment-409869231
   configureWebpack: (config) => {
     if (process.env.NODE_ENV === 'production') {

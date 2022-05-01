@@ -16,12 +16,16 @@ function authHeaders(token: string) {
   return {
     headers: {
       Authorization: `Token ${token}`,
+      // 'Access-Control-Allow-Origin' : '*',
+      
+      
     },
   };
 }
 function authHeader(token: string) {
   return {
-    Authorization: `Token ${token}`
+    Authorization: `Token ${token}`,
+    // 'Access-Control-Allow-Origin' : '*',
 
   };
 }
@@ -37,7 +41,13 @@ export const api = {
       "password": password
     }
 
-    return axios.post(`${apiUrl}/api/auth/login/`, data);
+    return axios.post(`${apiUrl}/api/auth/login/`, data,{
+      // headers:{Fauth'Access-Control-Allow-Origin' : '*',
+      //   "Access-Control-Allow-Methods": "GET, OPTIONS, POST, PUT",
+      //   'Access-Control-Allow-Headers': 'Content-Type',
+
+      // }
+    });
   },
   async verify(key: string) {
 

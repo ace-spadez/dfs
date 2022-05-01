@@ -12,6 +12,6 @@ let envApiUrl = 'https://rankf.southeastasia.cloudapp.azure.com';
 // }
 
 
-export const apiUrl = 'http://localhost:8000';
+export const apiUrl = 'http://20.24.100.104:8000';
 
 export const appName = process.env.VUE_APP_NAME;
