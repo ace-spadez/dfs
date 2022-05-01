@@ -6,7 +6,8 @@ from .permissions import IsQuadrant, IsWriter
 from .models import QuadrantUser, QuadContestApplication
 from .serializers import QuadRegisterInfoCheckSerializer, QuadContestInfoCheckSerializer,\
     QuadContestPatchInfoCheckSerializer, QuadProblemSerializer,\
-    QuadProblemInfoCheckSerializer,QuadProblemPatchSerializer, QuadContestPreviewSerializer
+    QuadProblemInfoCheckSerializer,QuadProblemPatchSerializer, QuadContestPreviewSerializer,\
+    QuadProblemInfoCheckPickleSerializer
 from appauth.serializers import UserPreviewSerializer
 from core.models import Contest, Contestchip, Problem, Option
 from core.serializers import ContestPreviewSerializer
@@ -209,11 +210,16 @@ class QuadContestProblemsView(views.APIView):
 
     def post(self, request, contest_uuid):
         user = request.user
+        print(user)
         contest = Contest.objects.get(uuid=contest_uuid)
-
+        print(contest)
+        print(request.data)
         serializer = QuadProblemInfoCheckSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        print('reached')
         data = serializer.validated_data
+
+        print(data)
 
         content = data['content']
         content_image = data.get('content_image', None)
@@ -223,13 +229,23 @@ class QuadContestProblemsView(views.APIView):
         options = data.get('options', [])
         tags = data.get('tags', None)
 
+        ##
+        #training_data = data.get('training_data',None)
+        #test_data = data.get('test_data',None)
+        ##
+
+
         problem = Problem(
             writer=user,
             content=content,
             content_image=content_image,
             problem_type=problem_type,
             subject=subject,
-            contest=contest
+            contest=contest,
+            ##
+           # training_data=training_data,
+           # test_data= test_data
+            ##
         )
         
 
@@ -242,6 +258,8 @@ class QuadContestProblemsView(views.APIView):
 
         elif problem_type == Problem.SINGLE or problem_type == Problem.MULTIPLE:
             problem.save()
+            if options==None:
+                raise ValidationError('No options submitted')
             if len(options) < 4 or len(options) > 6:
                 raise ValidationError(
                     'The options submitted are less than 4, or more than 6')
@@ -253,6 +271,20 @@ class QuadContestProblemsView(views.APIView):
                     content=option['content']
                 )
                 opt.save()
+
+        #############
+        elif problem_type == Problem.PICKLE_UPLOAD:
+            pass
+            # if training_data is None:
+            #     raise ValidationError('No training data uploaded')
+            # elif test_data is None:
+            #     raise ValidationError('No test data uploaded')
+            # problem.training_data = training_data
+            # problem.test_data = test_data
+            problem.save()
+        #################
+            
+
         else:
             raise ValidationError('No proper problem type submitted')
         if tags is not None:
@@ -267,6 +299,36 @@ class QuadContestProblemsView(views.APIView):
             'body': serializer.data
         })
 
+class QuadContestProblemPickleView(views.APIView):
+
+    permission_classes = [IsAuthenticated, IsQuadrant, IsWriter]
+
+    def post(self,request,contest_uuid,problem_uuid):
+        user = request.user
+        contest = Contest.objects.get(uuid=contest_uuid)
+        problem = contest.problems.get(uuid = problem_uuid)
+        serializer = QuadProblemInfoCheckPickleSerializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        print(data)
+        training_data = data.get('training_data',None)
+        test_data = data.get('test_data',None)
+
+        if problem.problem_type==Problem.PICKLE_UPLOAD:
+            problem.training_data = training_data
+            problem.test_data = test_data
+
+            problem.save()
+        else:
+            raise ValidationError('problem type not pickle')
+
+        serializer = QuadProblemSerializer(problem,context={'request':request})
+        return response.Response({
+            'message':'Retrived Problem',
+            'body':serializer.data
+        },status=status.HTTP_200_OK)
+                
+        
 
 class QuadContestProblemView(views.APIView):
     permission_classes = [IsAuthenticated, IsQuadrant, IsWriter]
@@ -301,6 +363,8 @@ class QuadContestProblemView(views.APIView):
         content_image = data.get('content_image', None)
         subject = data['subject']
         correct_integer = data.get('correct_integer', None)
+        training_data = data.get('training_data',None)
+        test_data = data.get('test_data',None)
 
         new_options = data.get('new_options',[])
         patch_options = data.get('patch_options',[])
@@ -339,6 +403,17 @@ class QuadContestProblemView(views.APIView):
                 tg,_ = Contestchip.objects.get_or_create(name=tag['name'])
                 problem.tags.add(tg)
             del data['tags']
+
+
+            #####################
+        if problem.problem_type == Problem.PICKLE_UPLOAD:
+            if training_data is not None:
+                problem.training_data = training_data
+                del data['training_data']
+            if test_data is not None:
+                problem.test_data = test_data
+                del data['test_data']
+            #####################
         problem.save()
         problem = problem.update(**data)
         serializer = QuadProblemSerializer(problem,context={'request':request})

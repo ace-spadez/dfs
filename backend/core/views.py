@@ -150,9 +150,12 @@ class AnswerView(views.APIView):
         
         options = data.get('options',None)
         integer_content = data.get('integer_content',None)
-        if (options==None or len(options)==0) and integer_content==None:
+        pickle_file = data.get('pickle_file',None)
+        if (options==None or len(options)==0) and integer_content==None and pickle_file==None:
             submission.delete()
         else:
+            if pickle_file is not None:
+                submission.pickle_file = pickle_file
             if integer_content is not None:
                 submission.integer_content = integer_content
             if options is not None:

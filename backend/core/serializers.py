@@ -46,7 +46,8 @@ class AnswerModelSerializer(serializers.ModelSerializer):
         fields = [
             'uuid',
             'options',
-            'integer_content'
+            'integer_content',
+            'pickle_file'
         ]
 
 class ProblemSerializer(serializers.ModelSerializer):
@@ -64,7 +65,8 @@ class ProblemSerializer(serializers.ModelSerializer):
             'writer',
             'contest',
             'options',
-            'submission'
+            'submission',
+            'training_data'
         ]
 
     def get_submission(self, problem):
@@ -80,6 +82,7 @@ class ProblemSerializer(serializers.ModelSerializer):
 class AnswerSerializer(serializers.Serializer):
     options = AnswerOptionSerializer(many=True, required=False)
     integer_content = serializers.IntegerField(required=False)
+    pickle_file = serializers.FileField(required=False)
 
 
 class XProblemSerializer(serializers.ModelSerializer):
@@ -100,7 +103,8 @@ class XProblemSerializer(serializers.ModelSerializer):
             'contest',
             'options',
             'correct_integer',
-            'submission'
+            'submission',
+            'training_data'
 
         ]
 

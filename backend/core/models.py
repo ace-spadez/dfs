@@ -124,10 +124,12 @@ class Problem(models.Model):
     SINGLE = 'S'
     MULTIPLE = 'M'
     INTEGER = 'I'
+    PICKLE_UPLOAD = 'P'
     QUESTION_TYPE_CHOICES = [
         (SINGLE, 'Single option correct'),
         (MULTIPLE, 'Multiple options correct'),
         (INTEGER, 'Integer type question'),
+        (PICKLE_UPLOAD, 'Pickle File Upload')
         
     ]
 
@@ -143,6 +145,12 @@ class Problem(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True)
     content = models.TextField()
     content_image = models.ImageField(null=True,blank=True)
+
+    ## MLCHLGR
+    training_data = models.FileField(null=True,blank=True)
+    test_data = models.FileField(null=True,blank=True)
+    ##EOF
+
     problem_type = models.CharField(max_length=20,choices=QUESTION_TYPE_CHOICES)
     tags = models.ManyToManyField(Contestchip,related_name='problems')
     subject =  models.CharField(max_length=30,choices= QUESTION_SUBJECT_CHOICES)
@@ -176,6 +184,8 @@ class Submission(models.Model):
     problem = models.ForeignKey(Problem,on_delete=models.CASCADE,related_name='submissions')
     options = models.ManyToManyField(Option,null=True)
     integer_content = models.IntegerField(null=True)
+    pickle_file= models.FileField(null=True,blank=True)
+
 
     def get_marks(self):
         print("In get marks")

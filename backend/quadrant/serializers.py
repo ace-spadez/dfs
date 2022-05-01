@@ -42,7 +42,12 @@ class QuadProblemSerializer(serializers.ModelSerializer):
             'writer',
             'correct_integer',
             'contest',
-            'options'
+            'options',
+
+            ##
+            'training_data',
+            'test_data'
+            ##
         ]
 class QuadTagSerializer(serializers.Serializer):
     name = serializers.CharField(required=True)
@@ -58,6 +63,17 @@ class QuadProblemInfoCheckSerializer(serializers.Serializer):
     correct_integer = serializers.IntegerField(required=False)
     options = QuadOptionCheckSerializer(many=True,required=False)
     tags = QuadTagSerializer(many=True,required=False)
+
+# #### MLCHLGR
+#     training_data = serializers.FileField(required=False)
+#     test_data = serializers.FileField(required=False)
+##EOF
+class QuadProblemInfoCheckPickleSerializer(serializers.Serializer):
+    #### MLCHLGR
+    training_data = serializers.FileField(required=False)
+    test_data = serializers.FileField(required=False)
+##EOF
+
 class QuadOptionPatchSerializer(serializers.Serializer):
     uuid = serializers.UUIDField(required=True)
     is_correct = serializers.BooleanField(required=False)
@@ -77,6 +93,10 @@ class QuadProblemPatchSerializer(serializers.Serializer):
 
     tags = QuadTagSerializer(many=True,required=False)
 
+#### MLCHLGR
+    training_data = serializers.FileField(required=False)
+    test_data = serializers.FileField(required=False)
+##EOF
 class QuadContestPreviewSerializer(serializers.ModelSerializer):
     writers = serializers.SerializerMethodField()
     is_applied = serializers.SerializerMethodField()
