@@ -117,12 +117,24 @@ export interface IQuadProblem{
     content: string;
     problem_type:string;
     content_image?:string;
+
+    training_data?: string;
+    test_data?: string;
+
+
     tags?:Array<string>;
     writer: IUserPreview;
     correct_integer?:number;
     contest:string;
     options : Array<IQuadOptions>;
+
+    
 }
+// export interface IQuadProblemTestFiles{
+ 
+//     training_data?: File;
+//     test_data?: File;   
+// }
 export interface IQuadProblemCreate{
     contest_uuid : string;
     content : string;
@@ -132,6 +144,10 @@ export interface IQuadProblemCreate{
     correct_integer?:number;
     options : Array<IQuadOptionsCreate>;
     tags : Array<ITag>;
+
+
+    training_data?: File;
+    test_data?: File;
 
 }
 export interface IQuadProblemPatch{
@@ -146,10 +162,15 @@ export interface IQuadProblemPatch{
     tags?:Array<ITag>;
 
 
+    // training_data?: File;
+    // test_data?: File;
+
 }
 export interface ISubmission{
     integer_content?: number;
     options?: Array<IQuadOptionsUUID>;
+
+    pickle_file: File|string;
 }
 
 export interface IXProblem{
@@ -164,6 +185,10 @@ export interface IXProblem{
     contest:string;
     options : Array<IQuadOptions>;
     submission : ISubmission;
+
+
+    // training_data?: string;
+    // testing_data?: string;
 }
 export interface IOptions{
     uuid: string;
@@ -181,6 +206,10 @@ export interface IProblem{
     contest:string;
     options : Array<IOptions>;
     submission : ISubmission|null;
+
+
+    training_data?: string;
+    //testing_data?: string;
 }
 export interface IStanding{
     user: IUserPreview;

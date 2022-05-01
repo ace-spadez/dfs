@@ -9,7 +9,7 @@ import {
   IQuadProblemCreate,
   IQuadProblemPatch,
   IPatchSelf,
-  ISubmission
+  ISubmission,
 } from "./interfaces";
 
 function authHeaders(token: string) {
@@ -187,8 +187,27 @@ export const api = {
   async getQuadContestProblem(token: string, contest_uuid: string, problem_uuid: string) {
     return axios.get(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}`, authHeaders(token))
   },
+  async sendPickleTestFiles(token:string,contest_uuid:string, problem_uuid:string, testfiles:IQuadProblemCreate){
+    const formData = new FormData();
+    if(testfiles.test_data!=null) formData.append('test_data',testfiles.test_data);
+    if(testfiles.training_data!=null) formData.append('training_data',testfiles.training_data);
+    return axios.post(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/${problem_uuid}/pickle/`,formData,
+    {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Token ${token}`
+  
+        }
+      }
+    
+    )
+
+  },
   async createQuadContestProblem(token: string, contest_uuid: string, problem: IQuadProblemCreate) {
-    return axios.post(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/`, problem, authHeaders(token))
+    console.log(problem.content_image); 
+
+    
+   return axios.post(`${apiUrl}/api/quadrant/contests/${contest_uuid}/problems/`, problem, authHeaders(token))
 
   },
   async patchQuadContestProblem(token: string, contest_uuid: string, problem_uuid: string, problem: IQuadProblemPatch) {
@@ -231,7 +250,24 @@ export const api = {
     return axios.get(`${apiUrl}/api/core/contests/${contest_uuid}/submissions/`, authHeaders(token))
   },
   async postContestProblemAnswer(token: string, contest_uuid: string, problem_uuid: string, submission: ISubmission) {
-    return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/problems/${problem_uuid}/answer/`, submission, authHeaders(token))
+    if(submission.pickle_file==null)
+    return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/problems/${problem_uuid}/answer/`, submission, authHeaders(token));
+    else{
+    const formData = new FormData();
+    formData.append('pickle_file',submission.pickle_file);
+    return axios.post(`${apiUrl}/api/core/contests/${contest_uuid}/problems/${problem_uuid}/answer/`,formData,
+    {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Token ${token}`
+  
+        }
+      }
+    
+    )
+
+    }
+  
   },
   async postBeginAttempt(token: string, contest_uuid: string) {
     // await new Promise((resolve, reject) => setTimeout(() => resolve(), 5000));

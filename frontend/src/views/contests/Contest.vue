@@ -82,7 +82,7 @@
 
               </div>-->
               <div class="question-numbers">
-                <div class="subject-name">Physics</div>
+                <div class="subject-name">Machine Learning</div>
 
                 <div
                   :class="`question-number ${problem.submission?'green':'grey'}`"
@@ -90,7 +90,7 @@
                   :key="i+1"
                   @click.prevent="scrollIntoView(i+1)"
                 >{{i+1}}</div>
-                <div class="subject-name">Maths</div>
+                <div class="subject-name">Deep Learning</div>
 
                 <div
                   :class="`question-number ${problem.submission?'green':'grey'}`"
@@ -98,7 +98,7 @@
                   :key="arrfiltercount('P')+i+1"
                   @click.prevent="scrollIntoView(arrfiltercount('P')+i+1)"
                 >{{arrfiltercount('P')+i+1}}</div>
-                <div class="subject-name">Chemistry</div>
+                <div class="subject-name">Artificial Intelligence</div>
 
                 <div
                   :class="`question-number ${problem.submission?'green':'grey'}`"

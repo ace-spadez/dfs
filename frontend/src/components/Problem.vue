@@ -4,10 +4,10 @@
 
     <vue-mathjax :formula="problem.content" class="question"></vue-mathjax>
     <div class="chips">
-      <span class="subject">{{problem.subject=='M'?'Maths':problem.subject=='P'?'Physics':'Chemsitry'}}</span>
-      <span class="type">{{problem.problem_type=='S'?'Single Option Correct':problem.problem_type=='M'?'Multiple Options Correct':'Integer-type'}}</span>
-      <span class="correct_answer">+3</span>
-      <span class="wrong_answer">-1</span>
+      <span class="subject">{{problem.subject=='M'?'Machine Learning':problem.subject=='P'?'Deep Learning':'Artificial Intelligence'}}</span>
+      <span class="type">{{problem.problem_type=='S'?'Single Option Correct':problem.problem_type=='M'?'Multiple Options Correct':problem.problem_type=='I'?'Integer-type':'Pickle Upload'}}</span>
+      <span class="correct_answer">+10</span>
+      <!-- <span class="wrong_answer">-1</span> -->
     </div>
     <div v-if="problem.problem_type=='S'">
       <div v-for="(option,index) in problem.options" class="option" :key="index">
@@ -45,6 +45,19 @@
         @change="saved=false"
       ></FormulateInput>
     </div>
+
+    <div v-if="problem.problem_type=='P'">
+       <a :href="problem.training_data"><v-btn>Download Training Data</v-btn></a>
+       <br/>
+       <br/>
+      <FormulateInput
+        v-model="pickle_file"
+        type="file"
+        @change="saved=false"
+      ></FormulateInput>
+     
+      <a v-if="file_link!=null" :href="file_link">submitted_file</a>
+    </div>
     <br />
     <v-btn color="green" :class="`save`" :disabled="saved" dark @click.prevent="save">save</v-btn>
 
@@ -73,7 +86,8 @@ export default class Problem extends Vue {
   public cOption: string = "";
   public cOptions: any = [];
   public cInteger: number | null = null;
-
+  public pickle_file: any = null;
+  public file_link = null;
 
   @Watch("cInteger")
   public onChange(n, o) {
@@ -81,12 +95,20 @@ export default class Problem extends Vue {
     this.saved = false;
   }
 
+  @Watch("pickle_file")
+  public onChangeA(n, o) {
+    // if (n == null) return;
+    this.saved = false;
+  }
+
+
   public get isClear() {
     console.log(this.problem)
     if (
       this.cOption == "" &&
       this.cOptions.length <= 0 &&
-      this.cInteger == null
+      this.cInteger == null &&
+      this.pickle_file ==null
     )
       return true;
     return false;
@@ -111,6 +133,10 @@ export default class Problem extends Vue {
             this.cOptions.push(option.uuid);
           });
         }
+        if (this.problem.problem_type == "P") {
+          this.file_link= this.problem.submission.pickle_file;
+        }
+        
       }
     }
 
@@ -131,6 +157,10 @@ export default class Problem extends Vue {
     if (this.problem.problem_type == "I") {
       if (this.cInteger) answer.integer_content = this.cInteger;
     }
+
+    if (this.problem.problem_type == "P") {
+      if (this.pickle_file) answer.pickle_file = this.pickle_file.fileList[0];
+    }
     console.log(answer);
     await dispatchSubmitAnswerState(this.$store, {
       contest_uuid: this.$route.params["contest_uuid"],
@@ -144,6 +174,7 @@ export default class Problem extends Vue {
     this.cOption = "";
     this.cOptions = [];
     this.cInteger = null;
+    this.pickle_file = null;
     this.save();
   }
 }

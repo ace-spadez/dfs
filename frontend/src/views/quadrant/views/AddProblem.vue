@@ -14,14 +14,14 @@
               type="select"
               name="problem_type"
               label="Problem Type"
-              :options="{ S: 'Single Option Correct', M: 'Multiple options correcct',I: 'Integer type'}"
+              :options="{ S: 'Single Option Correct', M: 'Multiple options correcct',I: 'Integer type',P:'Pickle File'}"
             /></span>
             <span>
             <FormulateInput
               type="select"
               name="subject"
               label="Subject"
-              :options="{ P: 'Physics', C: 'Chemistry',M: 'Maths'}"
+              :options="{ P: 'Machine Learning', C: 'Deep Learning',M: 'Artificial Intelligence'}"
             /></span>
             </div>
             <FormulateInput
@@ -39,7 +39,7 @@
               validation="mime:image/jpeg,image/png,image"
             />
             <FormulateInput
-              v-if="problem.problem_type!='I'"
+              v-if="problem.problem_type=='M'||problem.problem_type=='S'"
               type="group"
               name="options"
               label="Options"
@@ -66,12 +66,30 @@
               <FormulateInput name="is_correct" type="checkbox" label="Is Correct?" />
             </FormulateInput>
             <FormulateInput
-              v-else
+              v-if="problem.problem_type=='I'"
               name="correct_integer"
               type="number"
               label="Correct Integer"
             />
-
+            <div v-if="problem.problem_type=='P'">
+                 <FormulateInput
+              
+              name="test_data"
+              type="file"
+              label="Select a test data file to upload"
+              help="Select a csv to upload."
+              validation="mime:text/csv"
+            />
+            <FormulateInput
+           
+              name="training_data"
+              type="file"
+              label="Select a training data file to upload"
+              help="Select a csv to upload."
+              validation="mime:text/csv"
+            />
+            </div>
+ 
             <FormulateInput
               type="group"
               name="tags"
@@ -143,7 +161,7 @@ import { commitQCSetClear } from "@/store/quadcontest/mutations";
   }
 })
 export default class AddProblem extends Vue {
-  problem = {
+  problem:any = {
     content: "",
     options: [],
     tags: [],
@@ -151,6 +169,7 @@ export default class AddProblem extends Vue {
     subject: 'M',
     contest_uuid:'',
     correct_integer:0,
+
   };
   formula = "";
   public get getUUID() {
@@ -158,11 +177,26 @@ export default class AddProblem extends Vue {
     return this.$route.params["id"];
   }
   public async submit() {
+    console.log(this.problem);
     this.problem['contest_uuid'] = this.getUUID;
-    console.log(this.problem.options)
+    if(this.problem.content_image){
+      this.problem['content_image'] = this.problem.content_image.fileList[0];
+
+    }
+    if(this.problem.test_data){
+      this.problem['test_data'] = this.problem.test_data.fileList[0];
+
+    }
+    if(this.problem.training_data){
+      this.problem['training_data'] = this.problem.training_data.fileList[0];
+
+    }
+    if(this.problem.problem_type=="S" || this.problem.problem_type=="M"){
+    console.log(this.problem.options)   
     for(var i=0;i<this.problem['options'].length;i++){
       console.log(this.problem['options'][i])
       if(!this.problem['options'][i]['is_correct']) (this.problem['options'][i]['is_correct'] as boolean)=false;
+    }
     }
  
     console.log(this.problem);
@@ -175,7 +209,7 @@ export default class AddProblem extends Vue {
       color: this.problemPostState.error ? "danger" : "success"
     };
     commitAddNotification(this.$store, notif);
-    await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+    await new Promise((resolve, reject) => setTimeout(() => resolve(null), 2000));
     commitRemoveNotification(this.$store, notif);
   
   }

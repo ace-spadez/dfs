@@ -16,6 +16,8 @@
 
     </div>
     <div class="green-option" v-if="problem.problem_type=='I'"><vue-mathjax :formula="`\$${problem.correct_integer}\$`"></vue-mathjax></div>
+    <a v-if="problem.problem_type=='P'" :href="problem.test_data"><v-btn class="left-btn">Download Test Data</v-btn></a>
+    <a v-if="problem.problem_type=='P'" :href="problem.training_data"><v-btn>Download Training Data</v-btn></a>
   </div>
 </template>
 
@@ -72,6 +74,9 @@ export default class ProblemPreview extends Vue {
 @import "@/assets/css/global.scss";
 .problem {
   color: white;
+}
+.left-btn{
+  margin-right:20px;
 }
 .question {
   color: white;
